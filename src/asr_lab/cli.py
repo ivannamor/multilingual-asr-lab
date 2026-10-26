@@ -3,6 +3,7 @@
 Usage::
 
     uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-it
+    uv run asr-lab score --run runs/whisper-small-it
 """
 
 from __future__ import annotations
@@ -11,6 +12,8 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+from asr_lab.evaluation.normalize import get_normalizer
+from asr_lab.evaluation.scoring import SCORES_FILE, format_summary, score_run
 from asr_lab.inference.faster_whisper import FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
 
@@ -33,6 +36,21 @@ def main(argv: Sequence[str] | None = None) -> None:
         "--limit", type=int, default=None, help="only the first N utterances of the manifest"
     )
 
+    score = commands.add_parser(
+        "score", help="compute WER and CER with confidence intervals for a run directory"
+    )
+    score.add_argument("--run", required=True, type=Path, help="run directory")
+    score.add_argument(
+        "--manifest", type=Path, default=None, help="default: the manifest recorded in run.json"
+    )
+    score.add_argument(
+        "--normalizer-lang",
+        default=None,
+        help="use one language's normalizer for every utterance (default: each utterance's)",
+    )
+    score.add_argument("--n-resamples", type=int, default=1000)
+    score.add_argument("--seed", type=int, default=0)
+
     args = parser.parse_args(argv)
     if args.command == "transcribe":
         model = FasterWhisperModel(
@@ -45,6 +63,17 @@ def main(argv: Sequence[str] | None = None) -> None:
             model, args.manifest, args.output, batch_size=args.batch_size, limit=args.limit
         )
         print(f"Predictions: {path}")
+    elif args.command == "score":
+        normalizer = get_normalizer(args.normalizer_lang) if args.normalizer_lang else None
+        scores = score_run(
+            args.run,
+            args.manifest,
+            normalizer=normalizer,
+            n_resamples=args.n_resamples,
+            seed=args.seed,
+        )
+        print(format_summary(scores))
+        print(f"Scores: {args.run / SCORES_FILE}")
 
 
 if __name__ == "__main__":

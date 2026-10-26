@@ -134,6 +134,9 @@ reproducible: the random generator is seeded (`seed=0` by default).
 ```bash
 # Transcribe a manifest; --limit N runs on the first N utterances only
 uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-int8-fleurs-it
+
+# Corpus WER and CER with 95% bootstrap confidence intervals, written to scores.json
+uv run asr-lab score --run runs/whisper-small-int8-fleurs-it
 ```
 
 A run directory holds `predictions.jsonl` (one raw hypothesis per utterance) and `run.json`
@@ -141,6 +144,14 @@ A run directory holds `predictions.jsonl` (one raw hypothesis per utterance) and
 processing time and real-time factor). Runs are resumable: running the same command again skips
 the utterances already transcribed, and running different settings in the same directory is an
 error. Run directories are not stored in git.
+
+`asr-lab score` normalizes references and hypotheses with each utterance's language normalizer
+(or `--normalizer-lang`), computes corpus WER and CER, and bootstraps confidence intervals for
+every meaningful resampling unit: utterances, readings of the same sentence
+(`metadata.sentence_id`) and speakers with several utterances. The widest interval is reported,
+because correlated utterances make narrower intervals over-optimistic. `scores.json` also
+records the number of utterances and reference words, the normalizer, S/D/I counts, the model and
+its settings, and the manifest hash.
 
 ### Transcribing with Whisper
 
