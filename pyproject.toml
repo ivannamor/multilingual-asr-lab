@@ -8,6 +8,7 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
+    "faster-whisper>=1.2.1",
     "huggingface-hub>=2.3.0",
     "numpy>=2.4.6",
     "soundfile>=0.14.0",
@@ -57,4 +58,7 @@ addopts = [
     "--import-mode=importlib",
     "--doctest-modules",
     "--doctest-glob=README.md",
+    "-m",
+    "not slow",
 ]
+markers = ["slow: downloads models or needs local datasets; run with `pytest -m slow`"]

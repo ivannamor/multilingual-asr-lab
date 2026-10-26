@@ -129,6 +129,27 @@ Utterances of the same speaker are correlated; pass `groups=speaker_ids` to resa
 speakers instead of single utterances, which gives wider and more honest intervals. Results are
 reproducible: the random generator is seeded (`seed=0` by default).
 
+### Transcribing with Whisper
+
+Models share one interface (`ASRModel.transcribe`). The Whisper adapter uses
+[faster-whisper](https://github.com/SYSTRAN/faster-whisper); weights are downloaded on first use.
+This example is not executed by the test suite because it needs the model and the FLEURS data.
+
+```python
+from pathlib import Path
+
+from asr_lab.data.manifest import read_manifest
+from asr_lab.inference.base import load_sample
+from asr_lab.inference.faster_whisper import FasterWhisperModel
+
+manifest = Path("data/fleurs_it/test.jsonl")
+samples = [load_sample(entry, manifest) for entry in read_manifest(manifest)[:3]]
+model = FasterWhisperModel("small", compute_type="int8", beam_size=5, cpu_threads=4)
+for hypothesis in model.transcribe(samples):
+    print(hypothesis.utterance_id, hypothesis.text)
+print(model.name, model.config)
+```
+
 ### Inspecting the alignment
 
 ```python
