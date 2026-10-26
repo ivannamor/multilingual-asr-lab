@@ -11,6 +11,7 @@ from asr_lab.evaluation.normalize import (
     GERMAN,
     IDENTITY,
     ITALIAN,
+    ITALIAN_V2,
     NORMALIZER_NAMES,
     WHISPER_BASIC,
     Normalizer,
@@ -65,13 +66,13 @@ def test_hyphenated_words_are_split() -> None:
     assert ITALIAN("vento da nord-est") == "vento da nord est"
 
 
-@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC])
+@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, ITALIAN_V2, GERMAN, WHISPER_BASIC])
 @pytest.mark.parametrize("text", ["", "   ", "?!...", "«»"])
 def test_empty_or_punctuation_only_gives_empty_string(normalizer: Normalizer, text: str) -> None:
     assert normalizer(text) == ""
 
 
-@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC])
+@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, ITALIAN_V2, GERMAN, WHISPER_BASIC])
 @pytest.mark.parametrize(
     "text",
     [
@@ -98,7 +99,7 @@ def test_get_normalizer_unknown_language() -> None:
 
 
 def test_normalizer_names_are_unique() -> None:
-    names = [n.name for n in (IDENTITY, BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC)]
+    names = [n.name for n in (IDENTITY, BASIC, ENGLISH, ITALIAN, ITALIAN_V2, GERMAN, WHISPER_BASIC)]
     assert len(names) == len(set(names))
 
 
@@ -137,9 +138,61 @@ def test_get_normalizer_by_name() -> None:
     assert get_normalizer_by_name("it-v1") is ITALIAN
     assert get_normalizer_by_name("whisper-basic") is WHISPER_BASIC
     assert get_normalizer_by_name("none") is IDENTITY
-    assert set(NORMALIZER_NAMES) == {"none", "basic-v1", "en-v1", "it-v1", "de-v1", "whisper-basic"}
+    assert set(NORMALIZER_NAMES) == {
+        "none",
+        "basic-v1",
+        "en-v1",
+        "it-v1",
+        "it-v2",
+        "de-v1",
+        "whisper-basic",
+    }
 
 
 def test_get_normalizer_by_unknown_name() -> None:
     with pytest.raises(ValueError, match="No normalizer named 'it-v9'; available: none"):
         get_normalizer_by_name("it-v9")
+
+
+# --- it-v2: numbers, symbols and units in words ---------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Aveva circa 20 anni.", "aveva circa venti anni"),
+        ("aveva circa vent'anni", "aveva circa venti anni"),  # elided tens restored
+        ("nel 2011", "nel duemilaundici"),
+        ("2.000 persone", "duemila persone"),  # Italian thousands separator
+        ("3,5 km", "tre virgola cinque chilometri"),  # decimal comma, unit
+        ("0,05 kg", "zero virgola zero cinque chilogrammi"),  # leading zeros read digit by digit
+        ("alle 10:30 e alle 9:00", "alle dieci e trenta e alle nove"),  # times
+        ("costa $5 o 20 €", "costa cinque dollari o venti euro"),  # amount before currency
+        ("il 15%", "il quindici per cento"),
+        ("a 90 km/h", "a novanta chilometri orari"),
+        ("tra il 1990\u20132000", "tra il millenovecentonovanta duemila"),  # en dash
+    ],
+)
+def test_it_v2_writes_numbers_symbols_and_units_in_words(text: str, expected: str) -> None:
+    assert ITALIAN_V2(text) == expected
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("Ha 4 figli", "ha quattro figli"),  # "ha" is the verb, not hectares
+        ("un fucile M16 e un file mp3", "un fucile m16 e un file mp3"),  # codes unchanged
+    ],
+)
+def test_it_v2_leaves_ambiguous_words_and_codes_alone(text: str, expected: str) -> None:
+    assert ITALIAN_V2(text) == expected
+
+
+def test_it_v2_matches_spoken_and_written_forms() -> None:
+    assert ITALIAN_V2("Aveva circa 20 anni.") == ITALIAN_V2("aveva circa vent'anni")
+    assert ITALIAN_V2("percorse 3 km") == ITALIAN_V2("percorse tre chilometri")
+    assert ITALIAN("percorse 3 km") != ITALIAN("percorse tre chilometri")  # it-v1 does not
+
+
+def test_italian_default_is_still_it_v1() -> None:
+    assert get_normalizer("it") is ITALIAN
