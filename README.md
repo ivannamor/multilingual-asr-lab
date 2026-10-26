@@ -46,6 +46,13 @@ characters), not the mean of per-utterance rates.
 Here the first utterance has 2 errors out of 3 words and the second has none, so the corpus WER
 is 2 / 5 = 0.4. A WER above 1.0 is possible when the model inserts many extra words.
 
+**Empty references.** The error rate of a single utterance with an empty reference (e.g. a
+silent clip) is mathematically undefined. `error_rate` returns `0.0` when the model also
+outputs nothing and `inf` otherwise, so hallucinations on silence rank as the worst
+utterances instead of being hidden. This differs from jiwer, which divides by `max(N, 1)`.
+Corpus-level WER and CER are unaffected: inserted words are added to the corpus error count.
+For silent clips, a dedicated hallucination metric is more informative than WER.
+
 ### Inspecting the alignment
 
 ```python

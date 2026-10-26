@@ -135,10 +135,16 @@ def utterance_counts(
 def error_rate(counts: ErrorCounts) -> float:
     """Return (S + D + I) / N, where N is the number of reference tokens.
 
-    With an empty reference (N = 0) the rate is 0.0 if there are no errors
-    and ``math.inf`` otherwise: any output on an empty reference is infinitely
-    wrong relative to its length. At corpus level this only happens if every
-    reference is empty.
+    The rate is undefined for an empty reference (N = 0), e.g. a silent clip.
+    By convention this returns 0.0 if there are no errors and ``math.inf``
+    otherwise, so that output on silence ranks as the worst possible utterance
+    and is never hidden. Alternatives were rejected on purpose: dividing by
+    ``max(N, 1)`` (jiwer) turns an insertion count into a fake rate, and NaN is
+    silently skipped by most aggregations, which would hide hallucinations.
+
+    Corpus-level rates are unaffected unless every reference is empty: the
+    insertions of empty-reference utterances are added to the corpus total.
+    For silent clips, report a dedicated hallucination metric instead of WER.
     """
     if counts.ref_length == 0:
         return 0.0 if counts.errors == 0 else math.inf
