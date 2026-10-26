@@ -2,7 +2,8 @@
 
 Every normalizer has a versioned name (e.g. ``"it-v1"``) that must be reported
 together with every error rate: changing the normalizer can move WER by several
-points. Numbers are not normalized yet, so "venti" and "20" still count as an error.
+points. ``it-v1`` does not normalize numbers ("venti" and "20" count as an error);
+``it-v2`` writes numbers, symbols and unambiguous units out in words.
 """
 
 from __future__ import annotations
@@ -12,6 +13,8 @@ import unicodedata
 from collections.abc import Callable
 from dataclasses import dataclass
 
+from num2words import num2words
+
 # Characters used in place of the apostrophe: right and left single quotation
 # marks, modifier letter apostrophe, acute accent, grave accent.
 _APOSTROPHE_VARIANTS = "\u2019\u2018\u02bc\u00b4\u0060"
@@ -20,6 +23,32 @@ _APOSTROPHE_TABLE = str.maketrans(dict.fromkeys(_APOSTROPHE_VARIANTS, "'"))
 _EDGE_APOSTROPHE = re.compile(r"(?<!\w)'|'(?!\w)")
 # Text in square or angle brackets ("[Music]", "<unk>") or in parentheses ("(laughs)").
 _BRACKETED = re.compile(r"[<\[][^>\]]*[>\]]|\(([^)]+?)\)")
+
+# Italian number formats: "2.000" (thousands), "3,5" (decimal), "10:30" (time).
+_IT_TIME = re.compile(r"(?<![\w:])(\d{1,2}):(\d{2})(?![\w:])")
+_IT_NUMBER = re.compile(r"(?<![\w.,])(\d{1,3}(?:\.\d{3})+(?:,\d+)?|\d+(?:[.,]\d+)?)(?![\w])")
+_IT_THOUSANDS = re.compile(r"\d{1,3}(?:\.\d{3})+(?:,\d+)?")
+_CURRENCY_BEFORE = re.compile(r"([$€£])\s*(\d[\d.,]*\d|\d)")
+# Only units that cannot be confused with Italian words ("ha" is also "has", "m" is ambiguous).
+_IT_UNITS = (
+    (re.compile(r"(?<!\w)km/h(?!\w)"), "chilometri orari"),
+    (re.compile(r"(?<!\w)km(?!\w)"), "chilometri"),
+    (re.compile(r"(?<!\w)cm(?!\w)"), "centimetri"),
+    (re.compile(r"(?<!\w)mm(?!\w)"), "millimetri"),
+    (re.compile(r"(?<!\w)kg(?!\w)"), "chilogrammi"),
+)
+_IT_SYMBOLS = {"$": " dollari ", "€": " euro ", "£": " sterline ", "%": " per cento "}
+# Tens lose their final vowel before a vowel: "vent'anni" = "venti anni".
+_IT_ELIDED_TENS = {
+    "vent": "venti",
+    "trent": "trenta",
+    "quarant": "quaranta",
+    "cinquant": "cinquanta",
+    "sessant": "sessanta",
+    "settant": "settanta",
+    "ottant": "ottanta",
+    "novant": "novanta",
+}
 
 
 def unicode_nfc(text: str) -> str:
@@ -66,6 +95,56 @@ def replace_eszett(text: str) -> str:
 def collapse_whitespace(text: str) -> str:
     """Collapse runs of whitespace into single spaces and trim both ends."""
     return " ".join(text.split())
+
+
+def expand_symbols_and_units_it(text: str) -> str:
+    """Write currency, percent and unambiguous units in Italian words.
+
+    The amount is moved before the currency, as it is spoken: "$5" -> "5 dollari".
+    """
+    text = _CURRENCY_BEFORE.sub(r"\2 \1", text)
+    for pattern, words in _IT_UNITS:
+        text = pattern.sub(words, text)
+    for symbol, words in _IT_SYMBOLS.items():
+        text = text.replace(symbol, words)
+    return text
+
+
+def verbalize_numbers_it(text: str) -> str:
+    """Write numbers in Italian words: "20" -> "venti", "2.000" -> "duemila".
+
+    Handles Italian thousands separators ("2.000"), decimal commas ("3,5" ->
+    "tre virgola cinque") and times ("10:30" -> "dieci e trenta"). Digits that are
+    part of a word or code ("M16", "mp3") are left unchanged.
+    """
+    text = _IT_TIME.sub(_italian_time, text)
+    return _IT_NUMBER.sub(_italian_number, text)
+
+
+def restore_elided_tens_it(text: str) -> str:
+    """Restore elided tens after elisions were split: "vent anni" -> "venti anni"."""
+    return " ".join(_IT_ELIDED_TENS.get(word, word) for word in text.split())
+
+
+def _italian_time(match: re.Match[str]) -> str:
+    hours, minutes = match.groups()
+    return hours if minutes == "00" else f"{hours} e {int(minutes)}"
+
+
+def _italian_number(match: re.Match[str]) -> str:
+    token = match.group()
+    if _IT_THOUSANDS.fullmatch(token):
+        token = token.replace(".", "")
+    integer, _, decimals = token.replace(".", ",").partition(",")
+    words = num2words(int(integer), lang="it")
+    if decimals:
+        decimal_words = (
+            " ".join(num2words(int(digit), lang="it") for digit in decimals)
+            if decimals.startswith("0")
+            else num2words(int(decimals), lang="it")
+        )
+        words += " virgola " + decimal_words
+    return f" {words} "
 
 
 def remove_bracketed(text: str) -> str:
@@ -121,10 +200,27 @@ WHISPER_BASIC = Normalizer(
     (lowercase, remove_bracketed, remove_marks_symbols_punctuation, collapse_whitespace),
 )
 
+# it-v1 plus numbers, symbols and units in words (experiment E3). Not yet the default
+# for Italian: changing the default would change every reported Italian number.
+ITALIAN_V2 = Normalizer(
+    "it-v2",
+    (
+        unicode_nfc,
+        unify_apostrophes,
+        lowercase,
+        expand_symbols_and_units_it,
+        verbalize_numbers_it,
+        remove_punctuation,
+        split_elisions,
+        restore_elided_tens_it,
+        collapse_whitespace,
+    ),
+)
+
 _BY_LANGUAGE = {"en": ENGLISH, "it": ITALIAN, "de": GERMAN}
 _BY_NAME = {
     normalizer.name: normalizer
-    for normalizer in (IDENTITY, BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC)
+    for normalizer in (IDENTITY, BASIC, ENGLISH, ITALIAN, ITALIAN_V2, GERMAN, WHISPER_BASIC)
 }
 NORMALIZER_NAMES = tuple(_BY_NAME)
 

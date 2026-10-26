@@ -122,7 +122,7 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--limit` | all | first N utterances of the manifest |
 | `asr-lab score` | `--run` | (required) | run directory |
 | | `--manifest` | from `run.json` | override the manifest |
-| | `--normalizer` | per utterance language | one normalizer by name for every utterance: `none`, `basic-v1`, `whisper-basic`, `it-v1`, `de-v1`, `en-v1` |
+| | `--normalizer` | per utterance language | one normalizer by name for every utterance: `none`, `basic-v1`, `whisper-basic`, `it-v1`, `it-v2`, `de-v1`, `en-v1` |
 | | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings (non-default values appear in the file name) |
 | `asr-lab errors` | `--run` | (required) | run directory |
 | | `--manifest`, `--normalizer` | as `score` | as `score` |
@@ -184,10 +184,12 @@ normalizer has a versioned name that should be reported with every result.
 | `none` | no change |
 | `basic-v1`, `en-v1` | Unicode NFC, unify apostrophes, lowercase, remove punctuation (apostrophes inside words are kept: "don't"), collapse whitespace |
 | `it-v1` | as above, then split elisions: "l'uomo" → "l uomo" |
+| `it-v2` | `it-v1` plus numbers, symbols and unambiguous units in words: "2.000" → "duemila", "3,5" → "tre virgola cinque", "10:30" → "dieci e trenta", "$5" → "cinque dollari", "km" → "chilometri", "vent'anni" → "venti anni" |
 | `de-v1` | as above, then "ß" → "ss" (umlauts are kept) |
 | `whisper-basic` | reimplementation of OpenAI Whisper's `BasicTextNormalizer`: lowercase, remove text in brackets and parentheses, replace every mark, symbol and punctuation character (apostrophes included) with a space |
 
-Numbers are not normalized yet: "venti" and "20" still count as different words.
+The default for Italian is `it-v1`, which does not normalize numbers ("venti" and "20" count as
+different words); `it-v2` does, and is available by name while experiment E3 measures its effect.
 
 ### Confidence intervals and system comparison
 

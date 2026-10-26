@@ -22,6 +22,7 @@ made; superseded entries are marked, not deleted.
 | 13 | [Report the widest confidence interval across resampling units](#13-report-the-widest-confidence-interval-across-resampling-units) | statistics |
 | 14 | [Scores files are named after their settings](#14-scores-files-are-named-after-their-settings) | engineering |
 | 15 | [Whisper's basic normalizer is reimplemented, not imported](#15-whispers-basic-normalizer-is-reimplemented-not-imported) | evaluation |
+| 16 | [it-v2 writes numbers in words, but is not the default yet](#16-it-v2-writes-numbers-in-words-but-is-not-the-default-yet) | evaluation |
 
 ---
 
@@ -322,3 +323,27 @@ comparability with published numbers).
 the same on the tested cases. A first use already showed a pitfall: FLEURS references contain
 spoken text in parentheses (103 of 865 Italian test utterances), which `whisper-basic` deletes,
 turning correctly transcribed words into insertions (experiment E3).
+
+## 16. it-v2 writes numbers in words, but is not the default yet
+
+**Context.** With `it-v1`, a correctly recognized number written differently in the reference and
+in the hypothesis ("20 anni" / "vent'anni", "3 km" / "tre chilometri") counts as an error. Error
+analysis of Whisper-small on FLEURS Italian found 56 substitutions involving digits or symbols.
+
+**Decision.** `it-v2` = `it-v1` plus: Italian number formats written in words with `num2words`
+(thousands dot "2.000", decimal comma "3,5", times "10:30", digits attached to letters such as
+"M16" untouched); currency moved before the amount and spelled out ("$5" → "cinque dollari");
+percent; only unambiguous units (`km`, `km/h`, `cm`, `mm`, `kg`; not `ha`, which is mostly the
+verb "has"); elided tens restored ("vent'anni" → "venti anni"). Numbers are converted before
+punctuation is removed. The default Italian normalizer stays `it-v1`.
+
+**Alternatives rejected.** Converting spoken numbers to digits (inverse text normalization):
+harder to make reliable for Italian than number-to-words. Making `it-v2` the default immediately:
+it would silently change every Italian number already reported; the switch, if any, will follow
+experiment E3 and be versioned.
+
+**Consequences.** On Whisper-small (same predictions) WER goes from 7.46% to 7.15%, a significant
+paired difference (-0.31 points, 95% CI [-0.48, -0.15]), and digit/symbol substitutions drop from
+56 to 10. The rules were chosen partly by looking at errors on the test set; they apply equally to
+every system and do not favour a model, but this is declared in the E3 report. Ordinals, fractions,
+Roman numerals and alternative spoken forms ("ventun anni", "dieci e mezza") are not handled.
