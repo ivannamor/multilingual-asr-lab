@@ -19,6 +19,7 @@ made; superseded entries are marked, not deleted.
 | 10 | [Lesson learned: never seek backwards in a compressed archive](#10-lesson-learned-never-seek-backwards-in-a-compressed-archive) | engineering |
 | 11 | [Local Whisper inference with faster-whisper, int8, 4 threads](#11-local-whisper-inference-with-faster-whisper-int8-4-threads) | inference |
 | 12 | [One run directory per configuration, resumable, with provenance](#12-one-run-directory-per-configuration-resumable-with-provenance) | engineering |
+| 13 | [Report the widest confidence interval across resampling units](#13-report-the-widest-confidence-interval-across-resampling-units) | statistics |
 
 ---
 
@@ -263,3 +264,24 @@ from different configurations).
 **Consequences.** Interrupted runs cost nothing; one directory is always one configuration; scores
 can be recomputed from saved predictions with any normalizer. Model loading time is not included
 in the real-time factor.
+
+## 13. Report the widest confidence interval across resampling units
+
+**Context.** Bootstrap intervals depend on what is resampled. Utterances that share a speaker,
+or that read the same sentence (FLEURS has two or three readings per sentence), have correlated
+errors; resampling them one by one treats them as independent and gives intervals that are too
+narrow. Which grouping matters most depends on the dataset.
+
+**Decision.** `asr-lab score` computes an interval for every meaningful unit: utterances always;
+`metadata.sentence_id` when every utterance has one; speakers when at least one speaker has
+several utterances (FLEURS speaker ids are per-utterance placeholders, see decision 7, so this
+unit is skipped there). The widest interval is reported as the headline; all of them are stored in
+`scores.json`. The headline is printed with its unit and number of units, e.g.
+`WER 5.96% 95% CI [2.38%, 10.35%] (resampling utterance, n=10)`.
+
+**Alternatives rejected.** Always resampling utterances (over-optimistic with correlated data);
+choosing one unit per dataset by hand (easy to forget, and an implicit choice in every report).
+
+**Consequences.** The reported uncertainty is conservative and the choice is automatic and
+visible. With few units (e.g. a small number of speakers) intervals become wide, which is the
+honest outcome rather than a defect.
