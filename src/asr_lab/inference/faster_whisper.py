@@ -15,6 +15,9 @@ from faster_whisper import WhisperModel
 
 from asr_lab.inference.base import ASRModel, AudioSample, Hypothesis
 
+# Fastest weight precision measured or recommended for each device.
+DEFAULT_COMPUTE_TYPES = {"cpu": "int8", "cuda": "float16"}
+
 
 class FasterWhisperModel(ASRModel):
     """Whisper with fixed, reportable decoding settings.
@@ -25,9 +28,11 @@ class FasterWhisperModel(ASRModel):
 
     Args:
         model_size: Whisper checkpoint, e.g. ``"small"`` or ``"large-v3-turbo"``.
-        compute_type: weight precision; ``"int8"`` is fastest on CPU.
+        device: ``"cpu"`` or ``"cuda"`` (an NVIDIA GPU, e.g. on Google Colab).
+        compute_type: weight precision; by default ``"int8"`` on CPU (fastest there)
+            and ``"float16"`` on a GPU.
         beam_size: number of partial transcripts kept during decoding (1 = greedy).
-        cpu_threads: threads used to transcribe one utterance.
+        cpu_threads: threads used to transcribe one utterance on CPU.
         model: an already built model, used by tests to avoid downloading weights.
     """
 
@@ -35,18 +40,27 @@ class FasterWhisperModel(ASRModel):
         self,
         model_size: str = "small",
         *,
-        compute_type: str = "int8",
+        device: str = "cpu",
+        compute_type: str | None = None,
         beam_size: int = 5,
         cpu_threads: int = 4,
         model: Any | None = None,
     ) -> None:
+        if device not in DEFAULT_COMPUTE_TYPES:
+            raise ValueError(
+                f"device must be one of {sorted(DEFAULT_COMPUTE_TYPES)}, got {device!r}"
+            )
         self.model_size = model_size
-        self.compute_type = compute_type
+        self.device = device
+        self.compute_type = compute_type or DEFAULT_COMPUTE_TYPES[device]
         self.beam_size = beam_size
         self.cpu_threads = cpu_threads
         if model is None:
             model = WhisperModel(
-                model_size, device="cpu", compute_type=compute_type, cpu_threads=cpu_threads
+                model_size,
+                device=device,
+                compute_type=self.compute_type,
+                cpu_threads=cpu_threads,
             )
         self._model = model
 
@@ -62,7 +76,7 @@ class FasterWhisperModel(ASRModel):
             "library_version": version("faster-whisper"),
             "model_size": self.model_size,
             "compute_type": self.compute_type,
-            "device": "cpu",
+            "device": self.device,
             "cpu_threads": self.cpu_threads,
             "beam_size": self.beam_size,
             "condition_on_previous_text": False,

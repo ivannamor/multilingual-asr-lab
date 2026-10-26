@@ -24,6 +24,7 @@ made; superseded entries are marked, not deleted.
 | 15 | [Whisper's basic normalizer is reimplemented, not imported](#15-whispers-basic-normalizer-is-reimplemented-not-imported) | evaluation |
 | 16 | [it-v2 writes numbers in words, but is not the default yet](#16-it-v2-writes-numbers-in-words-but-is-not-the-default-yet) | evaluation |
 | 17 | [Results tables are generated and checked against committed results](#17-results-tables-are-generated-and-checked-against-committed-results) | engineering |
+| 18 | [A notebook for trying the pipeline, not for presenting results](#18-a-notebook-for-trying-the-pipeline-not-for-presenting-results) | engineering |
 
 ---
 
@@ -374,3 +375,24 @@ re-running inference).
 **Consequences.** Anyone can verify every table from a clone in seconds. Prose numbers are still
 written by hand and must be checked when a chapter is written. The repository grows by a few
 hundred KB per run, acceptable for text predictions (audio is never committed).
+
+## 18. A notebook for trying the pipeline, not for presenting results
+
+**Context.** Results are presented in `RESULTS.md` (decision 17). A reader may also want to run the
+pipeline and change a setting, ideally without installing anything.
+
+**Decision.** `notebooks/quickstart.ipynb` runs the pipeline on a small random subset of FLEURS:
+install the package from GitHub, settings in one cell (language, model, beam size, normalizer,
+number of utterances), ingest, transcribe, score with a confidence interval, error analysis,
+normalizers compared, one paired comparison. It contains no logic: every step calls `asr_lab`. A
+"Open in Colab" badge opens it on Google Colab with a free GPU; the Whisper adapter gained a
+`device` option (`cpu` or `cuda`, with `int8` and `float16` as the respective default precision).
+Outputs are never committed (`nbstripout` pre-commit hook). Tests check that the notebook has no
+outputs, that every code cell parses and that every `asr_lab` name it imports still exists; it is
+not executed in CI, which would need a model and a dataset download.
+
+**Alternatives rejected.** A notebook as the results document (decision 17); executing the
+notebook in CI (slow and dependent on external downloads).
+
+**Consequences.** Trying the project takes a click and a few minutes. Code that runs only on a GPU
+(Colab) is not exercised by CI; the notebook was executed locally on CPU before release.

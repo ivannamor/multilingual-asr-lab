@@ -12,6 +12,12 @@ repos:
       - id: check-merge-conflict
       - id: mixed-line-ending
 
+  # Notebooks are committed without outputs (no stale results, readable diffs)
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.9.1
+    hooks:
+      - id: nbstripout
+
   # Ruff runs from the project venv, so its version always matches uv.lock
   - repo: local
     hooks:
@@ -19,9 +25,9 @@ repos:
         name: ruff check
         entry: uv run --frozen ruff check --fix
         language: system
-        types_or: [python, pyi]
+        types_or: [python, pyi, jupyter]
       - id: ruff-format
         name: ruff format
         entry: uv run --frozen ruff format
         language: system
-        types_or: [python, pyi]
+        types_or: [python, pyi, jupyter]
