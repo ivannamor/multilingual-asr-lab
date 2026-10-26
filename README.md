@@ -22,6 +22,20 @@ uv run pre-commit install    # optional: run linters before every commit
 uv run pytest                # run the test suite (including the examples below)
 ```
 
+## Data
+
+Datasets are converted into JSONL manifests (one utterance per line) with 16 kHz mono 16-bit
+WAV audio. Audio paths are relative to the manifest, so a dataset folder can be moved freely.
+Data is downloaded from the Hugging Face Hub and is not stored in git.
+
+```bash
+# FLEURS Italian test set (865 utterances, ~660 MB download, cached by huggingface_hub)
+uv run python -m asr_lab.data.ingest --lang it --split test --output data/fleurs_it
+```
+
+FLEURS has no speaker ids: each utterance gets a placeholder `speaker_id`, and
+`metadata["sentence_id"]` groups the utterances that read the same sentence.
+
 ## Usage
 
 Open a Python console with `uv run python`.
