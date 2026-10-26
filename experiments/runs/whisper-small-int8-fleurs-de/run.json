@@ -1,0 +1,30 @@
+{
+  "model": "faster-whisper/small-int8",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "small",
+    "compute_type": "int8",
+    "device": "cpu",
+    "cpu_threads": 4,
+    "beam_size": 5,
+    "condition_on_previous_text": false,
+    "vad_filter": false
+  },
+  "manifest_sha256": "3f43aa24a12eb9e5768dbcc1ec0615ea28aa164cbf973f4b1febc350287c0719",
+  "limit": null,
+  "manifest": "data/fleurs_de/test.jsonl",
+  "n_utterances": 862,
+  "audio_seconds": 11349.300000000014,
+  "git_commit": "0b1e259e1b11f2bdcc6c1b38fcfb815485f22754",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.11.17",
+    "platform": "Linux aarch64",
+    "executable_is_venv": true
+  },
+  "started_at": "2026-10-26T18:59:46+00:00",
+  "finished_at": "2026-10-26T19:37:22+00:00",
+  "processing_seconds": 2255.3926067150023,
+  "rtf": 0.1987252611804252
+}

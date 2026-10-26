@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/base-int8",
+  "manifest": "data/fleurs_de/test.jsonl",
+  "normalizer": [
+    "de-v1"
+  ],
+  "n_utterances": 862,
+  "substitutions": 2564,
+  "deletions": 283,
+  "insertions": 532,
+  "distinct_confusion_pairs": 2082,
+  "substitutions_with_digits_or_symbols": 85,
+  "top_confusions": [
+    {
+      "reference": "das",
+      "hypothesis": "dass",
+      "count": 10
+    },
+    {
+      "reference": "dass",
+      "hypothesis": "das",
+      "count": 7
+    },
+    {
+      "reference": "chr",
+      "hypothesis": "christus",
+      "count": 7
+    },
+    {
+      "reference": "indem",
+      "hypothesis": "dem",
+      "count": 6
+    },
+    {
+      "reference": "einen",
+      "hypothesis": "ein",
+      "count": 6
+    },
+    {
+      "reference": "n",
+      "hypothesis": "nach",
+      "count": 6
+    },
+    {
+      "reference": "zum",
+      "hypothesis": "zu",
+      "count": 5
+    },
+    {
+      "reference": "höhle",
+      "hypothesis": "hölle",
+      "count": 5
+    },
+    {
+      "reference": "visum",
+      "hypothesis": "wiesum",
+      "count": 5
+    },
+    {
+      "reference": "usw",
+      "hypothesis": "weiter",
+      "count": 5
+    },
+    {
+      "reference": "blogs",
+      "hypothesis": "blocks",
+      "count": 4
+    },
+    {
+      "reference": "des",
+      "hypothesis": "das",
+      "count": 4
+    },
+    {
+      "reference": "dass",
+      "hypothesis": "sodass",
+      "count": 4
+    },
+    {
+      "reference": "infolgedessen",
+      "hypothesis": "dessen",
+      "count": 4
+    },
+    {
+      "reference": "um",
+      "hypothesis": "und",
+      "count": 4
+    },
+    {
+      "reference": "so",
+      "hypothesis": "zu",
+      "count": 4
+    },
+    {
+      "reference": "das",
+      "hypothesis": "der",
+      "count": 4
+    },
+    {
+      "reference": "ein",
+      "hypothesis": "eine",
+      "count": 4
+    },
+    {
+      "reference": "davey",
+      "hypothesis": "davei",
+      "count": 4
+    },
+    {
+      "reference": "weist",
+      "hypothesis": "weiss",
+      "count": 4
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "in",
+      "count": 12
+    },
+    {
+      "word": "x",
+      "count": 10
+    },
+    {
+      "word": "und",
+      "count": 9
+    },
+    {
+      "word": "die",
+      "count": 6
+    },
+    {
+      "word": "schengen",
+      "count": 5
+    },
+    {
+      "word": "gizeh",
+      "count": 5
+    },
+    {
+      "word": "so",
+      "count": 4
+    },
+    {
+      "word": "drei",
+      "count": 4
+    },
+    {
+      "word": "er",
+      "count": 4
+    },
+    {
+      "word": "sie",
+      "count": 4
+    },
+    {
+      "word": "00",
+      "count": 4
+    },
+    {
+      "word": "man",
+      "count": 3
+    },
+    {
+      "word": "eee",
+      "count": 3
+    },
+    {
+      "word": "dar",
+      "count": 3
+    },
+    {
+      "word": "um",
+      "count": 3
+    },
+    {
+      "word": "wild",
+      "count": 3
+    },
+    {
+      "word": "starke",
+      "count": 3
+    },
+    {
+      "word": "fertig",
+      "count": 3
+    },
+    {
+      "word": "oder",
+      "count": 3
+    },
+    {
+      "word": "männer",
+      "count": 3
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "in",
+      "count": 25
+    },
+    {
+      "word": "und",
+      "count": 23
+    },
+    {
+      "word": "zu",
+      "count": 15
+    },
+    {
+      "word": "der",
+      "count": 9
+    },
+    {
+      "word": "das",
+      "count": 7
+    },
+    {
+      "word": "die",
+      "count": 6
+    },
+    {
+      "word": "zur",
+      "count": 5
+    },
+    {
+      "word": "den",
+      "count": 5
+    },
+    {
+      "word": "im",
+      "count": 5
+    },
+    {
+      "word": "so",
+      "count": 5
+    },
+    {
+      "word": "oster",
+      "count": 5
+    },
+    {
+      "word": "internet",
+      "count": 4
+    },
+    {
+      "word": "es",
+      "count": 4
+    },
+    {
+      "word": "6",
+      "count": 4
+    },
+    {
+      "word": "wieder",
+      "count": 4
+    },
+    {
+      "word": "auch",
+      "count": 3
+    },
+    {
+      "word": "folge",
+      "count": 3
+    },
+    {
+      "word": "alt",
+      "count": 3
+    },
+    {
+      "word": "jede",
+      "count": 3
+    },
+    {
+      "word": "3",
+      "count": 3
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_de_15061068980244284411",
+      "errors": 20,
+      "reference_words": 32,
+      "reference": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29¾ zoll x 24½ zoll misst zu beginn seines lebens zur aufbewahrung zusammengerollt wurde",
+      "hypothesis": "zwar war es nie mehr mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse perkament dokument welches 29 3 4 zoll mal 24 1 1 1 2 misst zu beginn der zu aufwand zusammengeräut wurde"
+    },
+    {
+      "utterance_id": "fleurs_de_1463105846377948821",
+      "errors": 17,
+      "reference_words": 23,
+      "reference": "die offizielle währung der falklandinseln ist das falkland pound fkp dessen wert in einklang mit dem wert des britischen pfunds gbp festgelegt wird",
+      "hypothesis": "die offizielle währung der falkland insel ist das falkland pound f k p desen wert in einglank midem wert desperation pfonds g b p fest gelect wert"
+    },
+    {
+      "utterance_id": "fleurs_de_152471765559000662",
+      "errors": 17,
+      "reference_words": 23,
+      "reference": "ottawa ist kanadas bezaubernde zweisprachige hauptstadt und zeichnet sich durch eine reihe von kunstgalerien und museen aus die kanadas vergangenheit und gegenwart präsentieren",
+      "hypothesis": "ota war ist kann er das bezaube in der zwei sprache gehobst statt und zeichnet sich durch eine reihe von kunstgelärien und museen aus die kann er das vergangenheit um gegenwart präsentieren"
+    },
+    {
+      "utterance_id": "fleurs_de_11321324965961472908",
+      "errors": 16,
+      "reference_words": 32,
+      "reference": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29¾ zoll x 24½ zoll misst zu beginn seines lebens zur aufbewahrung zusammengerollt wurde",
+      "hypothesis": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse perkementumkument welches 29 3 viertel soll mal 24 5 zäume ist zu beginn sein es lebens zu auch bewahren zusammengeräut wurde"
+    },
+    {
+      "utterance_id": "fleurs_de_2086646754220140621",
+      "errors": 15,
+      "reference_words": 25,
+      "reference": "der australier mitchell gourley wurde elfter im stehenden super g der männer der tschechische konkurrent oldrich jelinek wurde sechzehnter im sitzenden super g der männer",
+      "hypothesis": "der australier mitchell gurley wurde erhaft am stehenden super gd menner der technische konkurrent aldrich jellyneck wurde 16 am sitzenen super gd menner"
+    }
+  ]
+}

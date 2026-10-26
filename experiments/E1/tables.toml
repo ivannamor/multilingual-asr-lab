@@ -4,6 +4,19 @@
 name = "e1-baseline"
 kind = "scores"
 rows = [
-  { label = "Whisper-small (faster-whisper, int8, beam 5)", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_it-v1.json" },
-  { label = "Whisper-base (faster-whisper, int8, beam 5)", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_it-v1.json" },
+  { label = "Italian · Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_it-v1.json" },
+  { label = "Italian · Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_it-v1.json" },
+  { label = "German · Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-de/scores_de-v1.json" },
+  { label = "German · Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-de/scores_de-v1.json" },
+  { label = "English · Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-en/scores_en-v1.json" },
+  { label = "English · Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-en/scores_en-v1.json" },
+]
+
+[[table]]
+name = "e1-model-gap"
+kind = "comparisons"
+rows = [
+  { label = "Italian: base → small", file = "experiments/E1/results/model_base_vs_small_it.json" },
+  { label = "German: base → small", file = "experiments/E1/results/model_base_vs_small_de.json" },
+  { label = "English: base → small", file = "experiments/E1/results/model_base_vs_small_en.json" },
 ]

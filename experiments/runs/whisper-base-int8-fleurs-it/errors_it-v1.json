@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/base-int8",
+  "manifest": "data/fleurs_it/test.jsonl",
+  "normalizer": [
+    "it-v1"
+  ],
+  "n_utterances": 865,
+  "substitutions": 2595,
+  "deletions": 402,
+  "insertions": 422,
+  "distinct_confusion_pairs": 1901,
+  "substitutions_with_digits_or_symbols": 82,
+  "top_confusions": [
+    {
+      "reference": "e",
+      "hypothesis": "è",
+      "count": 33
+    },
+    {
+      "reference": "gli",
+      "hypothesis": "i",
+      "count": 31
+    },
+    {
+      "reference": "l",
+      "hypothesis": "la",
+      "count": 20
+    },
+    {
+      "reference": "è",
+      "hypothesis": "e",
+      "count": 14
+    },
+    {
+      "reference": "la",
+      "hypothesis": "alla",
+      "count": 11
+    },
+    {
+      "reference": "c",
+      "hypothesis": "cristo",
+      "count": 9
+    },
+    {
+      "reference": "ph",
+      "hypothesis": "piacca",
+      "count": 8
+    },
+    {
+      "reference": "delle",
+      "hypothesis": "dell",
+      "count": 8
+    },
+    {
+      "reference": "d",
+      "hypothesis": "dopo",
+      "count": 7
+    },
+    {
+      "reference": "giza",
+      "hypothesis": "gizza",
+      "count": 7
+    },
+    {
+      "reference": "agli",
+      "hypothesis": "ai",
+      "count": 6
+    },
+    {
+      "reference": "miglior",
+      "hypothesis": "migliore",
+      "count": 6
+    },
+    {
+      "reference": "all",
+      "hypothesis": "al",
+      "count": 6
+    },
+    {
+      "reference": "sia",
+      "hypothesis": "è",
+      "count": 6
+    },
+    {
+      "reference": "temperature",
+      "hypothesis": "temperatura",
+      "count": 6
+    },
+    {
+      "reference": "è",
+      "hypothesis": "ha",
+      "count": 6
+    },
+    {
+      "reference": "km",
+      "hypothesis": "chilometri",
+      "count": 6
+    },
+    {
+      "reference": "il",
+      "hypothesis": "al",
+      "count": 6
+    },
+    {
+      "reference": "casablanca",
+      "hypothesis": "blanca",
+      "count": 6
+    },
+    {
+      "reference": "a",
+      "hypothesis": "al",
+      "count": 6
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "a",
+      "count": 36
+    },
+    {
+      "word": "e",
+      "count": 34
+    },
+    {
+      "word": "in",
+      "count": 17
+    },
+    {
+      "word": "i",
+      "count": 17
+    },
+    {
+      "word": "ha",
+      "count": 15
+    },
+    {
+      "word": "di",
+      "count": 13
+    },
+    {
+      "word": "è",
+      "count": 11
+    },
+    {
+      "word": "il",
+      "count": 9
+    },
+    {
+      "word": "si",
+      "count": 8
+    },
+    {
+      "word": "l",
+      "count": 7
+    },
+    {
+      "word": "le",
+      "count": 7
+    },
+    {
+      "word": "sotto",
+      "count": 6
+    },
+    {
+      "word": "con",
+      "count": 6
+    },
+    {
+      "word": "00",
+      "count": 6
+    },
+    {
+      "word": "sci",
+      "count": 5
+    },
+    {
+      "word": "un",
+      "count": 4
+    },
+    {
+      "word": "dei",
+      "count": 4
+    },
+    {
+      "word": "o",
+      "count": 4
+    },
+    {
+      "word": "tra",
+      "count": 4
+    },
+    {
+      "word": "ma",
+      "count": 3
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "di",
+      "count": 32
+    },
+    {
+      "word": "a",
+      "count": 18
+    },
+    {
+      "word": "in",
+      "count": 15
+    },
+    {
+      "word": "l",
+      "count": 14
+    },
+    {
+      "word": "e",
+      "count": 12
+    },
+    {
+      "word": "i",
+      "count": 12
+    },
+    {
+      "word": "si",
+      "count": 11
+    },
+    {
+      "word": "è",
+      "count": 11
+    },
+    {
+      "word": "il",
+      "count": 9
+    },
+    {
+      "word": "un",
+      "count": 9
+    },
+    {
+      "word": "con",
+      "count": 8
+    },
+    {
+      "word": "al",
+      "count": 7
+    },
+    {
+      "word": "per",
+      "count": 7
+    },
+    {
+      "word": "sud",
+      "count": 7
+    },
+    {
+      "word": "o",
+      "count": 6
+    },
+    {
+      "word": "fa",
+      "count": 6
+    },
+    {
+      "word": "più",
+      "count": 6
+    },
+    {
+      "word": "casa",
+      "count": 6
+    },
+    {
+      "word": "d",
+      "count": 6
+    },
+    {
+      "word": "mosa",
+      "count": 6
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_it_14309954849873750903",
+      "errors": 22,
+      "reference_words": 33,
+      "reference": "l eee pc di asus precedentemente lanciato a livello mondiale per aspetti legati al risparmio e alla funzionalità si è trasformato in tema controverso in occasione dell evento it month di taipei 2007",
+      "hypothesis": "l ipc di alus precedentemente lanciata a livello mondiali per aspetti legati a risparmi alla funzionalità se trasformato in tema controversi una calzione delle eventi i t mont di tipei domi la sette"
+    },
+    {
+      "utterance_id": "fleurs_it_17320448726860654676",
+      "errors": 17,
+      "reference_words": 45,
+      "reference": "l uso corretto dei blog può aiutare gli studenti a diventare più critici e analitici rispondendo attivamente ai materiali di internet gli studenti possono definire la propria posizione all interno degli scritti degli altri oltre a delineare le proprie prospettive su specifiche questioni oravec 2002",
+      "hypothesis": "l uso corretto dei blog può aiutare i studenti di ventare più credici analitici respondandativamente materiale di internet i studenti possono definire alla proprio posizione all interno degli scritte degli altri oltre a delineare le prove prospettive su specifica questioni ora veco 2002"
+    },
+    {
+      "utterance_id": "fleurs_it_6282559625255999756",
+      "errors": 17,
+      "reference_words": 53,
+      "reference": "cinque minuti dopo l inizio dello spettacolo inizia il vento circa un minuto dopo il vento sta raggiungendo i 70 km h poi arriva la pioggia così violenta e torrenziale da pungerti la pelle come un ago poi inizia a cadere la grandine persone in preda al panico che urlano e scappano travolgendosi",
+      "hypothesis": "5 minuti dopo l inizio dell ospettacolo inizia al vento circa un minuto dopo il vento sta raggiungendo i 70 chilometri orari poi arriva la pioggia così violente e torrenziale da pungerti la pelle comunago poi inizia cadere la grande persone impre dal panico che urla scappano travolgendosi"
+    },
+    {
+      "utterance_id": "fleurs_it_9736141568307377538",
+      "errors": 16,
+      "reference_words": 34,
+      "reference": "ad accoglierlo c erano il vice primo ministro di singapore wong kan seng e il primo ministro di singapore lee hsien loong con il quale ha discusso di problematiche commerciali e legate al terrorismo",
+      "hypothesis": "ad accoglierlo c erano nel vice primemmistro i singapore woncan sang è il primo mistro i singapore li sien long con il quale ha discusso i problematiche commerciali è legato al terrorismo"
+    },
+    {
+      "utterance_id": "fleurs_it_16156880817865903347",
+      "errors": 16,
+      "reference_words": 37,
+      "reference": "la piana di giza o necropoli di giza nella valle dei re in egitto ospita numerose piramidi la più grande delle quali è la piramide di cheope varie tombe più piccole svariati templi e la grande sfinge",
+      "hypothesis": "la piena di gizza o un ecropoli di gizza nella valle dei reine gitto ospita numerosi piramidi la più grande delle quali è la piramida di keopé varietto un be più piccolo e svariati templi e la grande sfinge"
+    }
+  ]
+}

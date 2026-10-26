@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/base-int8",
+  "manifest": "data/fleurs_en/test.jsonl",
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_utterances": 647,
+  "substitutions": 1047,
+  "deletions": 140,
+  "insertions": 264,
+  "distinct_confusion_pairs": 857,
+  "substitutions_with_digits_or_symbols": 67,
+  "top_confusions": [
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 20
+    },
+    {
+      "reference": "and",
+      "hypothesis": "in",
+      "count": 14
+    },
+    {
+      "reference": "the",
+      "hypothesis": "a",
+      "count": 11
+    },
+    {
+      "reference": "a",
+      "hypothesis": "the",
+      "count": 11
+    },
+    {
+      "reference": "travellers",
+      "hypothesis": "travelers",
+      "count": 6
+    },
+    {
+      "reference": "the",
+      "hypothesis": "that",
+      "count": 6
+    },
+    {
+      "reference": "the",
+      "hypothesis": "this",
+      "count": 4
+    },
+    {
+      "reference": "had",
+      "hypothesis": "has",
+      "count": 4
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometers",
+      "count": 4
+    },
+    {
+      "reference": "others",
+      "hypothesis": "other",
+      "count": 3
+    },
+    {
+      "reference": "schengen",
+      "hypothesis": "shenzhen",
+      "count": 3
+    },
+    {
+      "reference": "the",
+      "hypothesis": "to",
+      "count": 3
+    },
+    {
+      "reference": "travelling",
+      "hypothesis": "traveling",
+      "count": 3
+    },
+    {
+      "reference": "is",
+      "hypothesis": "it's",
+      "count": 3
+    },
+    {
+      "reference": "d",
+      "hypothesis": "ad",
+      "count": 3
+    },
+    {
+      "reference": "shock",
+      "hypothesis": "shot",
+      "count": 3
+    },
+    {
+      "reference": "marianas",
+      "hypothesis": "mariana's",
+      "count": 2
+    },
+    {
+      "reference": "twentieth",
+      "hypothesis": "20th",
+      "count": 2
+    },
+    {
+      "reference": "twelve",
+      "hypothesis": "12",
+      "count": 2
+    },
+    {
+      "reference": "bennet",
+      "hypothesis": "bennett",
+      "count": 2
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 17
+    },
+    {
+      "word": "a",
+      "count": 11
+    },
+    {
+      "word": "it",
+      "count": 9
+    },
+    {
+      "word": "that",
+      "count": 5
+    },
+    {
+      "word": "and",
+      "count": 5
+    },
+    {
+      "word": "of",
+      "count": 4
+    },
+    {
+      "word": "re",
+      "count": 4
+    },
+    {
+      "word": "in",
+      "count": 3
+    },
+    {
+      "word": "germ",
+      "count": 2
+    },
+    {
+      "word": "one",
+      "count": 2
+    },
+    {
+      "word": "hundred",
+      "count": 2
+    },
+    {
+      "word": "thirty",
+      "count": 2
+    },
+    {
+      "word": "super",
+      "count": 2
+    },
+    {
+      "word": "only",
+      "count": 2
+    },
+    {
+      "word": "time",
+      "count": 2
+    },
+    {
+      "word": "team",
+      "count": 2
+    },
+    {
+      "word": "percent",
+      "count": 2
+    },
+    {
+      "word": "35",
+      "count": 2
+    },
+    {
+      "word": "no",
+      "count": 2
+    },
+    {
+      "word": "eee",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "to",
+      "count": 21
+    },
+    {
+      "word": "the",
+      "count": 18
+    },
+    {
+      "word": "a",
+      "count": 9
+    },
+    {
+      "word": "and",
+      "count": 8
+    },
+    {
+      "word": "in",
+      "count": 7
+    },
+    {
+      "word": "of",
+      "count": 5
+    },
+    {
+      "word": "that",
+      "count": 4
+    },
+    {
+      "word": "u",
+      "count": 3
+    },
+    {
+      "word": "or",
+      "count": 3
+    },
+    {
+      "word": "an",
+      "count": 3
+    },
+    {
+      "word": "i",
+      "count": 3
+    },
+    {
+      "word": "most",
+      "count": 3
+    },
+    {
+      "word": "be",
+      "count": 3
+    },
+    {
+      "word": "this",
+      "count": 2
+    },
+    {
+      "word": "sun",
+      "count": 2
+    },
+    {
+      "word": "was",
+      "count": 2
+    },
+    {
+      "word": "one",
+      "count": 2
+    },
+    {
+      "word": "spring",
+      "count": 2
+    },
+    {
+      "word": "we",
+      "count": 2
+    },
+    {
+      "word": "next",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_en_2642023010607031328",
+      "errors": 18,
+      "reference_words": 28,
+      "reference": "during the struggle for independence organised by the mau movement a peaceful gathering in the town resulted in the killing of the paramount chief tupua tamasese lealofi iii",
+      "hypothesis": "during the struggle for independence where can i spend a mile moving a peaceful gathering in the town resulted in the killing of the paramount chi to poa to masase they'll know for you the third"
+    },
+    {
+      "utterance_id": "fleurs_en_4446007980468141561",
+      "errors": 16,
+      "reference_words": 41,
+      "reference": "while this is often only an inaccurate stereotype the best way to get along in paris still is to be on your best behavior acting like someone who is bien élevé well brought up it will make getting about considerably easier",
+      "hypothesis": "while it is often an inaccurate stereotype the best way to get along in parisists is still beyond your best behavior actually like somebody who is uh beyond ebay well brought up you'll be getting around about considerably easier"
+    },
+    {
+      "utterance_id": "fleurs_en_3927163358777802368",
+      "errors": 15,
+      "reference_words": 49,
+      "reference": "researchers from princeton university in the united states and uppsala university in sweden reported the new species evolved in just two generations though this process had been believed to take much longer due to breeding between an endemic darwin finch geospiza fortes and the immigrant cactus finch geospiza conirostris",
+      "hypothesis": "researchers from princeton university and the united states and uppsala university in sweden reported the news that issues involved in just two generations those as process has been believed to take much longer due to the breeding between an endemic darwin finch joe spisa fortes and the immigrant cactus finch joe spisa kwoni dolsteris"
+    },
+    {
+      "utterance_id": "fleurs_en_7489324500816890474",
+      "errors": 12,
+      "reference_words": 28,
+      "reference": "during the struggle for independence organised by the mau movement a peaceful gathering in the town resulted in the killing of the paramount chief tupua tamasese lealofi iii",
+      "hypothesis": "during this struggle for independence organized by the mao movement a peaceful gathering in the town resulted in the killing of paramount chief to but to which i live the third"
+    },
+    {
+      "utterance_id": "fleurs_en_17991438134494400884",
+      "errors": 12,
+      "reference_words": 42,
+      "reference": "appropriate use of blogs can empower students to become more analytical and critical through actively responding to internet materials students can define their positions in the context of others writings as well as outline their own perspectives on particular issues oravec 2002",
+      "hypothesis": "upper beat use of blogs can empower students to become more analytical and critical through actively responding to internet materials students can define their positions in the context of others writing as well outlined with their perspectives on particular issues for octave two thousand and two"
+    }
+  ]
+}

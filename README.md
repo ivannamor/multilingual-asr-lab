@@ -15,20 +15,28 @@ Design decisions and their rationale are recorded in [docs/design.md](docs/desig
 
 ## Results
 
-**The full results, method and discussion are in [RESULTS.md](RESULTS.md).** FLEURS Italian test
-set (865 utterances, 3.5 hours), corpus-level rates, 95% bootstrap confidence intervals resampling
-the 346 distinct sentences:
+**The full results, method and discussion are in [RESULTS.md](RESULTS.md).** FLEURS test sets
+(Italian, German and English; 1.8 to 3.5 hours each), corpus-level rates, 95% bootstrap confidence
+intervals resampling the distinct sentences:
 
 <!-- BEGIN e1-baseline -->
 | System | Normalizer | Utterances / words | WER [95% CI] | S / D / I | CER [95% CI] |
 |---|---|---|---|---|---|
-| Whisper-small (faster-whisper, int8, beam 5) | `it-v1` | 865 / 21,255 | 7.46% [6.81%, 8.08%] | 1,223 / 169 / 193 | 2.11% [1.87%, 2.37%] |
-| Whisper-base (faster-whisper, int8, beam 5) | `it-v1` | 865 / 21,255 | 16.09% [15.13%, 17.12%] | 2,595 / 402 / 422 | 4.16% [3.84%, 4.49%] |
+| Italian · Whisper-small | `it-v1` | 865 / 21,255 | 7.46% [6.81%, 8.08%] | 1,223 / 169 / 193 | 2.11% [1.87%, 2.37%] |
+| Italian · Whisper-base | `it-v1` | 865 / 21,255 | 16.09% [15.13%, 17.12%] | 2,595 / 402 / 422 | 4.16% [3.84%, 4.49%] |
+| German · Whisper-small | `de-v1` | 862 / 18,703 | 9.31% [8.58%, 10.11%] | 1,335 / 165 / 242 | 2.58% [2.32%, 2.88%] |
+| German · Whisper-base | `de-v1` | 862 / 18,703 | 18.07% [16.91%, 19.31%] | 2,564 / 283 / 532 | 5.28% [4.92%, 5.73%] |
+| English · Whisper-small | `en-v1` | 647 / 14,467 | 6.66% [5.98%, 7.36%] | 708 / 101 / 154 | 2.75% [2.43%, 3.08%] |
+| English · Whisper-base | `en-v1` | 647 / 14,467 | 10.03% [9.09%, 10.99%] | 1,047 / 140 / 264 | 4.39% [3.95%, 4.82%] |
 <!-- END e1-baseline -->
 
 Key findings so far:
-- **Text normalization alone changes the WER of the same Whisper-small transcripts from 13.87% to
-  7.15%**: almost half of the raw word errors are casing, punctuation and formatting, not
+- **The gain from a larger model depends on the language**: Whisper-small removes about half of
+  Whisper-base's word errors in Italian and German, but only a third in English (experiment E1).
+  The German test set has only male speakers and the Italian one is 96% female, so language and
+  gender cannot be separated in these comparisons.
+- **Text normalization alone changes the WER of the same Whisper-small Italian transcripts from
+  13.87% to 7.15%**: almost half of the raw word errors are casing, punctuation and formatting, not
   recognition errors (experiment E3).
 - **A "standard" normalizer can inflate WER**: Whisper's own basic normalizer deletes text in
   parentheses, which FLEURS speakers read aloud, adding 1.87 points of WER (95% CI [1.03, 2.79]).
@@ -36,7 +44,7 @@ Key findings so far:
   8.6-9.3 WER points under every normalizer, but its relative error reduction ranges from 40% to
   55% depending on normalization.
 
-To reproduce: [Reproducing the baseline](#reproducing-the-baseline) and `experiments/E3/run.sh`.
+To reproduce: `experiments/E1/run.sh` and `experiments/E3/run.sh` (see [Experiments](#experiments)).
 
 ## Try it in your browser
 
@@ -103,7 +111,8 @@ its numbers (`run.sh`, and `run.ps1` for Windows) and a TOML spec of the tables 
 `experiments/runs/`, so every score and comparison can be recomputed without running a model:
 
 ```bash
-bash experiments/E3/run.sh    # rescoring, paired comparisons, error analysis, tables
+bash experiments/E1/run.sh    # baseline: Whisper-small and -base on Italian, German, English
+bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
 ```
 
 ### Run directories
