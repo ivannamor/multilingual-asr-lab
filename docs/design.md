@@ -396,3 +396,12 @@ notebook in CI (slow and dependent on external downloads).
 
 **Consequences.** Trying the project takes a click and a few minutes. Code that runs only on a GPU
 (Colab) is not exercised by CI; the notebook was executed locally on CPU before release.
+
+**Update (GPU on Colab).** The first Colab run failed on the GPU with `libcublas.so.12 is not
+found`: CTranslate2, used by faster-whisper, is built for CUDA 12, while the current Colab image
+ships a newer CUDA (and Python 3.13). The notebook now has a GPU setup cell, run only when a GPU is
+present: it installs the CUDA 12 libraries from pip (`nvidia-cublas-cu12`, `nvidia-cudnn-cu12`),
+loads them with `ctypes` (they are not on the system library path), and checks the GPU with
+Whisper-tiny. Any failure falls back to the CPU with a message instead of stopping the notebook.
+Verified on a Colab T4: 30 utterances with Whisper-small in about one second, against a few minutes
+on the CPU; the fallback path was exercised on a machine without a GPU.
