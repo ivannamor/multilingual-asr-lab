@@ -13,10 +13,11 @@ dependencies = [
     "numpy>=2.4.6",
     "soundfile>=0.14.0",
     "soxr>=1.1.0",
+    "tqdm>=4.70.1",
 ]
 
 [project.scripts]
-asr-lab = "asr_lab:main"
+asr-lab = "asr_lab.cli:main"
 
 [build-system]
 requires = ["uv_build>=0.13.5,<0.14.0"]

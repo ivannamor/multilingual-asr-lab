@@ -129,9 +129,22 @@ Utterances of the same speaker are correlated; pass `groups=speaker_ids` to resa
 speakers instead of single utterances, which gives wider and more honest intervals. Results are
 reproducible: the random generator is seeded (`seed=0` by default).
 
+### Running a model on a dataset
+
+```bash
+# Transcribe a manifest; --limit N runs on the first N utterances only
+uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-int8-fleurs-it
+```
+
+A run directory holds `predictions.jsonl` (one raw hypothesis per utterance) and `run.json`
+(model name and decoding settings, manifest SHA-256, git commit, environment, audio duration,
+processing time and real-time factor). Runs are resumable: running the same command again skips
+the utterances already transcribed, and running different settings in the same directory is an
+error. Run directories are not stored in git.
+
 ### Transcribing with Whisper
 
-Models share one interface (`ASRModel.transcribe`). The Whisper adapter uses
+From Python, models share one interface (`ASRModel.transcribe`). The Whisper adapter uses
 [faster-whisper](https://github.com/SYSTRAN/faster-whisper); weights are downloaded on first use.
 This example is not executed by the test suite because it needs the model and the FLEURS data.
 

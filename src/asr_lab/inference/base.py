@@ -11,6 +11,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 import numpy as np
 import soundfile as sf
@@ -56,6 +57,11 @@ class ASRModel(ABC):
     @abstractmethod
     def name(self) -> str:
         """Model identifier reported with every result, e.g. ``"openai/whisper-small"``."""
+
+    @property
+    def config(self) -> dict[str, Any]:
+        """Settings that can change the output, stored with every run; adapters override it."""
+        return {}
 
     @abstractmethod
     def _transcribe_batch(self, samples: Sequence[AudioSample]) -> list[Hypothesis]:
