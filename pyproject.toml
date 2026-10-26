@@ -7,7 +7,9 @@ authors = [
     { name = "Ivan Namor", email = "namorivan@gmail.com" }
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "numpy>=2.4.6",
+]
 
 [project.scripts]
 asr-lab = "asr_lab:main"
