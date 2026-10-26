@@ -113,10 +113,11 @@ def _run_dir(tmp_path: Path, limit: int | None = None) -> tuple[Path, Path]:
     return run_dir, manifest
 
 
-def test_score_run_writes_scores_json(tmp_path: Path) -> None:
+def test_score_run_writes_a_scores_file(tmp_path: Path) -> None:
     run_dir, manifest = _run_dir(tmp_path)
-    scores = score_run(run_dir, n_resamples=100)
-    saved = json.loads((run_dir / "scores.json").read_text(encoding="utf-8"))
+    scores, path = score_run(run_dir, n_resamples=100)
+    assert path == run_dir / "scores_it-v1_r100.json"
+    saved = json.loads(path.read_text(encoding="utf-8"))
     assert saved == scores
     assert scores["model"] == "fake-model"
     assert scores["manifest_sha256"] == file_sha256(manifest)
@@ -125,7 +126,21 @@ def test_score_run_writes_scores_json(tmp_path: Path) -> None:
 
 def test_score_run_respects_the_run_limit(tmp_path: Path) -> None:
     run_dir, _ = _run_dir(tmp_path, limit=2)
-    assert score_run(run_dir, n_resamples=50)["n_utterances"] == 2
+    scores, _ = score_run(run_dir, n_resamples=50)
+    assert scores["n_utterances"] == 2
+
+
+def test_different_normalizers_are_saved_to_different_files(tmp_path: Path) -> None:
+    run_dir, _ = _run_dir(tmp_path)
+    _, default_path = score_run(run_dir)
+    _, basic_path = score_run(run_dir, normalizer=BASIC)
+    assert default_path.name == "scores_it-v1.json"
+    assert basic_path.name == "scores_basic-v1.json"
+    assert default_path.exists()  # not overwritten
+    first = json.loads(default_path.read_text(encoding="utf-8"))
+    _, again = score_run(run_dir)
+    second = json.loads(again.read_text(encoding="utf-8"))
+    assert first["wer"] == second["wer"]  # same settings, same result
 
 
 def test_score_run_rejects_a_changed_manifest(tmp_path: Path) -> None:
@@ -150,5 +165,6 @@ def test_summary_and_cli(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> 
     assert "4 utterances, 13 words" in output
     assert "WER 15.38%" in output
     assert "95% CI" in output
-    assert (run_dir / "scores.json").exists()
-    assert format_summary(json.loads((run_dir / "scores.json").read_text())) in output
+    path = run_dir / "scores_it-v1_r50.json"
+    assert f"Scores: {path}" in output
+    assert format_summary(json.loads(path.read_text(encoding="utf-8"))) in output

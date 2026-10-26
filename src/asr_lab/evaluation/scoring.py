@@ -32,7 +32,8 @@ from asr_lab.inference.base import Hypothesis
 from asr_lab.inference.predictions import read_predictions
 from asr_lab.provenance import file_sha256, git_commit, utc_now
 
-SCORES_FILE = "scores.json"
+DEFAULT_N_RESAMPLES = 1000
+DEFAULT_SEED = 0
 
 
 def score_predictions(
@@ -40,9 +41,9 @@ def score_predictions(
     hypotheses: Sequence[Hypothesis],
     *,
     normalizer: Normalizer | None = None,
-    n_resamples: int = 1000,
+    n_resamples: int = DEFAULT_N_RESAMPLES,
     level: float = 0.95,
-    seed: int = 0,
+    seed: int = DEFAULT_SEED,
 ) -> dict[str, Any]:
     """Compute corpus WER and CER with bootstrap confidence intervals.
 
@@ -88,12 +89,17 @@ def score_run(
     manifest_path: Path | None = None,
     *,
     normalizer: Normalizer | None = None,
-    n_resamples: int = 1000,
-    seed: int = 0,
-) -> dict[str, Any]:
-    """Score a run directory and write ``scores.json`` next to its predictions.
+    n_resamples: int = DEFAULT_N_RESAMPLES,
+    seed: int = DEFAULT_SEED,
+) -> tuple[dict[str, Any], Path]:
+    """Score a run directory and save the scores next to its predictions.
 
-    The manifest defaults to the one recorded in the run's ``run.json``.
+    The manifest defaults to the one recorded in the run's ``run.json``. The
+    file name depends on the scoring settings (see ``scores_filename``), so
+    scoring the same run with another normalizer never overwrites a result.
+
+    Returns:
+        The scores and the path of the file they were written to.
     """
     run_path = run_dir / "run.json"
     run = json.loads(run_path.read_text(encoding="utf-8")) if run_path.exists() else {}
@@ -117,9 +123,31 @@ def score_run(
         "scored_at": utc_now(),
         "scoring_git_commit": git_commit(),
     }
+    path = run_dir / scores_filename(scores["normalizer"], n_resamples, seed)
     text = json.dumps(scores, ensure_ascii=False, indent=2) + "\n"
-    (run_dir / SCORES_FILE).write_text(text, encoding="utf-8", newline="\n")
-    return scores
+    path.write_text(text, encoding="utf-8", newline="\n")
+    return scores, path
+
+
+def scores_filename(normalizers: Sequence[str], n_resamples: int, seed: int) -> str:
+    """File name for a set of scoring settings.
+
+    Settings that change the result are part of the name; defaults are left out
+    to keep the common case short. Same settings give the same name and, since
+    scoring is deterministic, the same content.
+
+    Example:
+        >>> scores_filename(["it-v1"], 1000, 0)
+        'scores_it-v1.json'
+        >>> scores_filename(["de-v1", "it-v1"], 5000, 1)
+        'scores_de-v1+it-v1_r5000_s1.json'
+    """
+    name = "scores_" + "+".join(normalizers)
+    if n_resamples != DEFAULT_N_RESAMPLES:
+        name += f"_r{n_resamples}"
+    if seed != DEFAULT_SEED:
+        name += f"_s{seed}"
+    return name + ".json"
 
 
 def format_summary(scores: dict[str, Any]) -> str:
