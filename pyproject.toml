@@ -44,5 +44,11 @@ select = [
 docstring-code-format = true
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
-addopts = ["-ra", "--strict-markers", "--import-mode=importlib"]
+testpaths = ["tests", "src", "README.md"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--import-mode=importlib",
+    "--doctest-modules",
+    "--doctest-glob=README.md",
+]
