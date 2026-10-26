@@ -96,7 +96,7 @@ transcribed, and running different settings in the same directory is an error. R
 are not stored in git.
 
 `asr-lab score` normalizes references and hypotheses with each utterance's language normalizer
-(or `--normalizer-lang`), computes corpus WER and CER, and bootstraps confidence intervals for
+(or the one named by `--normalizer`), computes corpus WER and CER, and bootstraps confidence intervals for
 every meaningful resampling unit: utterances, readings of the same sentence
 (`metadata.sentence_id`) and speakers with several utterances. The widest interval is reported,
 because correlated utterances make narrower intervals over-optimistic. The scores file also
@@ -122,10 +122,10 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--limit` | all | first N utterances of the manifest |
 | `asr-lab score` | `--run` | (required) | run directory |
 | | `--manifest` | from `run.json` | override the manifest |
-| | `--normalizer-lang` | per utterance | one language's normalizer for every utterance |
+| | `--normalizer` | per utterance language | one normalizer by name for every utterance: `none`, `basic-v1`, `whisper-basic`, `it-v1`, `de-v1`, `en-v1` |
 | | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings (non-default values appear in the file name) |
 | `asr-lab errors` | `--run` | (required) | run directory |
-| | `--manifest`, `--normalizer-lang` | as `score` | as `score` |
+| | `--manifest`, `--normalizer` | as `score` | as `score` |
 | | `--top`, `--worst` | `20`, `5` | frequent errors listed, worst utterances shown |
 
 ## Python API
@@ -185,6 +185,7 @@ normalizer has a versioned name that should be reported with every result.
 | `basic-v1`, `en-v1` | Unicode NFC, unify apostrophes, lowercase, remove punctuation (apostrophes inside words are kept: "don't"), collapse whitespace |
 | `it-v1` | as above, then split elisions: "l'uomo" → "l uomo" |
 | `de-v1` | as above, then "ß" → "ss" (umlauts are kept) |
+| `whisper-basic` | reimplementation of OpenAI Whisper's `BasicTextNormalizer`: lowercase, remove text in brackets and parentheses, replace every mark, symbol and punctuation character (apostrophes included) with a space |
 
 Numbers are not normalized yet: "venti" and "20" still count as different words.
 
