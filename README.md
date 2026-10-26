@@ -22,8 +22,12 @@ Corpus-level rates. Confidence intervals: percentile bootstrap, 1,000 resamples,
 346 distinct FLEURS sentences (each is read by two or three speakers, so readings of the same
 sentence are correlated; resampling single utterances would give an interval about 18% narrower).
 RTF = processing time / audio duration on a 12-core ARM64 laptop CPU, 4 threads, no GPU.
-Part of the errors are normalization artefacts rather than recognition errors (numbers and
-symbols, e.g. "20" vs "vent'", "$" vs "dollari"), which experiment E3 will quantify.
+Error analysis (`asr-lab errors`): most errors are substitutions (1,223 vs 169 deletions and 193
+insertions), spread over 885 distinct word pairs. Part of them are normalization artefacts rather
+than recognition errors (abbreviations and numbers such as "km" vs "chilometri", elided forms such
+as "delle" vs "dell'"), which experiment E3 will quantify; others are rare proper nouns ("Geospiza"
+recognized as "joe s pizza"). Whisper's known subtitle hallucination appears at the end of 5 of the
+865 utterances ("Sottotitoli e revisione a cura di QTSS", text learned from subtitled videos).
 To reproduce: [Reproducing the baseline](#reproducing-the-baseline).
 
 ## Quick start
@@ -62,6 +66,7 @@ uv sync
 uv run python -m asr_lab.data.ingest --lang it --split test --output data/fleurs_it
 uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-int8-fleurs-it
 uv run asr-lab score --run runs/whisper-small-int8-fleurs-it
+uv run asr-lab errors --run runs/whisper-small-int8-fleurs-it   # most frequent errors
 ```
 
 Expected output of the last command (transcription takes about 25 minutes on a laptop CPU;
@@ -82,6 +87,9 @@ A run directory holds:
   duration, processing time and real-time factor;
 - `scores_<normalizer>.json`: one file per scoring setting, e.g. `scores_it-v1.json`, so scoring
   the same predictions with another normalizer never overwrites a result.
+- `errors_<normalizer>.json`: most frequent substitutions, deletions and insertions, and the
+  utterances with the most errors (written by `asr-lab errors`, which also prints aligned
+  reference/hypothesis pairs in the style of NIST sclite).
 
 Runs are resumable: running the same `transcribe` command again skips the utterances already
 transcribed, and running different settings in the same directory is an error. Run directories
@@ -116,6 +124,9 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--manifest` | from `run.json` | override the manifest |
 | | `--normalizer-lang` | per utterance | one language's normalizer for every utterance |
 | | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings (non-default values appear in the file name) |
+| `asr-lab errors` | `--run` | (required) | run directory |
+| | `--manifest`, `--normalizer-lang` | as `score` | as `score` |
+| | `--top`, `--worst` | `20`, `5` | frequent errors listed, worst utterances shown |
 
 ## Python API
 
