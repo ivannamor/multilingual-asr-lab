@@ -6,11 +6,25 @@ A reproducible framework to evaluate, compare and improve automatic speech recog
 models on Italian, German and English, with a focus on statistically sound evaluation and
 data-centric optimization.
 
-> **Status:** early development. Evaluation (WER/CER, text normalization, bootstrap confidence
-> intervals), FLEURS ingestion and the common model interface are in place; the first model
-> adapter and the experiments are next.
+> **Status:** early development. The evaluation pipeline (FLEURS ingestion, Whisper inference,
+> WER/CER with versioned normalizers and bootstrap confidence intervals) works end to end and has
+> produced the first baseline; the experiments comparing models and settings are next.
 
 Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
+
+## Results
+
+| Model | Dataset | Utterances / words | Normalizer | WER [95% CI] | CER [95% CI] | RTF |
+|---|---|---|---|---|---|---|
+| Whisper-small (faster-whisper, int8, beam 5) | FLEURS it test | 865 / 21,255 | `it-v1` | **7.46%** [6.81, 8.08] | 2.11% [1.87, 2.37] | 0.11 |
+
+Corpus-level rates. Confidence intervals: percentile bootstrap, 1,000 resamples, resampling the
+346 distinct FLEURS sentences (each is read by two or three speakers, so readings of the same
+sentence are correlated; resampling single utterances would give an interval about 18% narrower).
+RTF = processing time / audio duration on a 12-core ARM64 laptop CPU, 4 threads, no GPU.
+Part of the errors are normalization artefacts rather than recognition errors (numbers and
+symbols, e.g. "20" vs "vent'", "$" vs "dollari"), which experiment E3 will quantify.
+To reproduce: [Reproducing the baseline](#reproducing-the-baseline).
 
 ## Quick start
 
@@ -39,7 +53,71 @@ uv run python -m asr_lab.data.ingest --lang it --split test --output data/fleurs
 FLEURS has no speaker ids: each utterance gets a placeholder `speaker_id`, and
 `metadata["sentence_id"]` groups the utterances that read the same sentence.
 
-## Usage
+## Command line
+
+### Reproducing the baseline
+
+```bash
+uv sync
+uv run python -m asr_lab.data.ingest --lang it --split test --output data/fleurs_it
+uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-int8-fleurs-it
+uv run asr-lab score --run runs/whisper-small-int8-fleurs-it
+```
+
+Expected output of the last command (transcription takes about 25 minutes on a laptop CPU;
+timings vary with the machine):
+
+```
+faster-whisper/small-int8 on data/fleurs_it/test.jsonl
+865 utterances, 21255 words, 128744 characters; normalizer it-v1
+WER 7.46%  95% CI [6.81%, 8.08%]  (resampling sentence_id, n=346)
+CER 2.11%  95% CI [1.87%, 2.37%]  (resampling sentence_id, n=346)
+```
+
+### Run directories
+
+A run directory holds:
+- `predictions.jsonl`: one raw (not normalized) hypothesis per utterance;
+- `run.json`: model name and decoding settings, manifest SHA-256, git commit, environment, audio
+  duration, processing time and real-time factor;
+- `scores_<normalizer>.json`: one file per scoring setting, e.g. `scores_it-v1.json`, so scoring
+  the same predictions with another normalizer never overwrites a result.
+
+Runs are resumable: running the same `transcribe` command again skips the utterances already
+transcribed, and running different settings in the same directory is an error. Run directories
+are not stored in git.
+
+`asr-lab score` normalizes references and hypotheses with each utterance's language normalizer
+(or `--normalizer-lang`), computes corpus WER and CER, and bootstraps confidence intervals for
+every meaningful resampling unit: utterances, readings of the same sentence
+(`metadata.sentence_id`) and speakers with several utterances. The widest interval is reported,
+because correlated utterances make narrower intervals over-optimistic. The scores file also
+records the number of utterances and reference words, S/D/I counts, the model and its settings,
+and the manifest hash.
+
+### Options
+
+Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe --help`.
+
+| Command | Option | Default | Meaning |
+|---|---|---|---|
+| `python -m asr_lab.data.ingest` | `--lang` | (required) | `it`, `de` or `en` |
+| | `--split` | `test` | `train`, `dev` or `test` |
+| | `--output` | (required) | dataset folder (manifest + audio) |
+| | `--max-utterances`, `--seed` | all, `0` | seeded random subset |
+| `asr-lab transcribe` | `--manifest`, `--output` | (required) | input manifest, run directory |
+| | `--model-size` | `small` | any faster-whisper model, e.g. `large-v3-turbo` |
+| | `--compute-type` | `int8` | weight precision, e.g. `float32` |
+| | `--beam-size` | `5` | `1` = greedy decoding |
+| | `--cpu-threads` | `4` | more threads were slower on the development machine |
+| | `--batch-size` | `8` | utterances written to disk at a time |
+| | `--limit` | all | first N utterances of the manifest |
+| `asr-lab score` | `--run` | (required) | run directory |
+| | `--manifest` | from `run.json` | override the manifest |
+| | `--normalizer-lang` | per utterance | one language's normalizer for every utterance |
+| | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings (non-default values appear in the file name) |
+
+## Python API
 
 Open a Python console with `uv run python`.
 
@@ -129,30 +207,6 @@ Utterances of the same speaker are correlated; pass `groups=speaker_ids` to resa
 speakers instead of single utterances, which gives wider and more honest intervals. Results are
 reproducible: the random generator is seeded (`seed=0` by default).
 
-### Running a model on a dataset
-
-```bash
-# Transcribe a manifest; --limit N runs on the first N utterances only
-uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-int8-fleurs-it
-
-# Corpus WER and CER with 95% bootstrap confidence intervals, written to scores.json
-uv run asr-lab score --run runs/whisper-small-int8-fleurs-it
-```
-
-A run directory holds `predictions.jsonl` (one raw hypothesis per utterance) and `run.json`
-(model name and decoding settings, manifest SHA-256, git commit, environment, audio duration,
-processing time and real-time factor). Runs are resumable: running the same command again skips
-the utterances already transcribed, and running different settings in the same directory is an
-error. Run directories are not stored in git.
-
-`asr-lab score` normalizes references and hypotheses with each utterance's language normalizer
-(or `--normalizer-lang`), computes corpus WER and CER, and bootstraps confidence intervals for
-every meaningful resampling unit: utterances, readings of the same sentence
-(`metadata.sentence_id`) and speakers with several utterances. The widest interval is reported,
-because correlated utterances make narrower intervals over-optimistic. `scores.json` also
-records the number of utterances and reference words, the normalizer, S/D/I counts, the model and
-its settings, and the manifest hash.
-
 ### Transcribing with Whisper
 
 From Python, models share one interface (`ASRModel.transcribe`). The Whisper adapter uses
@@ -190,4 +244,5 @@ ErrorCounts(hits=1, substitutions=1, deletions=1, insertions=0)
 
 ```
 
-All examples in this README are executed by the test suite, so they always match the code.
+All Python examples with a `>>>` prompt are executed by the test suite, so they always match
+the code.

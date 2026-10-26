@@ -13,7 +13,12 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from asr_lab.evaluation.normalize import get_normalizer
-from asr_lab.evaluation.scoring import SCORES_FILE, format_summary, score_run
+from asr_lab.evaluation.scoring import (
+    DEFAULT_N_RESAMPLES,
+    DEFAULT_SEED,
+    format_summary,
+    score_run,
+)
 from asr_lab.inference.faster_whisper import FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
 
@@ -48,8 +53,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         default=None,
         help="use one language's normalizer for every utterance (default: each utterance's)",
     )
-    score.add_argument("--n-resamples", type=int, default=1000)
-    score.add_argument("--seed", type=int, default=0)
+    score.add_argument("--n-resamples", type=int, default=DEFAULT_N_RESAMPLES)
+    score.add_argument("--seed", type=int, default=DEFAULT_SEED)
 
     args = parser.parse_args(argv)
     if args.command == "transcribe":
@@ -65,7 +70,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         print(f"Predictions: {path}")
     elif args.command == "score":
         normalizer = get_normalizer(args.normalizer_lang) if args.normalizer_lang else None
-        scores = score_run(
+        scores, path = score_run(
             args.run,
             args.manifest,
             normalizer=normalizer,
@@ -73,7 +78,7 @@ def main(argv: Sequence[str] | None = None) -> None:
             seed=args.seed,
         )
         print(format_summary(scores))
-        print(f"Scores: {args.run / SCORES_FILE}")
+        print(f"Scores: {path}")
 
 
 if __name__ == "__main__":

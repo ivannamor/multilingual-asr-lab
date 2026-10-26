@@ -20,6 +20,7 @@ made; superseded entries are marked, not deleted.
 | 11 | [Local Whisper inference with faster-whisper, int8, 4 threads](#11-local-whisper-inference-with-faster-whisper-int8-4-threads) | inference |
 | 12 | [One run directory per configuration, resumable, with provenance](#12-one-run-directory-per-configuration-resumable-with-provenance) | engineering |
 | 13 | [Report the widest confidence interval across resampling units](#13-report-the-widest-confidence-interval-across-resampling-units) | statistics |
+| 14 | [Scores files are named after their settings](#14-scores-files-are-named-after-their-settings) | engineering |
 
 ---
 
@@ -276,7 +277,7 @@ narrow. Which grouping matters most depends on the dataset.
 `metadata.sentence_id` when every utterance has one; speakers when at least one speaker has
 several utterances (FLEURS speaker ids are per-utterance placeholders, see decision 7, so this
 unit is skipped there). The widest interval is reported as the headline; all of them are stored in
-`scores.json`. The headline is printed with its unit and number of units, e.g.
+the scores file. The headline is printed with its unit and number of units, e.g.
 `WER 5.96% 95% CI [2.38%, 10.35%] (resampling utterance, n=10)`.
 
 **Alternatives rejected.** Always resampling utterances (over-optimistic with correlated data);
@@ -285,3 +286,19 @@ choosing one unit per dataset by hand (easy to forget, and an implicit choice in
 **Consequences.** The reported uncertainty is conservative and the choice is automatic and
 visible. With few units (e.g. a small number of speakers) intervals become wide, which is the
 honest outcome rather than a defect.
+
+## 14. Scores files are named after their settings
+
+**Context.** Scoring is cheap and deterministic, so the same predictions are scored many times:
+with different normalizers (experiment E3) or bootstrap settings. A single `scores.json` per run
+directory would be overwritten each time.
+
+**Decision.** The file name contains every scoring setting that changes the result, leaving out
+defaults: `scores_it-v1.json`, `scores_basic-v1.json`, `scores_de-v1+it-v1_r5000_s1.json` (several
+normalizers for a multilingual manifest, 5,000 resamples, seed 1).
+
+**Alternatives rejected.** One file overwritten on every call (results are lost silently);
+timestamped files (identical copies pile up, and it is unclear which one is current).
+
+**Consequences.** Same settings give the same file with the same content; different settings
+never collide. A cross-run view (e.g. MLflow) can be built on top of these files later.
