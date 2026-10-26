@@ -4,6 +4,7 @@ Usage::
 
     uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-it
     uv run asr-lab score --run runs/whisper-small-it
+    uv run asr-lab errors --run runs/whisper-small-it
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ import argparse
 from collections.abc import Sequence
 from pathlib import Path
 
+from asr_lab.evaluation.error_analysis import analyze_run, format_errors
 from asr_lab.evaluation.normalize import get_normalizer
 from asr_lab.evaluation.scoring import (
     DEFAULT_N_RESAMPLES,
@@ -56,6 +58,21 @@ def main(argv: Sequence[str] | None = None) -> None:
     score.add_argument("--n-resamples", type=int, default=DEFAULT_N_RESAMPLES)
     score.add_argument("--seed", type=int, default=DEFAULT_SEED)
 
+    errors = commands.add_parser(
+        "errors", help="most frequent errors and worst utterances of a run directory"
+    )
+    errors.add_argument("--run", required=True, type=Path, help="run directory")
+    errors.add_argument(
+        "--manifest", type=Path, default=None, help="default: the manifest recorded in run.json"
+    )
+    errors.add_argument(
+        "--normalizer-lang",
+        default=None,
+        help="use one language's normalizer for every utterance (default: each utterance's)",
+    )
+    errors.add_argument("--top", type=int, default=20, help="how many frequent errors to list")
+    errors.add_argument("--worst", type=int, default=5, help="how many worst utterances to show")
+
     args = parser.parse_args(argv)
     if args.command == "transcribe":
         model = FasterWhisperModel(
@@ -79,6 +96,13 @@ def main(argv: Sequence[str] | None = None) -> None:
         )
         print(format_summary(scores))
         print(f"Scores: {path}")
+    elif args.command == "errors":
+        normalizer = get_normalizer(args.normalizer_lang) if args.normalizer_lang else None
+        utterances, report, path = analyze_run(
+            args.run, args.manifest, normalizer=normalizer, top=args.top, worst=args.worst
+        )
+        print(format_errors(utterances, report, show=args.worst))
+        print(f"Errors: {path}")
 
 
 if __name__ == "__main__":

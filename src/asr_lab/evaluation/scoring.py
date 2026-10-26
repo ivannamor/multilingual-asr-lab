@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 from collections.abc import Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -55,17 +56,12 @@ def score_predictions(
         ValueError: if predictions are missing for some utterances or exist for
             utterances that are not in the manifest.
     """
-    by_id = _match(entries, hypotheses)
-    normalizers = [normalizer or get_normalizer(entry.lang) for entry in entries]
-    references = [norm(entry.text) for norm, entry in zip(normalizers, entries, strict=True)]
-    predicted = [
-        norm(by_id[entry.utterance_id].text)
-        for norm, entry in zip(normalizers, entries, strict=True)
-    ]
+    pairs = normalized_pairs(entries, hypotheses, normalizer)
+    references, predicted = pairs.references, pairs.hypotheses
     units = _resampling_units(entries)
     return {
         "n_utterances": len(entries),
-        "normalizer": sorted({norm.name for norm in normalizers}),
+        "normalizer": pairs.normalizer_names,
         "n_empty_hypotheses": sum(1 for text in predicted if not text),
         "wer": _rate_report(
             utterance_counts(references, predicted, word_tokens),
@@ -101,24 +97,14 @@ def score_run(
     Returns:
         The scores and the path of the file they were written to.
     """
-    run_path = run_dir / "run.json"
-    run = json.loads(run_path.read_text(encoding="utf-8")) if run_path.exists() else {}
-    if manifest_path is None:
-        if "manifest" not in run:
-            raise ValueError(f"No run.json with a manifest in {run_dir}; pass the manifest")
-        manifest_path = Path(run["manifest"])
-    manifest_sha256 = file_sha256(manifest_path)
-    if run.get("manifest_sha256") not in (None, manifest_sha256):
-        raise ValueError(f"{manifest_path} has changed since the run was transcribed")
-    entries = read_manifest(manifest_path)[: run.get("limit")]
-    hypotheses = read_predictions(run_dir / "predictions.jsonl")
+    run = load_run(run_dir, manifest_path)
     scores = {
-        "model": run.get("model"),
-        "model_config": run.get("model_config"),
-        "manifest": manifest_path.as_posix(),
-        "manifest_sha256": manifest_sha256,
+        "model": run.info.get("model"),
+        "model_config": run.info.get("model_config"),
+        "manifest": run.manifest_path.as_posix(),
+        "manifest_sha256": run.manifest_sha256,
         **score_predictions(
-            entries, hypotheses, normalizer=normalizer, n_resamples=n_resamples, seed=seed
+            run.entries, run.hypotheses, normalizer=normalizer, n_resamples=n_resamples, seed=seed
         ),
         "scored_at": utc_now(),
         "scoring_git_commit": git_commit(),
@@ -166,6 +152,75 @@ def format_summary(scores: dict[str, Any]) -> str:
             f"(resampling {report['headline_unit']}, n={headline['n_units']})"
         )
     return "\n".join(lines)
+
+
+@dataclass(frozen=True)
+class LoadedRun:
+    """A run directory with its manifest entries and predictions, ready to be scored."""
+
+    info: dict[str, Any]  # content of run.json, empty if there is none
+    manifest_path: Path
+    manifest_sha256: str
+    entries: list[ManifestEntry]  # limited like the run
+    hypotheses: list[Hypothesis]
+
+
+@dataclass(frozen=True)
+class NormalizedPairs:
+    """References and hypotheses normalized identically, in manifest order."""
+
+    references: list[str]
+    hypotheses: list[str]
+    normalizer_names: list[str]
+
+
+def load_run(run_dir: Path, manifest_path: Path | None = None) -> LoadedRun:
+    """Read a run directory and its manifest (by default the one recorded in run.json).
+
+    Raises:
+        ValueError: if no manifest is known or it changed since the run was transcribed.
+    """
+    run_path = run_dir / "run.json"
+    info = json.loads(run_path.read_text(encoding="utf-8")) if run_path.exists() else {}
+    if manifest_path is None:
+        if "manifest" not in info:
+            raise ValueError(f"No run.json with a manifest in {run_dir}; pass the manifest")
+        manifest_path = Path(info["manifest"])
+    manifest_sha256 = file_sha256(manifest_path)
+    if info.get("manifest_sha256") not in (None, manifest_sha256):
+        raise ValueError(f"{manifest_path} has changed since the run was transcribed")
+    return LoadedRun(
+        info=info,
+        manifest_path=manifest_path,
+        manifest_sha256=manifest_sha256,
+        entries=read_manifest(manifest_path)[: info.get("limit")],
+        hypotheses=read_predictions(run_dir / "predictions.jsonl"),
+    )
+
+
+def normalized_pairs(
+    entries: Sequence[ManifestEntry],
+    hypotheses: Sequence[Hypothesis],
+    normalizer: Normalizer | None = None,
+) -> NormalizedPairs:
+    """Match predictions to manifest entries and normalize both sides identically.
+
+    Args:
+        normalizer: by default the normalizer of each utterance's language.
+
+    Raises:
+        ValueError: if predictions are missing for some utterances or exist for
+            utterances that are not in the manifest.
+    """
+    by_id = _match(entries, hypotheses)
+    normalizers = [normalizer or get_normalizer(entry.lang) for entry in entries]
+    return NormalizedPairs(
+        references=[norm(e.text) for norm, e in zip(normalizers, entries, strict=True)],
+        hypotheses=[
+            norm(by_id[e.utterance_id].text) for norm, e in zip(normalizers, entries, strict=True)
+        ],
+        normalizer_names=sorted({norm.name for norm in normalizers}),
+    )
 
 
 def _match(
