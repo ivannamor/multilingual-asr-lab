@@ -58,7 +58,7 @@ def score_predictions(
     """
     pairs = normalized_pairs(entries, hypotheses, normalizer)
     references, predicted = pairs.references, pairs.hypotheses
-    units = _resampling_units(entries)
+    units = resampling_units(entries)
     return {
         "n_utterances": len(entries),
         "normalizer": pairs.normalizer_names,
@@ -239,7 +239,7 @@ def _match(
     return by_id
 
 
-def _resampling_units(entries: Sequence[ManifestEntry]) -> dict[str, list[str] | None]:
+def resampling_units(entries: Sequence[ManifestEntry]) -> dict[str, list[str] | None]:
     """Group ids for each resampling unit that is meaningful for these entries."""
     units: dict[str, list[str] | None] = {"utterance": None}
     sentence_ids = [entry.metadata.get("sentence_id") for entry in entries]

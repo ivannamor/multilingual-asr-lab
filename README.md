@@ -8,27 +8,34 @@ data-centric optimization.
 
 > **Status:** early development. The evaluation pipeline (FLEURS ingestion, Whisper inference,
 > WER/CER with versioned normalizers and bootstrap confidence intervals) works end to end and has
-> produced the first baseline; the experiments comparing models and settings are next.
+> produced the first results (baseline and text normalization); more experiments are next.
 
 Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
 
 ## Results
 
-| Model | Dataset | Utterances / words | Normalizer | WER [95% CI] | CER [95% CI] | RTF |
-|---|---|---|---|---|---|---|
-| Whisper-small (faster-whisper, int8, beam 5) | FLEURS it test | 865 / 21,255 | `it-v1` | **7.46%** [6.81, 8.08] | 2.11% [1.87, 2.37] | 0.11 |
+**The full results, method and discussion are in [RESULTS.md](RESULTS.md).** FLEURS Italian test
+set (865 utterances, 3.5 hours), corpus-level rates, 95% bootstrap confidence intervals resampling
+the 346 distinct sentences:
 
-Corpus-level rates. Confidence intervals: percentile bootstrap, 1,000 resamples, resampling the
-346 distinct FLEURS sentences (each is read by two or three speakers, so readings of the same
-sentence are correlated; resampling single utterances would give an interval about 18% narrower).
-RTF = processing time / audio duration on a 12-core ARM64 laptop CPU, 4 threads, no GPU.
-Error analysis (`asr-lab errors`): most errors are substitutions (1,223 vs 169 deletions and 193
-insertions), spread over 885 distinct word pairs. Part of them are normalization artefacts rather
-than recognition errors (abbreviations and numbers such as "km" vs "chilometri", elided forms such
-as "delle" vs "dell'"), which experiment E3 will quantify; others are rare proper nouns ("Geospiza"
-recognized as "joe s pizza"). Whisper's known subtitle hallucination appears at the end of 5 of the
-865 utterances ("Sottotitoli e revisione a cura di QTSS", text learned from subtitled videos).
-To reproduce: [Reproducing the baseline](#reproducing-the-baseline).
+<!-- BEGIN e1-baseline -->
+| System | Normalizer | Utterances / words | WER [95% CI] | S / D / I | CER [95% CI] |
+|---|---|---|---|---|---|
+| Whisper-small (faster-whisper, int8, beam 5) | `it-v1` | 865 / 21,255 | 7.46% [6.81%, 8.08%] | 1,223 / 169 / 193 | 2.11% [1.87%, 2.37%] |
+| Whisper-base (faster-whisper, int8, beam 5) | `it-v1` | 865 / 21,255 | 16.09% [15.13%, 17.12%] | 2,595 / 402 / 422 | 4.16% [3.84%, 4.49%] |
+<!-- END e1-baseline -->
+
+Key findings so far:
+- **Text normalization alone changes the WER of the same Whisper-small transcripts from 13.87% to
+  7.15%**: almost half of the raw word errors are casing, punctuation and formatting, not
+  recognition errors (experiment E3).
+- **A "standard" normalizer can inflate WER**: Whisper's own basic normalizer deletes text in
+  parentheses, which FLEURS speakers read aloud, adding 1.87 points of WER (95% CI [1.03, 2.79]).
+- **Model rankings are stable, relative gains are not**: Whisper-small beats Whisper-base by
+  8.6-9.3 WER points under every normalizer, but its relative error reduction ranges from 40% to
+  55% depending on normalization.
+
+To reproduce: [Reproducing the baseline](#reproducing-the-baseline) and `experiments/E3/run.sh`.
 
 ## Quick start
 
@@ -79,6 +86,17 @@ WER 7.46%  95% CI [6.81%, 8.08%]  (resampling sentence_id, n=346)
 CER 2.11%  95% CI [1.87%, 2.37%]  (resampling sentence_id, n=346)
 ```
 
+### Experiments
+
+Each experiment has a folder in [`experiments/`](experiments/) with a script that regenerates all
+its numbers (`run.sh`, and `run.ps1` for Windows) and a TOML spec of the tables it contributes to
+[RESULTS.md](RESULTS.md). The transcripts of the runs used in the results are committed in
+`experiments/runs/`, so every score and comparison can be recomputed without running a model:
+
+```bash
+bash experiments/E3/run.sh    # rescoring, paired comparisons, error analysis, tables
+```
+
 ### Run directories
 
 A run directory holds:
@@ -127,6 +145,14 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | `asr-lab errors` | `--run` | (required) | run directory |
 | | `--manifest`, `--normalizer` | as `score` | as `score` |
 | | `--top`, `--worst` | `20`, `5` | frequent errors listed, worst utterances shown |
+| `asr-lab compare` | `--a`, `--b` | (required) | run directories of systems A and B (can be the same run) |
+| | `--normalizer-a`, `--normalizer-b` | per utterance language | normalizer of each side |
+| | `--metric` | `wer` | `wer` or `cer` |
+| | `--output` | none | save the comparison as JSON |
+| `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
+| | `--document` | `RESULTS.md` | document whose tables are regenerated |
+| | `--check` | off | only check that the document is up to date |
+| | `--allow-missing-markers` | off | skip tables the document does not show (README) |
 
 ## Python API
 

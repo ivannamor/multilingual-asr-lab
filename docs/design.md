@@ -23,6 +23,7 @@ made; superseded entries are marked, not deleted.
 | 14 | [Scores files are named after their settings](#14-scores-files-are-named-after-their-settings) | engineering |
 | 15 | [Whisper's basic normalizer is reimplemented, not imported](#15-whispers-basic-normalizer-is-reimplemented-not-imported) | evaluation |
 | 16 | [it-v2 writes numbers in words, but is not the default yet](#16-it-v2-writes-numbers-in-words-but-is-not-the-default-yet) | evaluation |
+| 17 | [Results tables are generated and checked against committed results](#17-results-tables-are-generated-and-checked-against-committed-results) | engineering |
 
 ---
 
@@ -347,3 +348,29 @@ paired difference (-0.31 points, 95% CI [-0.48, -0.15]), and digit/symbol substi
 56 to 10. The rules were chosen partly by looking at errors on the test set; they apply equally to
 every system and do not favour a model, but this is declared in the E3 report. Ordinals, fractions,
 Roman numerals and alternative spoken forms ("ventun anni", "dieci e mezza") are not handled.
+
+## 17. Results tables are generated and checked against committed results
+
+**Context.** Results are presented in a long document (`RESULTS.md`) and summarized in the README.
+Numbers typed by hand go stale or are copied wrongly (two hand-written values in the README were
+already caught by doctests), and experiment outputs lived only in a local, untracked `runs/`
+folder.
+
+**Decision.** Every experiment has a folder in `experiments/` with a script (`run.sh` and
+`run.ps1`) that regenerates all its numbers, and a TOML spec listing the tables it contributes.
+`asr-lab render-results` builds the tables from the JSON results and writes them between
+`<!-- BEGIN name -->` / `<!-- END name -->` markers, leaving the prose untouched. A test renders
+the documents in check mode and fails if any table differs from the committed results. The
+transcripts (`predictions.jsonl`, about 250 KB per run) and the scores, comparisons and error
+reports of the runs used in the results are committed in `experiments/runs/` and
+`experiments/<E>/results/`; `runs/` stays a local scratch area. Paired comparisons are produced
+by `asr-lab compare` and saved as JSON, never computed ad hoc.
+
+**Alternatives rejected.** A Jupyter notebook as the results document (hard to review in pull
+requests, outputs can be stale or depend on execution order; a notebook is planned instead as a
+hands-on quickstart); hand-written tables; not versioning predictions (every check would require
+re-running inference).
+
+**Consequences.** Anyone can verify every table from a clone in seconds. Prose numbers are still
+written by hand and must be checked when a chapter is written. The repository grows by a few
+hundred KB per run, acceptable for text predictions (audio is never committed).

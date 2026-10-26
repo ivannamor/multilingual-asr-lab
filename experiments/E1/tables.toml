@@ -1,0 +1,9 @@
+# Tables of the E1 chapter of RESULTS.md (rendered by: asr-lab render-results)
+
+[[table]]
+name = "e1-baseline"
+kind = "scores"
+rows = [
+  { label = "Whisper-small (faster-whisper, int8, beam 5)", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_it-v1.json" },
+  { label = "Whisper-base (faster-whisper, int8, beam 5)", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_it-v1.json" },
+]
