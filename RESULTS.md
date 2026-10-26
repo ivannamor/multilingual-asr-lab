@@ -15,11 +15,19 @@ that regenerates it.
 
 ## Executive summary
 
-- **Baseline.** Whisper-small (faster-whisper, int8, beam size 5) reaches **7.46% WER** (95% CI
-  [6.81, 8.08]) and 2.11% CER on the FLEURS Italian test set; Whisper-base reaches 16.09%.
-- **Normalization is a large hidden variable.** On the same Whisper-small transcripts, WER ranges
-  from 13.87% with no normalization to 7.15% with the most complete Italian normalizer. Almost
-  half of the raw word errors are casing, punctuation and formatting.
+- **Baseline in three languages.** On the FLEURS test sets, Whisper-small (faster-whisper, int8,
+  beam size 5) reaches **6.66% WER in English** (95% CI [5.98, 7.36]), **7.46% in Italian**
+  ([6.81, 8.08]) and **9.31% in German** ([8.58, 10.11]); Whisper-base reaches 10.03%, 16.09% and
+  18.07%.
+- **The benefit of the larger model depends on the language.** Whisper-small removes about half of
+  Whisper-base's word errors in Italian (54%) and German (48%), but only a third in English (34%),
+  where the smaller model is already much better.
+- **Language is confounded with speaker gender.** The German test set has only male voices and the
+  Italian one is 96% female, so the gaps between languages cannot be attributed to the language
+  alone.
+- **Normalization is a large hidden variable.** On the same Whisper-small Italian transcripts, WER
+  ranges from 13.87% with no normalization to 7.15% with the most complete Italian normalizer.
+  Almost half of the raw word errors are casing, punctuation and formatting.
 - **A widely used normalizer can make results worse.** Whisper's own basic normalizer deletes text
   in parentheses. In FLEURS that text is read aloud (103 of 865 references), so correctly
   transcribed words become insertions: +1.87 WER points (95% CI [1.03, 2.79]) compared with a
@@ -34,21 +42,28 @@ that regenerates it.
 
 ### Data
 
-FLEURS (Google), Italian test split, downloaded from the Hugging Face Hub and converted to 16 kHz
-mono 16-bit WAV with a JSONL manifest.
+FLEURS (Google), test splits for Italian, German and English (US), downloaded from the Hugging Face
+Hub and converted to 16 kHz mono 16-bit WAV with a JSONL manifest. FLEURS is built on FLoRes, a
+corpus of Wikipedia sentences translated into many languages, and the three test sets read almost
+the same sentences: 343 of them are in all three. The content is therefore close to parallel
+across languages, while the speakers are different.
 
-| | |
-|---|---|
-| Utterances | 865 (3.52 hours of audio) |
-| Distinct sentences | 346: each sentence is read by two or three speakers |
-| Duration per utterance | 5.3 s to 52.9 s, median 13.9 s |
-| Speaker gender | 827 female, 38 male utterances |
-| Speaker ids | not provided by FLEURS |
-| References | original transcripts with casing and punctuation; 103 contain text in parentheses that is read aloud |
+| | Italian | German | English |
+|---|---|---|---|
+| Utterances | 865 | 862 | 647 |
+| Hours of audio | 3.52 | 3.15 | 1.77 |
+| Distinct sentences | 346 | 347 | 350 |
+| Duration per utterance (median) | 5.3-52.9 s (13.9 s) | 3.6-47.9 s (11.4 s) | 3.6-29.3 s (9.5 s) |
+| Speaker gender (utterances) | 827 female, 38 male | 862 male | 412 female, 235 male |
 
-The gender imbalance is large: no result in this document should be read as representative of
-male voices. Because speaker ids are missing, readings of the same sentence are the only known
-source of correlation between utterances (see Statistics).
+Each sentence is read by one to three speakers (two at most in English). FLEURS does not provide
+speaker ids, so readings of the same sentence are the only known source of correlation between
+utterances (see Statistics). References are the original transcripts with casing and punctuation;
+in Italian, 103 contain text in parentheses that is read aloud.
+
+The gender balance differs completely between languages: German is all male, Italian almost all
+female. Language and gender are therefore confounded, and no Italian result should be read as
+representative of male voices or German result of female voices.
 
 ### Models
 
@@ -56,9 +71,9 @@ source of correlation between utterances (see Statistics).
 |---|---|
 | Models | Whisper-small and Whisper-base (OpenAI), through faster-whisper 1.2.1 (CTranslate2) |
 | Precision | int8 weights |
-| Decoding | beam size 5, language forced to Italian, `condition_on_previous_text` disabled, no voice activity detection |
+| Decoding | beam size 5, language forced to the test set's language, `condition_on_previous_text` disabled, no voice activity detection |
 | Hardware | 12-core ARM64 laptop CPU (Snapdragon X Elite), WSL2 Ubuntu, no GPU, 4 threads |
-| Speed | real-time factor 0.11 (small, 24 min for 3.5 h of audio) and 0.07 (base, 14 min) |
+| Speed | real-time factor 0.11-0.20 for small (24 min for 3.5 h of Italian audio) and 0.06-0.11 for base; German was the slowest language for both models |
 
 faster-whisper was chosen after a benchmark on this machine: it was about six times faster than
 the PyTorch implementation, and more than 4 threads made it slower
@@ -78,8 +93,9 @@ the PyTorch implementation, and more than 4 threads made it slower
 
 - **Confidence intervals**: percentile bootstrap, 1,000 resamples, fixed seed. Readings of the same
   sentence have correlated errors (a hard proper noun is hard for every reader), so intervals are
-  computed both resampling utterances and resampling the 346 sentences; the widest is reported. In
-  practice the sentence-level interval is about 22% wider than the utterance-level one.
+  computed both resampling utterances and resampling sentences; the widest is reported. In
+  practice the sentence-level interval is always the widest, 19% to 46% wider than the
+  utterance-level one.
 - **Comparisons** between two systems, or two normalizers, use the paired bootstrap: each
   replicate draws the same sentences for both sides, and the interval of the difference is
   reported. Two separate intervals can overlap while the paired difference is clearly significant
@@ -88,18 +104,74 @@ the PyTorch implementation, and more than 4 threads made it slower
 
 ## E1. Baseline
 
+**Question.** How accurate are two off-the-shelf multilingual models, Whisper-small and
+Whisper-base, on read speech in Italian, German and English, and how much does the larger model
+gain in each language?
+
+**Method.** Each model transcribes each test set once, with the settings in [Setup](#models).
+Transcripts are scored with the normalizer of their language: `it-v1`, `de-v1` (`basic-v1` plus
+"ß" → "ss") and `en-v1` (`basic-v1`); see [E3](#normalizers-compared) for what they do. The two
+models are compared with the paired bootstrap within each language. Languages are compared only
+descriptively: the utterances differ, so no paired test is possible between them.
+
 <!-- BEGIN e1-baseline -->
 | System | Normalizer | Utterances / words | WER [95% CI] | S / D / I | CER [95% CI] |
 |---|---|---|---|---|---|
-| Whisper-small (faster-whisper, int8, beam 5) | `it-v1` | 865 / 21,255 | 7.46% [6.81%, 8.08%] | 1,223 / 169 / 193 | 2.11% [1.87%, 2.37%] |
-| Whisper-base (faster-whisper, int8, beam 5) | `it-v1` | 865 / 21,255 | 16.09% [15.13%, 17.12%] | 2,595 / 402 / 422 | 4.16% [3.84%, 4.49%] |
+| Italian · Whisper-small | `it-v1` | 865 / 21,255 | 7.46% [6.81%, 8.08%] | 1,223 / 169 / 193 | 2.11% [1.87%, 2.37%] |
+| Italian · Whisper-base | `it-v1` | 865 / 21,255 | 16.09% [15.13%, 17.12%] | 2,595 / 402 / 422 | 4.16% [3.84%, 4.49%] |
+| German · Whisper-small | `de-v1` | 862 / 18,703 | 9.31% [8.58%, 10.11%] | 1,335 / 165 / 242 | 2.58% [2.32%, 2.88%] |
+| German · Whisper-base | `de-v1` | 862 / 18,703 | 18.07% [16.91%, 19.31%] | 2,564 / 283 / 532 | 5.28% [4.92%, 5.73%] |
+| English · Whisper-small | `en-v1` | 647 / 14,467 | 6.66% [5.98%, 7.36%] | 708 / 101 / 154 | 2.75% [2.43%, 3.08%] |
+| English · Whisper-base | `en-v1` | 647 / 14,467 | 10.03% [9.09%, 10.99%] | 1,047 / 140 / 264 | 4.39% [3.95%, 4.82%] |
 <!-- END e1-baseline -->
 
-Whisper-small makes fewer than half the word errors of Whisper-base. Most of its errors are
-substitutions (1,223, against 169 deletions and 193 insertions), spread over 885 distinct word
-pairs: there is no single dominant error to fix. The error analysis (`asr-lab errors`) shows four
-recurring patterns:
+<!-- BEGIN e1-model-gap -->
+| Comparison | A | B | B - A [95% CI] | B better in | Significant |
+|---|---|---|---|---|---|
+| Italian: base → small | 16.09% | 7.46% | -8.63% [-9.38%, -7.89%] | 100.0% | yes |
+| German: base → small | 18.07% | 9.31% | -8.75% [-9.70%, -7.89%] | 100.0% | yes |
+| English: base → small | 10.03% | 6.66% | -3.37% [-3.98%, -2.76%] | 100.0% | yes |
+<!-- END e1-model-gap -->
 
+### Findings
+
+1. **English is the easiest language for both models, German the hardest.** Whisper-small reaches
+   6.66% WER in English, 7.46% in Italian and 9.31% in German. The English and Italian intervals
+   overlap; German is clearly behind. The ranking is the same for Whisper-base (10.03%, 16.09%,
+   18.07%). CER ranks the languages differently: for Whisper-small English has the highest CER
+   (2.75%, against 2.11% for Italian), so even the choice between WER and CER changes which
+   language looks easiest.
+2. **The larger model is always significantly better, but by how much depends on the language.**
+   Whisper-small removes 54% of Whisper-base's word errors in Italian, 48% in German and only 34%
+   in English, where Whisper-base is already much better. A plausible explanation is that English
+   dominates Whisper's training data, so even the smaller model has seen enough of it; these
+   experiments do not test that explanation.
+3. **Most errors are substitutions in every language**, spread over hundreds of distinct word pairs
+   (885 in Italian, 1,059 in German, 548 in English for Whisper-small): there is no single dominant
+   error to fix.
+
+**Speaker gender.** Language and gender are confounded (see [Data](#data)), so the gap between
+German and the other languages may be partly a gender effect. Within a language, the scores can be
+split by gender only where both are present; the subsets read different sentences, so these
+figures are descriptive, not a test:
+
+| Whisper-small, WER [95% CI] | Female | Male |
+|---|---|---|
+| Italian (827 / 38 utterances) | 7.17% [6.57, 7.78] | 13.67% [10.22, 17.81] |
+| English (412 / 235 utterances) | 6.41% [5.64, 7.20] | 7.09% [5.91, 8.38] |
+
+In English the two groups are close and their intervals overlap widely. The Italian male subset is
+almost twice as hard, but it has 38 utterances from an unknown, probably very small, number of
+speakers, so it says more about those speakers than about male voices in general. These figures
+were computed with a one-off script, not with a committed command, which is why they are not in a
+generated table.
+
+### Error analysis
+
+The most frequent errors (`asr-lab errors`, Whisper-small) are different in each language, and
+many of them are about writing conventions rather than recognition.
+
+**Italian.**
 - **Formatting rather than recognition**: abbreviations and numbers ("km" vs "chilometri"), elided
   forms ("delle" vs "dell'"). Experiment E3 measures how much of the WER they account for.
 - **"e" (and) and "è" (is)**, which sound almost the same, confused 22 times: a context error that a
@@ -108,10 +180,53 @@ recurring patterns:
   "joe s pizza", *Martelly* became "Martelli".
 - **Hallucination**: in 5 of 865 utterances Whisper appends "Sottotitoli (e revisione) a cura di
   QTSS" ("subtitles by QTSS"), text learned from subtitled videos in its training data, which
-  never occurs in the references.
+  never occurs in the references. No such text appears in the German or English transcripts.
 
-E1 will be extended to German and English and to other model families (larger Whisper models,
-wav2vec2 with CTC, Transducers).
+**German.**
+- **Compounds.** German writes compound nouns as one word, and speakers do not pause between their
+  parts, so the model has to decide where a word ends. A simple check (a reference word that the
+  hypothesis writes as two consecutive words, or the reverse) finds 86 compounds split by
+  Whisper-small and 45 words joined. Each costs two word errors: one substitution plus one
+  insertion or deletion. Part of this is a normalization artifact: `de-v1` turns hyphens into
+  spaces, so the reference "Schengen-Raum" becomes two words while the model's "Schengenraum" is
+  one; "Schengen" is among the most deleted words (8 times).
+- **Abbreviations**: "n. Chr." (*nach Christus*, AD) and "usw." (*und so weiter*, etc.) are written
+  in full by the model, and "km" as "Kilometer": about 25 substitutions, all formatting.
+- **Short function words** that differ by one sound: "einen" vs "ein", "zum" vs "zu", "im" vs "in",
+  "von" vs "vom". Whisper-base also confuses "das" (the, that) and "dass" (that, conjunction) 17
+  times; they sound the same and differ only in grammar.
+
+**English.**
+- **Spelling variants**: the references use British spelling and the model American spelling
+  ("travellers" vs "travelers", 7 times). `en-v1` does not map spelling variants (Whisper's English
+  normalizer does), so these are counted as errors.
+- **Short, unstressed words**: "in" heard as "and" 15 times, "a" and "the" swapped 18 times, and
+  "the", "a", "to" are the most frequent deletions and insertions.
+- **Numbers**: 61 substitutions involve digits or symbols, more than in Italian (56) although
+  English has fewer words: `en-v1`, like `de-v1`, does not write numbers in words.
+
+**Interpretation.** WER differences between languages mix three things: how hard the language is
+for the model, who the speakers are, and how well the normalizer fits the language's writing
+conventions. The normalizers for German and English are much simpler than `it-v2` (E3), so their
+WER is probably inflated by formatting errors that `it-v2` would remove in Italian.
+
+### Limitations
+
+- Language is confounded with speaker gender, and speaker ids are not available.
+- `de-v1` and `en-v1` handle neither numbers nor abbreviations, `de-v1` splits hyphenated
+  compounds and `en-v1` keeps spelling variants. Comparing languages fairly needs normalizers of
+  similar coverage.
+- The test sets are small (1.8 to 3.5 hours) and contain read Wikipedia text only.
+- No correction for multiple comparisons is applied to the three model comparisons; every one has
+  Whisper-small better in all 1,000 replicates, so a corrected threshold would not change any
+  verdict.
+
+E1 will be extended to other model families (larger Whisper models, wav2vec2 with CTC,
+Transducers).
+
+**Reproduce:** `bash experiments/E1/run.sh` (or `experiments/E1/run.ps1` on Windows). With the
+committed transcripts it only rescores; without them it downloads the three test sets and
+transcribes them (about two hours on a laptop CPU).
 
 ## E3. How much does text normalization change WER?
 
@@ -231,8 +346,8 @@ committed transcripts it only rescores; without them it first transcribes the te
 
 ## Limitations and next steps
 
-- All results so far are on FLEURS Italian read speech with a strong female majority; German and
-  English, and noisier or spontaneous speech, come next.
+- All results so far are on FLEURS read speech, where language is confounded with speaker gender;
+  noisier and spontaneous speech come next. The normalization study (E3) covers Italian only.
 - Only two Whisper sizes have been evaluated; other model families (CTC with an n-gram language
   model, Transducers) are planned.
 - Decoding settings (beam size, temperature, voice activity detection, precision) are fixed here;

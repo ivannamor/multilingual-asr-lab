@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/small-int8",
+  "manifest": "data/fleurs_en/test.jsonl",
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_utterances": 647,
+  "substitutions": 708,
+  "deletions": 101,
+  "insertions": 154,
+  "distinct_confusion_pairs": 548,
+  "substitutions_with_digits_or_symbols": 61,
+  "top_confusions": [
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 15
+    },
+    {
+      "reference": "a",
+      "hypothesis": "the",
+      "count": 11
+    },
+    {
+      "reference": "the",
+      "hypothesis": "a",
+      "count": 7
+    },
+    {
+      "reference": "travellers",
+      "hypothesis": "travelers",
+      "count": 7
+    },
+    {
+      "reference": "the",
+      "hypothesis": "that",
+      "count": 6
+    },
+    {
+      "reference": "had",
+      "hypothesis": "has",
+      "count": 4
+    },
+    {
+      "reference": "and",
+      "hypothesis": "in",
+      "count": 4
+    },
+    {
+      "reference": "davey",
+      "hypothesis": "davy",
+      "count": 4
+    },
+    {
+      "reference": "d",
+      "hypothesis": "ad",
+      "count": 4
+    },
+    {
+      "reference": "is",
+      "hypothesis": "it's",
+      "count": 4
+    },
+    {
+      "reference": "savanna",
+      "hypothesis": "savannah",
+      "count": 3
+    },
+    {
+      "reference": "others",
+      "hypothesis": "other",
+      "count": 3
+    },
+    {
+      "reference": "us",
+      "hypothesis": "s",
+      "count": 3
+    },
+    {
+      "reference": "schengen",
+      "hypothesis": "shenzhen",
+      "count": 3
+    },
+    {
+      "reference": "its",
+      "hypothesis": "his",
+      "count": 3
+    },
+    {
+      "reference": "travelling",
+      "hypothesis": "traveling",
+      "count": 3
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometers",
+      "count": 3
+    },
+    {
+      "reference": "is",
+      "hypothesis": "was",
+      "count": 3
+    },
+    {
+      "reference": "pm",
+      "hypothesis": "m",
+      "count": 3
+    },
+    {
+      "reference": "year",
+      "hypothesis": "years",
+      "count": 2
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 12
+    },
+    {
+      "word": "a",
+      "count": 9
+    },
+    {
+      "word": "it",
+      "count": 7
+    },
+    {
+      "word": "that",
+      "count": 5
+    },
+    {
+      "word": "and",
+      "count": 3
+    },
+    {
+      "word": "with",
+      "count": 2
+    },
+    {
+      "word": "germ",
+      "count": 2
+    },
+    {
+      "word": "one",
+      "count": 2
+    },
+    {
+      "word": "hundred",
+      "count": 2
+    },
+    {
+      "word": "thirty",
+      "count": 2
+    },
+    {
+      "word": "at",
+      "count": 2
+    },
+    {
+      "word": "only",
+      "count": 2
+    },
+    {
+      "word": "team",
+      "count": 2
+    },
+    {
+      "word": "dragon",
+      "count": 2
+    },
+    {
+      "word": "percent",
+      "count": 2
+    },
+    {
+      "word": "in",
+      "count": 2
+    },
+    {
+      "word": "no",
+      "count": 2
+    },
+    {
+      "word": "world",
+      "count": 2
+    },
+    {
+      "word": "w",
+      "count": 2
+    },
+    {
+      "word": "of",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "to",
+      "count": 13
+    },
+    {
+      "word": "the",
+      "count": 11
+    },
+    {
+      "word": "a",
+      "count": 6
+    },
+    {
+      "word": "and",
+      "count": 4
+    },
+    {
+      "word": "u",
+      "count": 4
+    },
+    {
+      "word": "who",
+      "count": 3
+    },
+    {
+      "word": "of",
+      "count": 3
+    },
+    {
+      "word": "that",
+      "count": 3
+    },
+    {
+      "word": "be",
+      "count": 3
+    },
+    {
+      "word": "masa",
+      "count": 2
+    },
+    {
+      "word": "spring",
+      "count": 2
+    },
+    {
+      "word": "next",
+      "count": 2
+    },
+    {
+      "word": "tuna",
+      "count": 2
+    },
+    {
+      "word": "p",
+      "count": 2
+    },
+    {
+      "word": "70",
+      "count": 2
+    },
+    {
+      "word": "kilometers",
+      "count": 2
+    },
+    {
+      "word": "i",
+      "count": 2
+    },
+    {
+      "word": "ship",
+      "count": 2
+    },
+    {
+      "word": "at",
+      "count": 2
+    },
+    {
+      "word": "this",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_en_1774013444539766052",
+      "errors": 10,
+      "reference_words": 22,
+      "reference": "its renown for being an epicenter of luxury began in about 400 a d and lasted up until about 1100 a d",
+      "hypothesis": "since we now for being at the center of luxury began in about 400 ad and lasted up until about 1100 ad"
+    },
+    {
+      "utterance_id": "fleurs_en_4446007980468141561",
+      "errors": 10,
+      "reference_words": 41,
+      "reference": "while this is often only an inaccurate stereotype the best way to get along in paris still is to be on your best behavior acting like someone who is bien élevé well brought up it will make getting about considerably easier",
+      "hypothesis": "while it is often an inaccurate stereotype the best way to get along in paris is to still be on your best behavior acting like somebody who is beyond ill be well brought up it would make getting around about considerably easier"
+    },
+    {
+      "utterance_id": "fleurs_en_3927163358777802368",
+      "errors": 10,
+      "reference_words": 49,
+      "reference": "researchers from princeton university in the united states and uppsala university in sweden reported the new species evolved in just two generations though this process had been believed to take much longer due to breeding between an endemic darwin finch geospiza fortes and the immigrant cactus finch geospiza conirostris",
+      "hypothesis": "researchers from princeton university in the united states and uppsala university in sweden reported the new species involved in just two generations though this process has the ability to take much longer due to the breeding between an endemic darwin finch jospisa fortes and the immigrant cactus binge jospisa coni rostris"
+    },
+    {
+      "utterance_id": "fleurs_en_2508559905589212221",
+      "errors": 9,
+      "reference_words": 52,
+      "reference": "their thermal behavior is not as steady as large caves on earth that often maintain a fairly constant temperature but it is consistent with these being deep holes in the ground said glen cushing of the united states geological survey usgs astrogeology team and of northern arizona university located in flagstaff arizona",
+      "hypothesis": "their formal behavior is not as steady as large caves on earth that often maintain a fairly constant temperature but is consistent with these being deep holes in the ground static gland pushing a united states geological survey astro geology team and of northern arizona university located in flagstaff arizona"
+    },
+    {
+      "utterance_id": "fleurs_en_7213249863906599090",
+      "errors": 8,
+      "reference_words": 22,
+      "reference": "its renown for being an epicenter of luxury began in about 400 a d and lasted up until about 1100 a d",
+      "hypothesis": "this renown for being at the center of luxury began in about 400 ad and lasted up until about 1100 ad"
+    }
+  ]
+}

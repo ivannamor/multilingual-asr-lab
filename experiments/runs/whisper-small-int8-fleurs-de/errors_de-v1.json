@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/small-int8",
+  "manifest": "data/fleurs_de/test.jsonl",
+  "normalizer": [
+    "de-v1"
+  ],
+  "n_utterances": 862,
+  "substitutions": 1335,
+  "deletions": 165,
+  "insertions": 242,
+  "distinct_confusion_pairs": 1059,
+  "substitutions_with_digits_or_symbols": 54,
+  "top_confusions": [
+    {
+      "reference": "chr",
+      "hypothesis": "christus",
+      "count": 8
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometer",
+      "count": 6
+    },
+    {
+      "reference": "einen",
+      "hypothesis": "ein",
+      "count": 6
+    },
+    {
+      "reference": "n",
+      "hypothesis": "nach",
+      "count": 6
+    },
+    {
+      "reference": "blogs",
+      "hypothesis": "blocks",
+      "count": 5
+    },
+    {
+      "reference": "usw",
+      "hypothesis": "weiter",
+      "count": 5
+    },
+    {
+      "reference": "das",
+      "hypothesis": "dass",
+      "count": 4
+    },
+    {
+      "reference": "zum",
+      "hypothesis": "zu",
+      "count": 4
+    },
+    {
+      "reference": "im",
+      "hypothesis": "in",
+      "count": 4
+    },
+    {
+      "reference": "von",
+      "hypothesis": "vom",
+      "count": 4
+    },
+    {
+      "reference": "dass",
+      "hypothesis": "sodass",
+      "count": 4
+    },
+    {
+      "reference": "webseite",
+      "hypothesis": "website",
+      "count": 4
+    },
+    {
+      "reference": "mekka",
+      "hypothesis": "mecca",
+      "count": 3
+    },
+    {
+      "reference": "gesichtsausdrucks",
+      "hypothesis": "gesichtsausdruck",
+      "count": 3
+    },
+    {
+      "reference": "gallonen",
+      "hypothesis": "galonen",
+      "count": 3
+    },
+    {
+      "reference": "um",
+      "hypothesis": "und",
+      "count": 3
+    },
+    {
+      "reference": "eine",
+      "hypothesis": "einer",
+      "count": 3
+    },
+    {
+      "reference": "gefleckte",
+      "hypothesis": "gepflegte",
+      "count": 3
+    },
+    {
+      "reference": "vom",
+      "hypothesis": "von",
+      "count": 3
+    },
+    {
+      "reference": "im",
+      "hypothesis": "am",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "x",
+      "count": 11
+    },
+    {
+      "word": "schengen",
+      "count": 8
+    },
+    {
+      "word": "in",
+      "count": 7
+    },
+    {
+      "word": "die",
+      "count": 7
+    },
+    {
+      "word": "und",
+      "count": 6
+    },
+    {
+      "word": "so",
+      "count": 5
+    },
+    {
+      "word": "sie",
+      "count": 4
+    },
+    {
+      "word": "00",
+      "count": 4
+    },
+    {
+      "word": "man",
+      "count": 3
+    },
+    {
+      "word": "eee",
+      "count": 3
+    },
+    {
+      "word": "wild",
+      "count": 3
+    },
+    {
+      "word": "dreissig",
+      "count": 3
+    },
+    {
+      "word": "rossby",
+      "count": 3
+    },
+    {
+      "word": "da",
+      "count": 2
+    },
+    {
+      "word": "prozent",
+      "count": 2
+    },
+    {
+      "word": "nord",
+      "count": 2
+    },
+    {
+      "word": "zurücksetzen",
+      "count": 2
+    },
+    {
+      "word": "drei",
+      "count": 2
+    },
+    {
+      "word": "national",
+      "count": 2
+    },
+    {
+      "word": "antike",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "und",
+      "count": 10
+    },
+    {
+      "word": "zu",
+      "count": 10
+    },
+    {
+      "word": "in",
+      "count": 8
+    },
+    {
+      "word": "die",
+      "count": 5
+    },
+    {
+      "word": "wieder",
+      "count": 5
+    },
+    {
+      "word": "so",
+      "count": 4
+    },
+    {
+      "word": "ihre",
+      "count": 3
+    },
+    {
+      "word": "sie",
+      "count": 3
+    },
+    {
+      "word": "6",
+      "count": 3
+    },
+    {
+      "word": "ein",
+      "count": 3
+    },
+    {
+      "word": "vielen",
+      "count": 3
+    },
+    {
+      "word": "original",
+      "count": 3
+    },
+    {
+      "word": "befolgt",
+      "count": 3
+    },
+    {
+      "word": "bis",
+      "count": 3
+    },
+    {
+      "word": "küsten",
+      "count": 3
+    },
+    {
+      "word": "immer",
+      "count": 3
+    },
+    {
+      "word": "exzellenz",
+      "count": 3
+    },
+    {
+      "word": "das",
+      "count": 3
+    },
+    {
+      "word": "nicht",
+      "count": 2
+    },
+    {
+      "word": "scott",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_de_5588377578874001231",
+      "errors": 13,
+      "reference_words": 52,
+      "reference": "forscher der princeton university in den vereinigten staaten und der uppsala university in schweden berichteten die neue art habe sich innerhalb von nur zwei generationen entwickelt obwohl man zuvor angenommen hatte dass dieser vorgang aufgrund der paarung zwischen einem einheimischen darwinfink geospiza fortes und dem eingewanderten kaktusfink geospiza conirostris viel länger dauerte",
+      "hypothesis": "forscher der princeton universität in den vereinigten staaten und der uppsale universität in schweden berichteten die neue art hat sich innerhalb von nur zwei generationen entwickelt obwohl man zuvor angenommen hatte dass dieser vorgang aufgrund der paarung zwischen einem einheimischen darwin fink geospizza fortes und dem eingewanderten cactus fink geospitze konni rostris viel länger dauert"
+    },
+    {
+      "utterance_id": "fleurs_de_6753945967797226570",
+      "errors": 12,
+      "reference_words": 32,
+      "reference": "die epoche in der die ereignisse stattfanden wird gemeinhin als hochmittelalter bezeichnet ein zeitalter in der europäischen geschichte das sich über das 11 12 und 13 jahrhundert erstreckt 1000 1300 n chr",
+      "hypothesis": "die epoche in der die ereignisse stattfanden wird gemeinhin als hochmittelalter bezeichnet ein zeithalter in der europäischen geschichte das sich über des elfte zwölfte und dreizehnte jahrhundert erstreht tausend bis tausend dreihundert nach christus"
+    },
+    {
+      "utterance_id": "fleurs_de_5054808651382969097",
+      "errors": 10,
+      "reference_words": 24,
+      "reference": "er wurde von wong kan seng dem stellvertretenden premierminister singapurs begrüsst und sprach mit lee hsien loong dem premierminister singapurs über handels und terrorismusangelegenheiten",
+      "hypothesis": "er wurde von wong kang seng dem stellvertretenden premierminister singapurz begrüsst und sprach mit li he sing long dem premierminister singapurz über handels und terrorismus angelegen hatten"
+    },
+    {
+      "utterance_id": "fleurs_de_5352084511476516591",
+      "errors": 10,
+      "reference_words": 37,
+      "reference": "busse fahren den ganzen tag über vom distriktübergreifenden busbahnhof auf der anderen seite des flusses ab wobei die meisten busse vor allem die in richtung osten und jakar bumthang zwischen 06 30 und 07 30 uhr abfahren",
+      "hypothesis": "busse fahren den ganzen tag über vorm distrikt übergreifenden busbahnhof auf der anderen seite des flusses ab wobei die meisten busse vor allem die in richtung osten und jakar burm chiang zwischen 36 und 37 abfahren"
+    },
+    {
+      "utterance_id": "fleurs_de_18258178889623554485",
+      "errors": 10,
+      "reference_words": 43,
+      "reference": "auch wenn dies oft nur ein unzutreffendes klischee ist so findet man sich in paris doch am besten zurecht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der bien élevé wohlerzogen ist das wird das zurechtkommen erheblich erleichtern",
+      "hypothesis": "auch wenn dies oft nur ein unzutreffendes klischee ist so findet man sich in paris doch am besten zu recht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der bjorn elef wohl erzogen ist das wird das zu recht kaum erleblich erleichtern"
+    }
+  ]
+}
