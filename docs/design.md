@@ -17,6 +17,7 @@ made; superseded entries are marked, not deleted.
 | 8 | [Models share one interface; audio is loaded outside the models](#8-models-share-one-interface-audio-is-loaded-outside-the-models) | inference |
 | 9 | [Documentation examples are executed by the test suite](#9-documentation-examples-are-executed-by-the-test-suite) | engineering |
 | 10 | [Lesson learned: never seek backwards in a compressed archive](#10-lesson-learned-never-seek-backwards-in-a-compressed-archive) | engineering |
+| 11 | [Local Whisper inference with faster-whisper, int8, 4 threads](#11-local-whisper-inference-with-faster-whisper-int8-4-threads) | inference |
 
 ---
 
@@ -203,3 +204,35 @@ read into memory before decoding. The full ingest now takes about 9 seconds.
 **Lesson.** Unit tests on a tiny synthetic archive checked correctness but could not reveal the
 cost on real data: every pipeline is run once on real data before it is considered done. A job
 that slows down as it progresses usually repeats work.
+
+## 11. Local Whisper inference with faster-whisper, int8, 4 threads
+
+**Context.** Development runs on an ARM64 CPU with no GPU. Two Whisper implementations were
+measured with Whisper-small on real FLEURS Italian utterances (real-time factor = processing time
+/ audio duration; lower is faster):
+
+| | faster-whisper (CTranslate2, int8) | transformers + PyTorch (float32) |
+|---|---|---|
+| RTF, greedy | **0.27** | 1.56 (4 threads), 1.89 (12 threads) |
+| RTF, beam size 5 | **0.34** | 2.61 (12 threads) |
+| Installed dependencies | about 315 MB | about 5.1 GB (the ARM64 PyTorch wheel ships CUDA libraries) |
+
+Thread count was also measured for faster-whisper (beam size 5): RTF 0.35 with 4 threads, 1.18
+with 8 and 1.63 with 12. Beyond 4 threads synchronization costs outweigh the extra cores on this
+machine (WSL shares cores with Windows).
+
+**Decision.** Local Whisper inference uses faster-whisper with int8 weights, beam size 5
+(Whisper's default) and 4 threads. The language is taken from the manifest instead of being
+detected, and `condition_on_previous_text` is disabled (a known source of repetition loops and
+hallucinations). Every setting that can change the output is exposed by the adapter's `config`
+and stored with the results.
+
+**Alternatives rejected.** transformers for local inference: about six times slower and a much
+heavier install. It will still be used where it is needed (wav2vec2 models, fine-tuning on a GPU),
+as an optional dependency.
+
+**Consequences.** The full FLEURS Italian test set (3.5 hours of audio) takes about 70 minutes
+with beam size 5. int8 quantization may change transcripts slightly compared with the original
+float32 weights; the model name includes the precision (`faster-whisper/small-int8`) and the
+effect can be measured (float32 is one setting away). The 8 idle cores can later run several
+model instances in parallel.
