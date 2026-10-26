@@ -166,7 +166,8 @@ def test_cli_transcribe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None
     cli.main(["transcribe", "--manifest", str(manifest), "--output", str(out), "--beam-size", "1"])
     assert created == {
         "model_size": "small",
-        "compute_type": "int8",
+        "device": "cpu",
+        "compute_type": None,
         "beam_size": 1,
         "cpu_threads": 4,
     }

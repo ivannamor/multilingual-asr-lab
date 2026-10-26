@@ -95,6 +95,20 @@ def test_name_and_config_describe_the_decoding_setup() -> None:
     assert config["library_version"]
 
 
+def test_default_precision_depends_on_the_device() -> None:
+    cpu = FasterWhisperModel(model=FakeWhisper([]))
+    gpu = FasterWhisperModel(model=FakeWhisper([]), device="cuda")
+    assert (cpu.name, cpu.config["device"]) == ("faster-whisper/small-int8", "cpu")
+    assert (gpu.name, gpu.config["device"]) == ("faster-whisper/small-float16", "cuda")
+    explicit = FasterWhisperModel(model=FakeWhisper([]), device="cuda", compute_type="int8")
+    assert explicit.compute_type == "int8"
+
+
+def test_unknown_device_is_rejected() -> None:
+    with pytest.raises(ValueError, match="device must be one of"):
+        FasterWhisperModel(model=FakeWhisper([]), device="tpu")
+
+
 @pytest.mark.slow
 @pytest.mark.skipif(not FLEURS_IT.exists(), reason="run the FLEURS ingest first")
 def test_real_whisper_small_on_one_fleurs_utterance() -> None:

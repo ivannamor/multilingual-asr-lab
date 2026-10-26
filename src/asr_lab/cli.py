@@ -45,7 +45,10 @@ def main(argv: Sequence[str] | None = None) -> None:
     transcribe.add_argument("--manifest", required=True, type=Path)
     transcribe.add_argument("--output", required=True, type=Path, help="run directory")
     transcribe.add_argument("--model-size", default="small")
-    transcribe.add_argument("--compute-type", default="int8")
+    transcribe.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
+    transcribe.add_argument(
+        "--compute-type", default=None, help="default: int8 on CPU, float16 on CUDA"
+    )
     transcribe.add_argument("--beam-size", type=int, default=5)
     transcribe.add_argument("--cpu-threads", type=int, default=4)
     transcribe.add_argument("--batch-size", type=int, default=8)
@@ -115,6 +118,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     if args.command == "transcribe":
         model = FasterWhisperModel(
             args.model_size,
+            device=args.device,
             compute_type=args.compute_type,
             beam_size=args.beam_size,
             cpu_threads=args.cpu_threads,

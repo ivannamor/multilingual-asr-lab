@@ -1,6 +1,7 @@
 # Multilingual ASR Lab
 
 [![CI](https://github.com/ivannamor/multilingual-asr-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/ivannamor/multilingual-asr-lab/actions/workflows/ci.yml)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ivannamor/multilingual-asr-lab/blob/main/notebooks/quickstart.ipynb)
 
 A reproducible framework to evaluate, compare and improve automatic speech recognition (ASR)
 models on Italian, German and English, with a focus on statistically sound evaluation and
@@ -36,6 +37,14 @@ Key findings so far:
   55% depending on normalization.
 
 To reproduce: [Reproducing the baseline](#reproducing-the-baseline) and `experiments/E3/run.sh`.
+
+## Try it in your browser
+
+The [quickstart notebook](notebooks/quickstart.ipynb) runs the whole pipeline on a few FLEURS
+utterances: transcription with Whisper, WER with a confidence interval, the most frequent errors and
+the effect of normalization. Open it in **Google Colab** with the badge above (free GPU, nothing to
+install), change the settings cell (language, model, beam size, normalizer, number of utterances)
+and run all cells. Locally: `uv run --with jupyter jupyter lab notebooks/quickstart.ipynb`.
 
 ## Quick start
 
@@ -133,7 +142,8 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--max-utterances`, `--seed` | all, `0` | seeded random subset |
 | `asr-lab transcribe` | `--manifest`, `--output` | (required) | input manifest, run directory |
 | | `--model-size` | `small` | any faster-whisper model, e.g. `large-v3-turbo` |
-| | `--compute-type` | `int8` | weight precision, e.g. `float32` |
+| | `--device` | `cpu` | `cpu` or `cuda` (NVIDIA GPU) |
+| | `--compute-type` | `int8` on CPU, `float16` on GPU | weight precision, e.g. `float32` |
 | | `--beam-size` | `5` | `1` = greedy decoding |
 | | `--cpu-threads` | `4` | more threads were slower on the development machine |
 | | `--batch-size` | `8` | utterances written to disk at a time |
