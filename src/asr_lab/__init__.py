@@ -1,2 +1,1 @@
-def main() -> None:
-    print("Hello from asr-lab!")
+"""ASR Lab: multilingual ASR evaluation and data-centric optimization."""

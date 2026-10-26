@@ -18,6 +18,7 @@ made; superseded entries are marked, not deleted.
 | 9 | [Documentation examples are executed by the test suite](#9-documentation-examples-are-executed-by-the-test-suite) | engineering |
 | 10 | [Lesson learned: never seek backwards in a compressed archive](#10-lesson-learned-never-seek-backwards-in-a-compressed-archive) | engineering |
 | 11 | [Local Whisper inference with faster-whisper, int8, 4 threads](#11-local-whisper-inference-with-faster-whisper-int8-4-threads) | inference |
+| 12 | [One run directory per configuration, resumable, with provenance](#12-one-run-directory-per-configuration-resumable-with-provenance) | engineering |
 
 ---
 
@@ -236,3 +237,29 @@ with beam size 5. int8 quantization may change transcripts slightly compared wit
 float32 weights; the model name includes the precision (`faster-whisper/small-int8`) and the
 effect can be measured (float32 is one setting away). The 8 idle cores can later run several
 model instances in parallel.
+
+## 12. One run directory per configuration, resumable, with provenance
+
+**Context.** Transcribing the full FLEURS Italian test set takes about an hour on CPU, and every
+reported number must be traceable to the model, settings, data and code that produced it.
+
+**Decision.** `asr-lab transcribe` writes a run directory with `predictions.jsonl` (raw
+hypotheses, appended batch by batch) and `run.json`: model name and full decoding config,
+manifest path and SHA-256, git commit, Python version and platform, audio duration, processing
+time and real-time factor. A run is identified by model, config, manifest hash and utterance
+limit: running again with the same identity resumes (already transcribed utterances are skipped),
+running with a different identity in the same directory is an error. Elapsed time is saved even
+when a run is interrupted, so the real-time factor of a resumed run stays correct.
+
+The git commit is read from the `.git` directory rather than by running `git`, because the code
+never runs shell commands (same behaviour on Linux and Windows). As a consequence uncommitted
+changes cannot be detected, and `run.json` records `"git_dirty": "unknown"`.
+
+**Alternatives rejected.** Recomputing everything on each run (an hour per attempt); a results
+database or MLflow at this stage (added later for experiment sweeps; plain files are enough and
+easy to inspect); overwriting a run directory silently when settings change (mixes predictions
+from different configurations).
+
+**Consequences.** Interrupted runs cost nothing; one directory is always one configuration; scores
+can be recomputed from saved predictions with any normalizer. Model loading time is not included
+in the real-time factor.

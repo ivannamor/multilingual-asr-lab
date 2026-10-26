@@ -19,6 +19,7 @@ htmlcov/
 /data/
 /models/
 /mlruns/
+/runs/
 
 # Hydra run directories
 /outputs/

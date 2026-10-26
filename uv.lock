@@ -30,6 +30,7 @@ dependencies = [
     { name = "numpy", version = "2.5.4", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
     { name = "soundfile" },
     { name = "soxr" },
+    { name = "tqdm" },
 ]
 
 [package.dev-dependencies]
@@ -47,6 +48,7 @@ requires-dist = [
     { name = "numpy", specifier = ">=2.4.6" },
     { name = "soundfile", specifier = ">=0.14.0" },
     { name = "soxr", specifier = ">=1.1.0" },
+    { name = "tqdm", specifier = ">=4.70.1" },
 ]
 
 [package.metadata.requires-dev]
