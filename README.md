@@ -53,6 +53,35 @@ utterances instead of being hidden. This differs from jiwer, which divides by `m
 Corpus-level WER and CER are unaffected: inserted words are added to the corpus error count.
 For silent clips, a dedicated hallucination metric is more informative than WER.
 
+### Text normalization
+
+References and hypotheses must go through the **same** normalizer before scoring, otherwise
+casing, punctuation and typographic variants are counted as recognition errors. Each
+normalizer has a versioned name that should be reported with every result.
+
+```python
+>>> from asr_lab.evaluation.normalize import get_normalizer
+>>> normalize = get_normalizer("it")
+>>> normalize.name
+'it-v1'
+>>> reference = "L'uomo è arrivato."
+>>> hypothesis = "l\u2019uomo è arrivato"  # typographic apostrophe
+>>> round(wer([reference], [hypothesis]), 3)
+0.667
+>>> wer([normalize(reference)], [normalize(hypothesis)])
+0.0
+
+```
+
+| Normalizer | Steps |
+|---|---|
+| `none` | no change |
+| `basic-v1`, `en-v1` | Unicode NFC, unify apostrophes, lowercase, remove punctuation (apostrophes inside words are kept: "don't"), collapse whitespace |
+| `it-v1` | as above, then split elisions: "l'uomo" → "l uomo" |
+| `de-v1` | as above, then "ß" → "ss" (umlauts are kept) |
+
+Numbers are not normalized yet: "venti" and "20" still count as different words.
+
 ### Inspecting the alignment
 
 ```python
