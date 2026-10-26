@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/small-int8",
+  "manifest": "data/fleurs_it/test.jsonl",
+  "normalizer": [
+    "it-v2"
+  ],
+  "n_utterances": 865,
+  "substitutions": 1171,
+  "deletions": 158,
+  "insertions": 191,
+  "distinct_confusion_pairs": 863,
+  "substitutions_with_digits_or_symbols": 10,
+  "top_confusions": [
+    {
+      "reference": "e",
+      "hypothesis": "è",
+      "count": 16
+    },
+    {
+      "reference": "l",
+      "hypothesis": "la",
+      "count": 8
+    },
+    {
+      "reference": "gli",
+      "hypothesis": "i",
+      "count": 7
+    },
+    {
+      "reference": "delle",
+      "hypothesis": "dell",
+      "count": 7
+    },
+    {
+      "reference": "d",
+      "hypothesis": "di",
+      "count": 6
+    },
+    {
+      "reference": "sci",
+      "hypothesis": "shi",
+      "count": 6
+    },
+    {
+      "reference": "martelly",
+      "hypothesis": "martelli",
+      "count": 6
+    },
+    {
+      "reference": "è",
+      "hypothesis": "e",
+      "count": 6
+    },
+    {
+      "reference": "fare",
+      "hypothesis": "far",
+      "count": 6
+    },
+    {
+      "reference": "la",
+      "hypothesis": "alla",
+      "count": 5
+    },
+    {
+      "reference": "casablanca",
+      "hypothesis": "blanca",
+      "count": 5
+    },
+    {
+      "reference": "giza",
+      "hypothesis": "gizza",
+      "count": 5
+    },
+    {
+      "reference": "a",
+      "hypothesis": "al",
+      "count": 5
+    },
+    {
+      "reference": "oscura",
+      "hypothesis": "scura",
+      "count": 4
+    },
+    {
+      "reference": "paesi",
+      "hypothesis": "pesi",
+      "count": 4
+    },
+    {
+      "reference": "cui",
+      "hypothesis": "qui",
+      "count": 4
+    },
+    {
+      "reference": "degli",
+      "hypothesis": "dei",
+      "count": 4
+    },
+    {
+      "reference": "nyiragongo",
+      "hypothesis": "niragongo",
+      "count": 4
+    },
+    {
+      "reference": "arcipelaghi",
+      "hypothesis": "arcipelagi",
+      "count": 4
+    },
+    {
+      "reference": "ai",
+      "hypothesis": "i",
+      "count": 4
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "a",
+      "count": 23
+    },
+    {
+      "word": "e",
+      "count": 16
+    },
+    {
+      "word": "è",
+      "count": 9
+    },
+    {
+      "word": "il",
+      "count": 7
+    },
+    {
+      "word": "i",
+      "count": 6
+    },
+    {
+      "word": "in",
+      "count": 5
+    },
+    {
+      "word": "ha",
+      "count": 5
+    },
+    {
+      "word": "con",
+      "count": 4
+    },
+    {
+      "word": "si",
+      "count": 4
+    },
+    {
+      "word": "addenbrooke",
+      "count": 3
+    },
+    {
+      "word": "l",
+      "count": 3
+    },
+    {
+      "word": "le",
+      "count": 3
+    },
+    {
+      "word": "trentacinque",
+      "count": 3
+    },
+    {
+      "word": "ft",
+      "count": 3
+    },
+    {
+      "word": "clima",
+      "count": 2
+    },
+    {
+      "word": "città",
+      "count": 2
+    },
+    {
+      "word": "sotto",
+      "count": 2
+    },
+    {
+      "word": "tutt",
+      "count": 2
+    },
+    {
+      "word": "ai",
+      "count": 2
+    },
+    {
+      "word": "xi",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "a",
+      "count": 18
+    },
+    {
+      "word": "di",
+      "count": 10
+    },
+    {
+      "word": "è",
+      "count": 8
+    },
+    {
+      "word": "e",
+      "count": 7
+    },
+    {
+      "word": "l",
+      "count": 7
+    },
+    {
+      "word": "sottotitoli",
+      "count": 5
+    },
+    {
+      "word": "cura",
+      "count": 5
+    },
+    {
+      "word": "casa",
+      "count": 5
+    },
+    {
+      "word": "ha",
+      "count": 4
+    },
+    {
+      "word": "qtss",
+      "count": 4
+    },
+    {
+      "word": "i",
+      "count": 4
+    },
+    {
+      "word": "con",
+      "count": 4
+    },
+    {
+      "word": "si",
+      "count": 4
+    },
+    {
+      "word": "revisione",
+      "count": 3
+    },
+    {
+      "word": "il",
+      "count": 3
+    },
+    {
+      "word": "al",
+      "count": 3
+    },
+    {
+      "word": "ti",
+      "count": 2
+    },
+    {
+      "word": "intra",
+      "count": 2
+    },
+    {
+      "word": "virgola",
+      "count": 2
+    },
+    {
+      "word": "quattro",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_it_14309954849873750903",
+      "errors": 12,
+      "reference_words": 33,
+      "reference": "l eee pc di asus precedentemente lanciato a livello mondiale per aspetti legati al risparmio e alla funzionalità si è trasformato in tema controverso in occasione dell evento it month di taipei duemilasette",
+      "hypothesis": "lì pc di azus precedentemente lanciata a livello mondiali per aspetti legati a risparmi la funzionalità si è trasformato in tema controverso in occasione dell evento di tmont di type duemilasette"
+    },
+    {
+      "utterance_id": "fleurs_it_34609404880915251",
+      "errors": 11,
+      "reference_words": 37,
+      "reference": "la piana di giza o necropoli di giza nella valle dei re in egitto ospita numerose piramidi la più grande delle quali è la piramide di cheope varie tombe più piccole svariati templi e la grande sfinge",
+      "hypothesis": "la piana di gizza o necropolis di gizza nella valla di rene gitto ospita numerose piramidi la più grande delle quali è la piramide di keope varie tombe più piccole svarie di templi e la grande sfinge"
+    },
+    {
+      "utterance_id": "fleurs_it_1446842049452059341",
+      "errors": 11,
+      "reference_words": 59,
+      "reference": "secondo i ricercatori dell università di princeton stati uniti e dell università di uppsala svezia la nuova specie si è evoluta in appena due generazioni sebbene si ritenesse che il tempo necessario per questo processo fosse molto maggiore questo per effetto dell accoppiamento tra un fringuello endemico di darwin geospiza fortes e il fringuello dei cactus immigrato geospiza conirostris",
+      "hypothesis": "secondo i ricercatori dell università di princeton stati uniti e dell università di uppsala svezia la nuova specie si è evoluta in appena due generazioni sebbene si ritenesse che il tempo necessario per questo processo fosse molto maggiore questo per effetto dell accoppiamento tra un fringuello endemico di darwin joe s pizza for tets e il fringuello dei cactus immigrato joe s pizza con i rostris"
+    },
+    {
+      "utterance_id": "fleurs_it_1716205486491786506",
+      "errors": 10,
+      "reference_words": 30,
+      "reference": "dalle sue lunghe fauci spuntavano più di settanta denti affilati come rasoi più un ulteriore fila situata sul palato quindi per chiunque incrociasse il suo cammino non c era scampo",
+      "hypothesis": "dalle sue lunghe fausci spuntavano più di settanta denti affilati come il rasoi più di un ulteriore fila situata sul palato quindi per chiunque incrociasse il suo cammino non c era scampo sottotitoli e revisione a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_14763818879524162554",
+      "errors": 10,
+      "reference_words": 31,
+      "reference": "a nord si trova la romantica e incantevole città di sintra facilmente raggiungibile è diventata famosa agli occhi degli stranieri grazie al brillante racconto dei suoi splendori scritto da lord byron",
+      "hypothesis": "a nord si trova la romantica incattevole città di sintra facilmente raggiungibile e diventa tafamosa gli occhi degli stranieri grazie al berillante d acconto dei suoi splendori scritto dal lord byron"
+    }
+  ]
+}

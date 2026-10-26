@@ -1,0 +1,44 @@
+# Tables of the E3 chapter of RESULTS.md (rendered by: asr-lab render-results)
+
+[[table]]
+name = "e3-normalizers-small"
+kind = "scores"
+rows = [
+  { label = "Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_none.json" },
+  { label = "Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_basic-v1.json" },
+  { label = "Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_whisper-basic.json" },
+  { label = "Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_it-v1.json" },
+  { label = "Whisper-small", file = "experiments/runs/whisper-small-int8-fleurs-it/scores_it-v2.json" },
+]
+
+[[table]]
+name = "e3-normalizers-base"
+kind = "scores"
+rows = [
+  { label = "Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_none.json" },
+  { label = "Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_basic-v1.json" },
+  { label = "Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_whisper-basic.json" },
+  { label = "Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_it-v1.json" },
+  { label = "Whisper-base", file = "experiments/runs/whisper-base-int8-fleurs-it/scores_it-v2.json" },
+]
+
+[[table]]
+name = "e3-normalizer-comparisons"
+kind = "comparisons"
+rows = [
+  { label = "none → basic-v1", file = "experiments/E3/results/normalizer_none_vs_basic-v1.json" },
+  { label = "basic-v1 → it-v1", file = "experiments/E3/results/normalizer_basic-v1_vs_it-v1.json" },
+  { label = "it-v1 → it-v2", file = "experiments/E3/results/normalizer_it-v1_vs_it-v2.json" },
+  { label = "basic-v1 → whisper-basic", file = "experiments/E3/results/normalizer_basic-v1_vs_whisper-basic.json" },
+]
+
+[[table]]
+name = "e3-model-gap"
+kind = "comparisons"
+rows = [
+  { label = "base → small, `none`", file = "experiments/E3/results/model_base_vs_small_none.json" },
+  { label = "base → small, `basic-v1`", file = "experiments/E3/results/model_base_vs_small_basic-v1.json" },
+  { label = "base → small, `whisper-basic`", file = "experiments/E3/results/model_base_vs_small_whisper-basic.json" },
+  { label = "base → small, `it-v1`", file = "experiments/E3/results/model_base_vs_small_it-v1.json" },
+  { label = "base → small, `it-v2`", file = "experiments/E3/results/model_base_vs_small_it-v2.json" },
+]
