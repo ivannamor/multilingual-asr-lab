@@ -82,6 +82,36 @@ normalizer has a versioned name that should be reported with every result.
 
 Numbers are not normalized yet: "venti" and "20" still count as different words.
 
+### Confidence intervals and system comparison
+
+A WER measured on a test set is an estimate: a different sample of utterances would give a
+different number. `bootstrap_ci` resamples utterances with replacement to get a 95% confidence
+interval, and `paired_bootstrap` compares two systems on the same utterances to tell whether
+their difference is larger than this sampling noise.
+
+```python
+>>> from asr_lab.evaluation.metrics import utterance_counts
+>>> from asr_lab.evaluation.stats import bootstrap_ci, paired_bootstrap
+>>> references = ["il gatto dorme sul divano"] * 60 + ["oggi piove molto"] * 40
+>>> system_a = ["il gatto dorme sul divano"] * 60 + ["oggi piove molta"] * 40
+>>> system_b = ["il gatto dorme sul divano"] * 60 + ["oggi piove molto"] * 30 + ["oggi piove molta"] * 10
+>>> counts_a = utterance_counts(references, system_a)
+>>> counts_b = utterance_counts(references, system_b)
+>>> ci = bootstrap_ci(counts_a)
+>>> print(f"WER A = {ci.estimate:.1%} [{ci.low:.1%}, {ci.high:.1%}]")
+WER A = 9.5% [7.1%, 12.2%]
+>>> comparison = paired_bootstrap(counts_a, counts_b)
+>>> print(f"B - A = {comparison.delta:+.1%} [{comparison.low:+.1%}, {comparison.high:+.1%}]")
+B - A = -7.1% [-9.7%, -4.8%]
+>>> comparison.significant
+True
+
+```
+
+Utterances of the same speaker are correlated; pass `groups=speaker_ids` to resample whole
+speakers instead of single utterances, which gives wider and more honest intervals. Results are
+reproducible: the random generator is seeded (`seed=0` by default).
+
 ### Inspecting the alignment
 
 ```python
