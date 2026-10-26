@@ -1,0 +1,38 @@
+# Python bytecode and build artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Virtual environment (recreated by `uv sync`)
+.venv/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+
+# Datasets, checkpoints, experiment tracking (large, re-downloadable)
+/data/
+/models/
+/mlruns/
+
+# Hydra run directories
+/outputs/
+/multirun/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets (API keys for LLM experiments)
+.env
+
+# Local editor / OS / Claude Code settings
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.claude/settings.local.json

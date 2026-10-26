@@ -1,0 +1,48 @@
+[project]
+name = "asr-lab"
+version = "0.1.0"
+description = "Multilingual ASR evaluation and data-centric optimization lab"
+readme = "README.md"
+authors = [
+    { name = "Ivan Namor", email = "namorivan@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+asr-lab = "asr_lab:main"
+
+[build-system]
+requires = ["uv_build>=0.13.5,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.7.0",
+    "pytest>=9.1.1",
+    "ruff>=0.17.2",
+]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E", "W",  # pycodestyle: basic style errors and warnings
+    "F",       # pyflakes: unused imports/variables, undefined names
+    "I",       # isort: import ordering
+    "B",       # flake8-bugbear: likely bugs (e.g. mutable default arguments)
+    "UP",      # pyupgrade: use modern syntax for the target Python version
+    "SIM",     # flake8-simplify: simpler equivalent code
+    "PTH",     # flake8-use-pathlib: pathlib instead of os.path (cross-platform rule)
+    "NPY",     # numpy-specific rules (deprecated APIs, legacy random)
+    "RUF",     # ruff-specific rules
+]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers", "--import-mode=importlib"]
