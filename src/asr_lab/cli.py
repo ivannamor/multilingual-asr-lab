@@ -14,7 +14,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from asr_lab.evaluation.error_analysis import analyze_run, format_errors
-from asr_lab.evaluation.normalize import get_normalizer
+from asr_lab.evaluation.normalize import NORMALIZER_NAMES, get_normalizer_by_name
 from asr_lab.evaluation.scoring import (
     DEFAULT_N_RESAMPLES,
     DEFAULT_SEED,
@@ -51,9 +51,10 @@ def main(argv: Sequence[str] | None = None) -> None:
         "--manifest", type=Path, default=None, help="default: the manifest recorded in run.json"
     )
     score.add_argument(
-        "--normalizer-lang",
+        "--normalizer",
         default=None,
-        help="use one language's normalizer for every utterance (default: each utterance's)",
+        choices=NORMALIZER_NAMES,
+        help="one normalizer for every utterance (default: each utterance's language normalizer)",
     )
     score.add_argument("--n-resamples", type=int, default=DEFAULT_N_RESAMPLES)
     score.add_argument("--seed", type=int, default=DEFAULT_SEED)
@@ -66,9 +67,10 @@ def main(argv: Sequence[str] | None = None) -> None:
         "--manifest", type=Path, default=None, help="default: the manifest recorded in run.json"
     )
     errors.add_argument(
-        "--normalizer-lang",
+        "--normalizer",
         default=None,
-        help="use one language's normalizer for every utterance (default: each utterance's)",
+        choices=NORMALIZER_NAMES,
+        help="one normalizer for every utterance (default: each utterance's language normalizer)",
     )
     errors.add_argument("--top", type=int, default=20, help="how many frequent errors to list")
     errors.add_argument("--worst", type=int, default=5, help="how many worst utterances to show")
@@ -86,7 +88,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         )
         print(f"Predictions: {path}")
     elif args.command == "score":
-        normalizer = get_normalizer(args.normalizer_lang) if args.normalizer_lang else None
+        normalizer = get_normalizer_by_name(args.normalizer) if args.normalizer else None
         scores, path = score_run(
             args.run,
             args.manifest,
@@ -97,7 +99,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         print(format_summary(scores))
         print(f"Scores: {path}")
     elif args.command == "errors":
-        normalizer = get_normalizer(args.normalizer_lang) if args.normalizer_lang else None
+        normalizer = get_normalizer_by_name(args.normalizer) if args.normalizer else None
         utterances, report, path = analyze_run(
             args.run, args.manifest, normalizer=normalizer, top=args.top, worst=args.worst
         )

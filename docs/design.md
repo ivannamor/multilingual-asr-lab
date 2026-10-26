@@ -21,6 +21,7 @@ made; superseded entries are marked, not deleted.
 | 12 | [One run directory per configuration, resumable, with provenance](#12-one-run-directory-per-configuration-resumable-with-provenance) | engineering |
 | 13 | [Report the widest confidence interval across resampling units](#13-report-the-widest-confidence-interval-across-resampling-units) | statistics |
 | 14 | [Scores files are named after their settings](#14-scores-files-are-named-after-their-settings) | engineering |
+| 15 | [Whisper's basic normalizer is reimplemented, not imported](#15-whispers-basic-normalizer-is-reimplemented-not-imported) | evaluation |
 
 ---
 
@@ -302,3 +303,22 @@ timestamped files (identical copies pile up, and it is unclear which one is curr
 
 **Consequences.** Same settings give the same file with the same content; different settings
 never collide. A cross-run view (e.g. MLflow) can be built on top of these files later.
+
+## 15. Whisper's basic normalizer is reimplemented, not imported
+
+**Context.** OpenAI Whisper's `BasicTextNormalizer` is the default normalization for non-English
+text in many papers and leaderboards, so results are easier to compare when it is available. It
+ships with the `openai-whisper` package, which depends on PyTorch (about 5 GB on this machine).
+
+**Decision.** The normalizer is reimplemented in a few lines as `whisper-basic` (lowercase; remove
+text in square/angle brackets and in parentheses; Unicode NFKC; replace every mark, symbol and
+punctuation character with a space; collapse whitespace) and tested on known cases. Normalizers
+can be selected by name on the command line (`--normalizer whisper-basic`).
+
+**Alternatives rejected.** Depending on `openai-whisper` for one function; leaving it out (losing
+comparability with published numbers).
+
+**Consequences.** Small differences from the original are possible and are declared; tokens are
+the same on the tested cases. A first use already showed a pitfall: FLEURS references contain
+spoken text in parentheses (103 of 865 Italian test utterances), which `whisper-basic` deletes,
+turning correctly transcribed words into insertions (experiment E3).

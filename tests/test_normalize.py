@@ -11,8 +11,11 @@ from asr_lab.evaluation.normalize import (
     GERMAN,
     IDENTITY,
     ITALIAN,
+    NORMALIZER_NAMES,
+    WHISPER_BASIC,
     Normalizer,
     get_normalizer,
+    get_normalizer_by_name,
 )
 
 RIGHT_QUOTE = "\u2019"  # typographic apostrophe, produced by word processors and many models
@@ -62,13 +65,13 @@ def test_hyphenated_words_are_split() -> None:
     assert ITALIAN("vento da nord-est") == "vento da nord est"
 
 
-@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, GERMAN])
+@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC])
 @pytest.mark.parametrize("text", ["", "   ", "?!...", "«»"])
 def test_empty_or_punctuation_only_gives_empty_string(normalizer: Normalizer, text: str) -> None:
     assert normalizer(text) == ""
 
 
-@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, GERMAN])
+@pytest.mark.parametrize("normalizer", [BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC])
 @pytest.mark.parametrize(
     "text",
     [
@@ -95,7 +98,7 @@ def test_get_normalizer_unknown_language() -> None:
 
 
 def test_normalizer_names_are_unique() -> None:
-    names = [n.name for n in (IDENTITY, BASIC, ENGLISH, ITALIAN, GERMAN)]
+    names = [n.name for n in (IDENTITY, BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC)]
     assert len(names) == len(set(names))
 
 
@@ -104,3 +107,39 @@ def test_normalization_changes_wer() -> None:
     hypothesis = f"l{RIGHT_QUOTE}uomo è arrivato"
     assert wer([reference], [hypothesis]) == pytest.approx(2 / 3)
     assert wer([ITALIAN(reference)], [ITALIAN(hypothesis)]) == 0.0
+
+
+# --- whisper-basic (reimplementation of OpenAI Whisper's BasicTextNormalizer) ---------
+
+
+@pytest.mark.parametrize(
+    ("text", "expected"),
+    [
+        ("L'uomo, dell'anno!", "l uomo dell anno"),  # apostrophes become spaces
+        (f"L{RIGHT_QUOTE}uomo", "l uomo"),
+        ("Perché è così?", "perché è così"),  # accents are kept
+        ("[Musica] Ciao (risate) a <unk> tutti", "ciao a tutti"),  # annotations removed
+        ("Costa 20$ e il 5%.", "costa 20 e il 5"),  # symbols removed, digits kept
+        ("Sono 2.000 km", "sono 2 000 km"),
+        ("Don't stop", "don t stop"),
+    ],
+)
+def test_whisper_basic(text: str, expected: str) -> None:
+    assert WHISPER_BASIC(text) == expected
+
+
+def test_whisper_basic_differs_from_it_v1_on_symbols() -> None:
+    assert ITALIAN("Costa 20$") == "costa 20$"  # it-v1 keeps symbols (they are not punctuation)
+    assert WHISPER_BASIC("Costa 20$") == "costa 20"
+
+
+def test_get_normalizer_by_name() -> None:
+    assert get_normalizer_by_name("it-v1") is ITALIAN
+    assert get_normalizer_by_name("whisper-basic") is WHISPER_BASIC
+    assert get_normalizer_by_name("none") is IDENTITY
+    assert set(NORMALIZER_NAMES) == {"none", "basic-v1", "en-v1", "it-v1", "de-v1", "whisper-basic"}
+
+
+def test_get_normalizer_by_unknown_name() -> None:
+    with pytest.raises(ValueError, match="No normalizer named 'it-v9'; available: none"):
+        get_normalizer_by_name("it-v9")

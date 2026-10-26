@@ -18,6 +18,8 @@ _APOSTROPHE_VARIANTS = "\u2019\u2018\u02bc\u00b4\u0060"
 _APOSTROPHE_TABLE = str.maketrans(dict.fromkeys(_APOSTROPHE_VARIANTS, "'"))
 # An apostrophe that is not between two word characters: quotes, or "po'".
 _EDGE_APOSTROPHE = re.compile(r"(?<!\w)'|'(?!\w)")
+# Text in square or angle brackets ("[Music]", "<unk>") or in parentheses ("(laughs)").
+_BRACKETED = re.compile(r"[<\[][^>\]]*[>\]]|\(([^)]+?)\)")
 
 
 def unicode_nfc(text: str) -> str:
@@ -66,6 +68,23 @@ def collapse_whitespace(text: str) -> str:
     return " ".join(text.split())
 
 
+def remove_bracketed(text: str) -> str:
+    """Remove annotations in brackets or parentheses, e.g. "[Music]" or "(laughs)"."""
+    return _BRACKETED.sub("", text)
+
+
+def remove_marks_symbols_punctuation(text: str) -> str:
+    """Apply Unicode NFKC, then replace every mark, symbol and punctuation character with a space.
+
+    Unlike ``remove_punctuation`` this also removes apostrophes inside words and
+    symbols such as "$" or "%", as OpenAI Whisper's basic normalizer does.
+    """
+    return "".join(
+        " " if unicodedata.category(char)[0] in "MSP" else char
+        for char in unicodedata.normalize("NFKC", text)
+    )
+
+
 @dataclass(frozen=True)
 class Normalizer:
     """A named, ordered pipeline of text transformations.
@@ -93,8 +112,21 @@ BASIC = Normalizer("basic-v1", (*_COMMON_STEPS, collapse_whitespace))
 ENGLISH = Normalizer("en-v1", (*_COMMON_STEPS, collapse_whitespace))
 ITALIAN = Normalizer("it-v1", (*_COMMON_STEPS, split_elisions, collapse_whitespace))
 GERMAN = Normalizer("de-v1", (*_COMMON_STEPS, replace_eszett, collapse_whitespace))
+# Reimplementation of ``BasicTextNormalizer`` from OpenAI Whisper (the default for
+# non-English text in many papers and leaderboards), written here to avoid
+# depending on the openai-whisper package and PyTorch. Tokens are identical to the
+# original; leading and trailing spaces are also trimmed.
+WHISPER_BASIC = Normalizer(
+    "whisper-basic",
+    (lowercase, remove_bracketed, remove_marks_symbols_punctuation, collapse_whitespace),
+)
 
 _BY_LANGUAGE = {"en": ENGLISH, "it": ITALIAN, "de": GERMAN}
+_BY_NAME = {
+    normalizer.name: normalizer
+    for normalizer in (IDENTITY, BASIC, ENGLISH, ITALIAN, GERMAN, WHISPER_BASIC)
+}
+NORMALIZER_NAMES = tuple(_BY_NAME)
 
 
 def get_normalizer(lang: str) -> Normalizer:
@@ -108,3 +140,17 @@ def get_normalizer(lang: str) -> Normalizer:
     except KeyError:
         supported = ", ".join(sorted(_BY_LANGUAGE))
         raise ValueError(f"No normalizer for language {lang!r}; supported: {supported}") from None
+
+
+def get_normalizer_by_name(name: str) -> Normalizer:
+    """Return a normalizer by its versioned name, e.g. ``"it-v1"`` or ``"whisper-basic"``.
+
+    Raises:
+        ValueError: if no normalizer has that name.
+    """
+    try:
+        return _BY_NAME[name]
+    except KeyError:
+        raise ValueError(
+            f"No normalizer named {name!r}; available: {', '.join(NORMALIZER_NAMES)}"
+        ) from None

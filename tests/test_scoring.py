@@ -168,3 +168,12 @@ def test_summary_and_cli(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> 
     path = run_dir / "scores_it-v1_r50.json"
     assert f"Scores: {path}" in output
     assert format_summary(json.loads(path.read_text(encoding="utf-8"))) in output
+
+
+def test_cli_score_with_a_named_normalizer(tmp_path: Path) -> None:
+    run_dir, _ = _run_dir(tmp_path)
+    cli.main(
+        ["score", "--run", str(run_dir), "--normalizer", "whisper-basic", "--n-resamples", "50"]
+    )
+    scores = json.loads((run_dir / "scores_whisper-basic_r50.json").read_text(encoding="utf-8"))
+    assert scores["normalizer"] == ["whisper-basic"]
