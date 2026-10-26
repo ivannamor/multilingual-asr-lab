@@ -6,8 +6,11 @@ A reproducible framework to evaluate, compare and improve automatic speech recog
 models on Italian, German and English, with a focus on statistically sound evaluation and
 data-centric optimization.
 
-> **Status:** early development. The evaluation core (alignment and error counts) is in place;
-> datasets, model adapters and experiments are coming next.
+> **Status:** early development. Evaluation (WER/CER, text normalization, bootstrap confidence
+> intervals), FLEURS ingestion and the common model interface are in place; the first model
+> adapter and the experiments are next.
+
+Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
 
 ## Quick start
 
