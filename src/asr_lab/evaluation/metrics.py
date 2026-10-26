@@ -6,7 +6,8 @@ level (sequences of characters), which is how WER and CER are computed.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+import math
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from enum import StrEnum
 
@@ -93,6 +94,78 @@ def count_errors(alignment: Sequence[AlignedPair]) -> ErrorCounts:
         deletions=ops.count(EditOp.DELETION),
         insertions=ops.count(EditOp.INSERTION),
     )
+
+
+def word_tokens(text: str) -> list[str]:
+    """Split a transcript into words on whitespace."""
+    return text.split()
+
+
+def char_tokens(text: str) -> list[str]:
+    """Split a transcript into characters, keeping one space between words.
+
+    Runs of whitespace collapse to a single space and leading/trailing
+    whitespace is dropped, so spacing differences are never counted as errors.
+    Spaces between words are characters, as in jiwer.
+    """
+    return list(" ".join(text.split()))
+
+
+def utterance_counts(
+    references: Sequence[str],
+    hypotheses: Sequence[str],
+    tokenize: Callable[[str], list[str]] = word_tokens,
+) -> list[ErrorCounts]:
+    """Align every reference/hypothesis pair and return one ``ErrorCounts`` each.
+
+    Keeping per-utterance counts lets later steps (corpus totals, bootstrap
+    resampling, slicing) work without re-running the alignment.
+
+    Raises:
+        ValueError: if the number of references and hypotheses differs.
+    """
+    if len(references) != len(hypotheses):
+        raise ValueError(f"Got {len(references)} references but {len(hypotheses)} hypotheses")
+    return [
+        count_errors(align(tokenize(ref), tokenize(hyp)))
+        for ref, hyp in zip(references, hypotheses, strict=True)
+    ]
+
+
+def error_rate(counts: ErrorCounts) -> float:
+    """Return (S + D + I) / N, where N is the number of reference tokens.
+
+    With an empty reference (N = 0) the rate is 0.0 if there are no errors
+    and ``math.inf`` otherwise: any output on an empty reference is infinitely
+    wrong relative to its length. At corpus level this only happens if every
+    reference is empty.
+    """
+    if counts.ref_length == 0:
+        return 0.0 if counts.errors == 0 else math.inf
+    return counts.errors / counts.ref_length
+
+
+def wer(references: Sequence[str], hypotheses: Sequence[str]) -> float:
+    """Corpus-level word error rate: total errors over total reference words.
+
+    This is not the mean of per-utterance WERs, which would give short
+    utterances the same weight as long ones.
+
+    Example:
+        >>> wer(["sì", "oggi piove molto forte"], ["no", "oggi piove molto forte"])
+        0.2
+    """
+    return error_rate(sum(utterance_counts(references, hypotheses, word_tokens), ErrorCounts()))
+
+
+def cer(references: Sequence[str], hypotheses: Sequence[str]) -> float:
+    """Corpus-level character error rate (spaces between words count as characters).
+
+    Example:
+        >>> round(cer(["perché"], ["perche"]), 3)
+        0.167
+    """
+    return error_rate(sum(utterance_counts(references, hypotheses, char_tokens), ErrorCounts()))
 
 
 def _cost_matrix(reference: Sequence[str], hypothesis: Sequence[str]) -> list[list[int]]:

@@ -24,8 +24,29 @@ uv run pytest                # run the test suite (including the examples below)
 
 ## Usage
 
-Align a reference transcript with a model hypothesis and count the errors
-(open a Python console with `uv run python`):
+Open a Python console with `uv run python`.
+
+### Word and character error rate
+
+`wer` and `cer` take a list of reference transcripts and a list of model outputs (hypotheses)
+and return **corpus-level** rates: total errors divided by total reference words (or
+characters), not the mean of per-utterance rates.
+
+```python
+>>> from asr_lab.evaluation.metrics import wer, cer
+>>> references = ["il gatto dorme", "oggi piove"]
+>>> hypotheses = ["il cane", "oggi piove"]
+>>> wer(references, hypotheses)
+0.4
+>>> round(cer(references, hypotheses), 3)
+0.375
+
+```
+
+Here the first utterance has 2 errors out of 3 words and the second has none, so the corpus WER
+is 2 / 5 = 0.4. A WER above 1.0 is possible when the model inserts many extra words.
+
+### Inspecting the alignment
 
 ```python
 >>> from asr_lab.evaluation.metrics import align, count_errors
@@ -36,20 +57,8 @@ match         il     il
 deletion      gatto  None
 substitution  dorme  cane
 
->>> counts = count_errors(pairs)
->>> counts
+>>> count_errors(pairs)
 ErrorCounts(hits=1, substitutions=1, deletions=1, insertions=0)
->>> print(f"WER = {counts.errors / counts.ref_length:.1%}")
-WER = 66.7%
-
-```
-
-The same functions work at character level, which is how the character error rate (CER) is
-computed:
-
-```python
->>> count_errors(align(list("kitten"), list("sitting")))
-ErrorCounts(hits=4, substitutions=2, deletions=0, insertions=1)
 
 ```
 
