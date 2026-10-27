@@ -133,6 +133,19 @@ descriptively: the utterances differ, so no paired test is possible between them
 | English: base → small | 10.03% | 6.66% | -3.37% [-3.98%, -2.76%] | 100.0% | yes |
 <!-- END e1-model-gap -->
 
+### Larger models on a GPU
+
+Whisper-large-v3-turbo and Whisper-large-v3 were transcribed in float16 on a Colab T4 GPU
+([notebook](notebooks/e1_large_colab.ipynb)), together with a *bridge* run of Whisper-small on the
+same GPU: comparing it with the CPU int8 run of the same model measures the effect of hardware and
+precision alone, so that the model comparisons below are not confounded with it.
+
+<!-- BEGIN e1-gpu -->
+<!-- END e1-gpu -->
+
+<!-- BEGIN e1-gpu-gaps -->
+<!-- END e1-gpu-gaps -->
+
 ### Findings
 
 1. **English is the easiest language for both models, German the hardest.** Whisper-small reaches

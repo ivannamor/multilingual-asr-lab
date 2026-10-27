@@ -25,6 +25,7 @@ made; superseded entries are marked, not deleted.
 | 16 | [it-v2 writes numbers in words, but is not the default yet](#16-it-v2-writes-numbers-in-words-but-is-not-the-default-yet) | evaluation |
 | 17 | [Results tables are generated and checked against committed results](#17-results-tables-are-generated-and-checked-against-committed-results) | engineering |
 | 18 | [A notebook for trying the pipeline, not for presenting results](#18-a-notebook-for-trying-the-pipeline-not-for-presenting-results) | engineering |
+| 19 | [Large models on a Colab GPU, with a bridge run and predictions brought back as a zip](#19-large-models-on-a-colab-gpu-with-a-bridge-run-and-predictions-brought-back-as-a-zip) | inference |
 
 ---
 
@@ -405,3 +406,29 @@ loads them with `ctypes` (they are not on the system library path), and checks t
 Whisper-tiny. Any failure falls back to the CPU with a message instead of stopping the notebook.
 Verified on a Colab T4: 30 utterances with Whisper-small in about one second, against a few minutes
 on the CPU; the fallback path was exercised on a machine without a GPU.
+
+## 19. Large models on a Colab GPU, with a bridge run and predictions brought back as a zip
+
+**Context.** Whisper-large-v3 and large-v3-turbo are too slow for the development machine (an
+ARM64 CPU, no GPU), so they run on a Colab T4 GPU in float16, while the existing runs used int8 on
+the CPU. A comparison between a CPU int8 run and a GPU float16 run changes the model, the precision
+and the hardware at once.
+
+**Decision.** `notebooks/e1_large_colab.ipynb` transcribes the three FLEURS test sets with
+Whisper-small, large-v3-turbo and large-v3 on the GPU. Whisper-small is a *bridge* run: its paired
+comparison with the CPU int8 run of the same model measures the effect of precision and hardware
+alone, and the model comparisons (small → turbo → large-v3) are all made between GPU runs. The
+notebook works inside a clone of the repository, so that every `run.json` records the git commit,
+and builds the manifests with the same ingest code, so that their SHA-256 matches the local ones.
+It only transcribes: it writes a zip with `predictions.jsonl` and `run.json` of each run, which is
+unzipped into `experiments/runs/`; scores, comparisons and tables are computed locally by
+`experiments/E1/run.sh`, exactly as for the CPU runs.
+
+**Alternatives rejected.** Running the large models on the CPU in int8 (homogeneous with the other
+runs, but hours per language); comparing CPU and GPU runs directly (confounded); pushing results
+from Colab to GitHub (needs credentials in the notebook); saving to Google Drive (convenient for
+long sessions, but an extra copy step and a Google account dependency).
+
+**Consequences.** Real-time factors measured on the GPU are not comparable with the CPU ones and
+are reported separately. If Colab images change so that the manifests differ, scoring stops with a
+SHA-256 mismatch instead of producing wrong numbers.
