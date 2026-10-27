@@ -178,6 +178,11 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--compute-type` | `int8` on CPU, `float16` on GPU | weight precision, e.g. `float32` |
 | | `--beam-size` | `5` | `1` = greedy decoding |
 | | `--cpu-threads` | `4` | more threads were slower on the development machine |
+| | `--temperature` | `0 0.2 0.4 0.6 0.8 1` | fallback temperatures, tried in order when an output looks broken; `0` alone disables the fallback |
+| | `--compression-ratio-threshold`, `--log-prob-threshold` | `2.4`, `-1.0` | when the fallback is triggered |
+| | `--no-speech-threshold` | `0.6` | output nothing for a window that is probably not speech |
+| | `--vad` | off | remove non-speech audio (Silero VAD) before decoding |
+| | `--hallucination-silence-threshold` | off | skip silences longer than this (seconds) around a likely hallucination; enables word timestamps |
 | | `--batch-size` | `8` | utterances written to disk at a time |
 | | `--limit` | all | first N utterances of the manifest |
 | `asr-lab score` | `--run` | (required) | run directory |

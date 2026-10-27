@@ -72,8 +72,57 @@ def test_decoding_options_are_passed_to_the_model() -> None:
     model, fake = _adapter([FakeSegment("x", -0.1)], beam_size=3)
     model.transcribe([_sample(lang="de")])
     assert fake.calls == [
-        {"language": "de", "beam_size": 3, "condition_on_previous_text": False, "vad_filter": False}
+        {
+            "language": "de",
+            "beam_size": 3,
+            "temperature": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+            "compression_ratio_threshold": 2.4,
+            "log_prob_threshold": -1.0,
+            "no_speech_threshold": 0.6,
+            "vad_filter": False,
+            "hallucination_silence_threshold": None,
+            "word_timestamps": False,
+            "condition_on_previous_text": False,
+            "best_of": 5,
+            "patience": 1.0,
+            "length_penalty": 1.0,
+        }
     ]
+
+
+def test_every_passed_option_is_recorded_in_the_config() -> None:
+    model, fake = _adapter(
+        [FakeSegment("x", -0.1)],
+        temperature=(0.0,),
+        vad_filter=True,
+        no_speech_threshold=None,
+        hallucination_silence_threshold=2.0,
+    )
+    model.transcribe([_sample()])
+    (options,) = fake.calls
+    assert options["temperature"] == [0.0]
+    assert options["vad_filter"] is True
+    assert options["word_timestamps"] is True  # needed by hallucination_silence_threshold
+    passed = {key: value for key, value in options.items() if key != "language"}
+    assert passed.items() <= model.config.items()
+
+
+def test_defaults_match_the_implicit_values_of_older_runs() -> None:
+    model, _ = _adapter([])
+    assert model.implicit_config.items() <= model.config.items()
+
+
+@pytest.mark.parametrize(
+    ("options", "message"),
+    [
+        ({"beam_size": 0}, "beam_size must be at least 1"),
+        ({"temperature": ()}, "temperature must be non-empty"),
+        ({"temperature": (0.0, -0.2)}, "non-negative"),
+    ],
+)
+def test_invalid_decoding_options(options: dict[str, Any], message: str) -> None:
+    with pytest.raises(ValueError, match=message):
+        FasterWhisperModel(model=FakeWhisper([]), **options)
 
 
 def test_every_sample_is_transcribed_in_order() -> None:

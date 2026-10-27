@@ -30,7 +30,7 @@ from asr_lab.evaluation.scoring import (
     format_summary,
     score_run,
 )
-from asr_lab.inference.faster_whisper import FasterWhisperModel
+from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
 from asr_lab.reporting import render_results
 
@@ -51,6 +51,26 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     transcribe.add_argument("--beam-size", type=int, default=5)
     transcribe.add_argument("--cpu-threads", type=int, default=4)
+    decoding = transcribe.add_argument_group("decoding (defaults: faster-whisper's)")
+    decoding.add_argument(
+        "--temperature",
+        type=float,
+        nargs="+",
+        default=list(DEFAULT_TEMPERATURES),
+        help="fallback temperatures; '--temperature 0' disables the fallback",
+    )
+    decoding.add_argument("--compression-ratio-threshold", type=float, default=2.4)
+    decoding.add_argument("--log-prob-threshold", type=float, default=-1.0)
+    decoding.add_argument("--no-speech-threshold", type=float, default=0.6)
+    decoding.add_argument(
+        "--vad", action="store_true", help="remove non-speech audio (Silero VAD) before decoding"
+    )
+    decoding.add_argument(
+        "--hallucination-silence-threshold",
+        type=float,
+        default=None,
+        help="skip silences longer than this (seconds) around a likely hallucination",
+    )
     transcribe.add_argument("--batch-size", type=int, default=8)
     transcribe.add_argument(
         "--limit", type=int, default=None, help="only the first N utterances of the manifest"
@@ -122,6 +142,12 @@ def main(argv: Sequence[str] | None = None) -> None:
             compute_type=args.compute_type,
             beam_size=args.beam_size,
             cpu_threads=args.cpu_threads,
+            temperature=args.temperature,
+            compression_ratio_threshold=args.compression_ratio_threshold,
+            log_prob_threshold=args.log_prob_threshold,
+            no_speech_threshold=args.no_speech_threshold,
+            vad_filter=args.vad,
+            hallucination_silence_threshold=args.hallucination_silence_threshold,
         )
         path = transcribe_manifest(
             model, args.manifest, args.output, batch_size=args.batch_size, limit=args.limit

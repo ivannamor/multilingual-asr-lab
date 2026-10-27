@@ -63,6 +63,15 @@ class ASRModel(ABC):
         """Settings that can change the output, stored with every run; adapters override it."""
         return {}
 
+    @property
+    def implicit_config(self) -> dict[str, Any]:
+        """Settings added to ``config`` after runs had been saved without them.
+
+        Each maps to the value those older runs actually used (a library default
+        that was not recorded), so that they can still be resumed; empty by default.
+        """
+        return {}
+
     @abstractmethod
     def _transcribe_batch(self, samples: Sequence[AudioSample]) -> list[Hypothesis]:
         """Transcribe a batch of samples; return hypotheses in the same order."""
