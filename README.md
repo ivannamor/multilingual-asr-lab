@@ -162,6 +162,25 @@ because correlated utterances make narrower intervals over-optimistic. The score
 records the number of utterances and reference words, S/D/I counts, the model and its settings,
 and the manifest hash.
 
+### Experiment tracking (MLflow)
+
+Scores and comparisons can also be logged to [MLflow](https://mlflow.org), to browse, filter and
+plot them in its web interface. The JSON files stay the source of truth (tables are generated
+from them), and logging the same file again replaces its MLflow run instead of duplicating it.
+MLflow is an optional dependency:
+
+```bash
+uv sync --all-extras                                        # install the tracking extra
+uv run asr-lab score --run runs/whisper-small-it --mlflow E1
+uv run asr-lab compare --a runs/A --b runs/B --output cmp.json --mlflow E1
+uv run mlflow ui --backend-store-uri sqlite:///mlflow.db    # http://127.0.0.1:5000
+```
+
+Each scores run records the WER and CER with their confidence intervals, S/D/I counts, the
+real-time factor, every model and decoding setting as a parameter, and the git commits of the
+transcription and of the scoring; the JSON file is attached as an artifact. Runs are stored where
+`MLFLOW_TRACKING_URI` points, by default in `mlflow.db` (not committed).
+
 ### Options
 
 Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe --help`.
@@ -189,6 +208,7 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--manifest` | from `run.json` | override the manifest |
 | | `--normalizer` | per utterance language | one normalizer by name for every utterance: `none`, `basic-v1`, `whisper-basic`, `it-v1`, `it-v2`, `de-v1`, `en-v1` |
 | | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings (non-default values appear in the file name) |
+| | `--mlflow` | off | also log the scores to this MLflow experiment |
 | `asr-lab errors` | `--run` | (required) | run directory |
 | | `--manifest`, `--normalizer` | as `score` | as `score` |
 | | `--top`, `--worst` | `20`, `5` | frequent errors listed, worst utterances shown |
@@ -196,6 +216,7 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--normalizer-a`, `--normalizer-b` | per utterance language | normalizer of each side |
 | | `--metric` | `wer` | `wer` or `cer` |
 | | `--output` | none | save the comparison as JSON |
+| | `--mlflow` | off | also log the saved comparison to this MLflow experiment (needs `--output`) |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |

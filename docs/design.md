@@ -27,6 +27,7 @@ made; superseded entries are marked, not deleted.
 | 18 | [A notebook for trying the pipeline, not for presenting results](#18-a-notebook-for-trying-the-pipeline-not-for-presenting-results) | engineering |
 | 19 | [Large models on a Colab GPU, with a bridge run and predictions brought back as a zip](#19-large-models-on-a-colab-gpu-with-a-bridge-run-and-predictions-brought-back-as-a-zip) | inference |
 | 20 | [Every decoding option is explicit and recorded](#20-every-decoding-option-is-explicit-and-recorded) | inference |
+| 21 | [MLflow mirrors the JSON results, it does not replace them](#21-mlflow-mirrors-the-json-results-it-does-not-replace-them) | engineering |
 
 ---
 
@@ -461,3 +462,28 @@ library version's defaults).
 **Consequences.** `run.json` describes the decoding completely. The implicit values are correct
 only for faster-whisper 1.2.1, the version recorded in every existing run; a later upgrade that
 changes a default must not reuse them for its own runs, which have every field recorded anyway.
+
+## 21. MLflow mirrors the JSON results, it does not replace them
+
+**Context.** Experiment E2 produces dozens of runs (decoding settings × languages). Comparing them
+by opening JSON files is slow; an experiment tracker gives a table of runs, filters and plots.
+MLflow is the most common open-source choice. But the results already have a complete,
+version-controlled record (run directories, scores files, generated tables, decision 17).
+
+**Decision.** `asr-lab score` and `asr-lab compare` take `--mlflow EXPERIMENT`, which logs the
+saved result to MLflow (`asr_lab/tracking.py`): metrics with their confidence intervals, every
+model and decoding setting as a parameter, real-time factor, git commits, and the JSON file as an
+artifact. The JSON files remain the source of truth: no table or document is generated from
+MLflow. Each result file maps to one MLflow run, found by a tag with the file's path, so logging it
+again replaces that run instead of creating a duplicate. MLflow is an optional extra
+(`tracking`): the Colab notebooks and anyone who only runs the pipeline do not install it. The
+store is MLflow's default local SQLite database (`mlflow.db`, not committed), or whatever
+`MLFLOW_TRACKING_URI` points to. CI installs all extras, so the tracking tests run there.
+
+**Alternatives rejected.** MLflow as the primary store (results would depend on a database
+outside git, and the tables could no longer be checked against committed files); logging during
+transcription (scores do not exist yet then, and a run's identity is already in `run.json`); a
+mandatory dependency (MLflow and its dependencies are large, for a feature that is optional).
+
+**Consequences.** The MLflow store can be deleted and rebuilt at any time by rescoring with
+`--mlflow`. Comparisons are logged only when saved with `--output`, since MLflow mirrors files.

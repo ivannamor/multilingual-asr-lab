@@ -19,6 +19,7 @@ htmlcov/
 /data/
 /models/
 /mlruns/
+/mlflow.db
 /runs/
 
 # Hydra run directories
