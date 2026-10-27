@@ -6,6 +6,7 @@ Usage::
     uv run asr-lab score --run runs/whisper-small-it
     uv run asr-lab errors --run runs/whisper-small-it
     uv run asr-lab compare --a runs/A --b runs/B
+    uv run asr-lab select --spec experiments/E2/sweep.toml --output selection.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -33,6 +34,7 @@ from asr_lab.evaluation.scoring import (
 from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
 from asr_lab.reporting import render_results
+from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
 from asr_lab.tracking import log_comparison, log_scores
 
 _MLFLOW_HELP = (
@@ -128,6 +130,17 @@ def main(argv: Sequence[str] | None = None) -> None:
     compare.add_argument("--output", type=Path, default=None, help="save the result as JSON")
     compare.add_argument("--mlflow", metavar="EXPERIMENT", default=None, help=_MLFLOW_HELP)
 
+    select = commands.add_parser(
+        "select",
+        help="choose a decoding configuration from the runs of a sweep "
+        "(fastest not significantly worse than the best)",
+    )
+    select.add_argument("--spec", required=True, type=Path, help="TOML sweep spec")
+    select.add_argument("--split", default="dev")
+    select.add_argument("--n-resamples", type=int, default=DEFAULT_N_RESAMPLES)
+    select.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    select.add_argument("--output", type=Path, default=None, help="save the result as JSON")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -199,6 +212,14 @@ def main(argv: Sequence[str] | None = None) -> None:
             print(f"Comparison: {args.output}")
             if args.mlflow:
                 print(f"MLflow run: {log_comparison(result, args.output, args.mlflow)}")
+    elif args.command == "select":
+        selection = select_configuration(
+            load_spec(args.spec), args.split, n_resamples=args.n_resamples, seed=args.seed
+        )
+        print(format_selection(selection))
+        if args.output:
+            save_selection(selection, args.output)
+            print(f"Selection: {args.output}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,

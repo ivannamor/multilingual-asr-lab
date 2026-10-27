@@ -112,6 +112,15 @@ def test_defaults_match_the_implicit_values_of_older_runs() -> None:
     assert model.implicit_config.items() <= model.config.items()
 
 
+def test_with_decoding_shares_the_weights_and_resets_other_options() -> None:
+    model, fake = _adapter([FakeSegment("x", -0.1)], model_size="medium", beam_size=3)
+    greedy = model.with_decoding(beam_size=1, vad_filter=True)
+    greedy.transcribe([_sample()])
+    assert fake.calls[0]["beam_size"] == 1 and fake.calls[0]["vad_filter"] is True
+    assert (greedy.model_size, greedy.device, greedy.compute_type) == ("medium", "cpu", "int8")
+    assert greedy.with_decoding().beam_size == 5  # options not given are the defaults
+
+
 @pytest.mark.parametrize(
     ("options", "message"),
     [

@@ -487,3 +487,36 @@ mandatory dependency (MLflow and its dependencies are large, for a feature that 
 
 **Consequences.** The MLflow store can be deleted and rebuilt at any time by rescoring with
 `--mlflow`. Comparisons are logged only when saved with `--output`, since MLflow mirrors files.
+
+## 22. Decoding options are chosen on the dev set by a rule written in code
+
+**Context.** Experiment E2 tunes Whisper-large-v3-turbo's decoding options (beam size,
+temperature fallback, voice activity detection, hallucination silence threshold) for speed and
+accuracy. Tuning on the test set would make its result optimistic; choosing by eye on the dev set
+leaves room for choices that are hard to reproduce, and for a look at the test set in between.
+
+**Decision.** A sweep is a TOML spec (`experiments/E2/sweep.toml`): one checkpoint, the languages
+with their normalizers, and named configurations that each change one option from the E1 setup.
+`asr_lab.sweep.run_sweep` transcribes them all with one loaded model (`with_decoding` shares the
+weights), after a warm-up so that no configuration pays for initialising the GPU.
+`select_configuration` then applies a rule fixed before any result exists: in each language the
+configuration with the lowest WER is the best; a configuration is eligible if a paired bootstrap
+does not find it significantly worse than the best of any language; the eligible configuration
+with the shortest total processing time wins, and if none is eligible the baseline is kept. One
+configuration serves every language, as one deployment would. The Colab notebook runs the dev
+sweep, the rule and the test run of the selected configuration in one session, without anyone
+looking at the dev results in between. Every run must have exactly its configuration's settings
+in `run.json`, or the selection refuses it. A repeat of the baseline, which is never selectable,
+measures how much two identical runs differ in WER and speed.
+
+**Alternatives rejected.** One configuration per language (three times the choices and the risk
+of overfitting the dev set, for a deployment that would need three setups); a full grid of
+combinations (dozens of runs; one factor at a time shows each option's effect, at the cost of
+missing interactions); choosing the lowest dev WER (ignores speed, the reason to tune decoding);
+a correction for multiple comparisons in the rule (uncorrected tests reject more configurations,
+which errs on the side of accuracy).
+
+**Consequences.** The test set is used once. The best dev WER is optimistic, since it is the
+minimum of several noisy estimates, so the test comparison with E1 is the result to report.
+Speeds are measured on a shared Colab GPU: they are comparable within one session only, and the
+repeated baseline shows how much they vary.
