@@ -26,6 +26,7 @@ made; superseded entries are marked, not deleted.
 | 17 | [Results tables are generated and checked against committed results](#17-results-tables-are-generated-and-checked-against-committed-results) | engineering |
 | 18 | [A notebook for trying the pipeline, not for presenting results](#18-a-notebook-for-trying-the-pipeline-not-for-presenting-results) | engineering |
 | 19 | [Large models on a Colab GPU, with a bridge run and predictions brought back as a zip](#19-large-models-on-a-colab-gpu-with-a-bridge-run-and-predictions-brought-back-as-a-zip) | inference |
+| 20 | [Every decoding option is explicit and recorded](#20-every-decoding-option-is-explicit-and-recorded) | inference |
 
 ---
 
@@ -432,3 +433,31 @@ long sessions, but an extra copy step and a Google account dependency).
 **Consequences.** Real-time factors measured on the GPU are not comparable with the CPU ones and
 are reported separately. If Colab images change so that the manifests differ, scoring stops with a
 SHA-256 mismatch instead of producing wrong numbers.
+
+## 20. Every decoding option is explicit and recorded
+
+**Context.** The Whisper adapter passed only the beam size, `condition_on_previous_text` and
+`vad_filter` to faster-whisper, and recorded only those. Everything else came from the library's
+defaults without being recorded, including the temperature fallback: when an output looks broken
+(compression ratio above 2.4 or average log-probability below -1.0), faster-whisper decodes again
+by *sampling* at temperatures 0.2 to 1.0. The runs of E1 therefore used a fallback that their
+`run.json` did not mention, and that is not deterministic when it is triggered. Experiment E2
+varies these options, so they must be part of a run's identity.
+
+**Decision.** The adapter takes every decoding option that E2 varies (temperatures, the two
+fallback thresholds, `no_speech_threshold`, VAD, `hallucination_silence_threshold`) and passes all
+of them explicitly, together with the ones that are never varied (`best_of`, `patience`,
+`length_penalty`, `condition_on_previous_text`); all of them are recorded in `model_config`. The
+defaults are faster-whisper 1.2.1's, so existing results do not change. Runs saved before the new
+fields existed are still recognized as the same configuration: an adapter declares the values its
+older runs used implicitly (`ASRModel.implicit_config`), and a missing field is compared with
+that value. A real change of setting is still rejected.
+
+**Alternatives rejected.** Rewriting the committed `run.json` files (it would edit provenance
+after the fact); treating the old runs as a different configuration (they would have to be
+transcribed again for nothing); recording only non-default values (the record would depend on the
+library version's defaults).
+
+**Consequences.** `run.json` describes the decoding completely. The implicit values are correct
+only for faster-whisper 1.2.1, the version recorded in every existing run; a later upgrade that
+changes a default must not reuse them for its own runs, which have every field recorded anyway.

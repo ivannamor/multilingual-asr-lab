@@ -19,9 +19,12 @@ from asr_lab.inference.run import transcribe_manifest
 class FakeModel(ASRModel):
     """Echoes utterance ids; can fail after a number of calls to simulate an interruption."""
 
-    def __init__(self, fail_after_calls: int | None = None, beam_size: int = 5) -> None:
+    def __init__(
+        self, fail_after_calls: int | None = None, beam_size: int = 5, temperature: float = 0.0
+    ) -> None:
         self.fail_after_calls = fail_after_calls
         self.beam_size = beam_size
+        self.temperature = temperature
         self.transcribed: list[str] = []
 
     @property
@@ -30,7 +33,11 @@ class FakeModel(ASRModel):
 
     @property
     def config(self) -> dict[str, Any]:
-        return {"beam_size": self.beam_size}
+        return {"beam_size": self.beam_size, "temperature": self.temperature}
+
+    @property
+    def implicit_config(self) -> dict[str, Any]:
+        return {"temperature": 0.0}  # as if "temperature" had been added to config later
 
     def _transcribe_batch(self, samples: Sequence[AudioSample]) -> list[Hypothesis]:
         if self.fail_after_calls is not None and len(self.transcribed) >= self.fail_after_calls:
@@ -88,7 +95,7 @@ def test_transcribe_manifest_writes_predictions_and_run_metadata(tmp_path: Path)
 
     run = json.loads((out / "run.json").read_text(encoding="utf-8"))
     assert run["model"] == "fake"
-    assert run["model_config"] == {"beam_size": 5}
+    assert run["model_config"] == {"beam_size": 5, "temperature": 0.0}
     assert run["n_utterances"] == 5
     assert run["audio_seconds"] == 5.0
     assert len(run["manifest_sha256"]) == 64
@@ -133,6 +140,40 @@ def test_different_settings_in_the_same_directory_are_rejected(tmp_path: Path) -
         transcribe_manifest(FakeModel(beam_size=1), manifest, out, progress=False)
 
 
+def _drop_from_saved_config(run_dir: Path, key: str) -> None:
+    run_path = run_dir / "run.json"
+    run = json.loads(run_path.read_text(encoding="utf-8"))
+    del run["model_config"][key]
+    run_path.write_text(json.dumps(run), encoding="utf-8")
+
+
+def test_run_saved_before_a_setting_was_recorded_resumes_with_its_implicit_value(
+    tmp_path: Path,
+) -> None:
+    manifest = _manifest(tmp_path)
+    out = tmp_path / "run"
+    with pytest.raises(KeyboardInterrupt):
+        transcribe_manifest(
+            FakeModel(fail_after_calls=1), manifest, out, batch_size=2, progress=False
+        )
+    _drop_from_saved_config(out, "temperature")
+    resumed = FakeModel()
+    transcribe_manifest(resumed, manifest, out, progress=False)
+    assert resumed.transcribed == ["u2", "u3", "u4"]
+
+
+def test_implicit_value_does_not_hide_a_real_change(tmp_path: Path) -> None:
+    manifest = _manifest(tmp_path)
+    out = tmp_path / "run"
+    with pytest.raises(KeyboardInterrupt):
+        transcribe_manifest(
+            FakeModel(fail_after_calls=1), manifest, out, batch_size=2, progress=False
+        )
+    _drop_from_saved_config(out, "temperature")
+    with pytest.raises(ValueError, match="model_config"):
+        transcribe_manifest(FakeModel(temperature=0.4), manifest, out, progress=False)
+
+
 def test_predictions_for_unknown_utterances_are_rejected(tmp_path: Path) -> None:
     manifest = _manifest(tmp_path)
     out = tmp_path / "run"
@@ -172,5 +213,29 @@ def test_cli_transcribe(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None
         "compute_type": None,
         "beam_size": 1,
         "cpu_threads": 4,
+        "temperature": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+        "compression_ratio_threshold": 2.4,
+        "log_prob_threshold": -1.0,
+        "no_speech_threshold": 0.6,
+        "vad_filter": False,
+        "hallucination_silence_threshold": None,
     }
     assert len(read_predictions(out / "predictions.jsonl")) == 5
+
+
+def test_cli_transcribe_decoding_options(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    created: dict[str, Any] = {}
+
+    def fake_whisper(model_size: str, **settings: Any) -> FakeModel:
+        created.update(settings)
+        return FakeModel()
+
+    monkeypatch.setattr(cli, "FasterWhisperModel", fake_whisper)
+    manifest = _manifest(tmp_path)
+    cli.main(
+        ["transcribe", "--manifest", str(manifest), "--output", str(tmp_path / "run"),
+         "--temperature", "0", "--vad", "--hallucination-silence-threshold", "2"]
+    )  # fmt: skip
+    assert created["temperature"] == [0.0]
+    assert created["vad_filter"] is True
+    assert created["hallucination_silence_threshold"] == 2.0

@@ -95,7 +95,12 @@ def _start_or_resume(
     }
     if run_path.exists():
         previous = json.loads(run_path.read_text(encoding="utf-8"))
-        changed = [name for name in _IDENTITY_FIELDS if previous.get(name) != identity[name]]
+        # A run saved before some settings were recorded used their implicit values.
+        recorded = {
+            **previous,
+            "model_config": {**model.implicit_config, **(previous.get("model_config") or {})},
+        }
+        changed = [name for name in _IDENTITY_FIELDS if recorded.get(name) != identity[name]]
         if changed:
             raise ValueError(
                 f"{run_path.parent} already holds a run with different {changed}; "
