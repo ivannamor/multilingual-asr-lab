@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/large-v3-float16",
+  "manifest": "data/fleurs_de/test.jsonl",
+  "normalizer": [
+    "de-v1"
+  ],
+  "n_utterances": 862,
+  "substitutions": 540,
+  "deletions": 101,
+  "insertions": 111,
+  "distinct_confusion_pairs": 389,
+  "substitutions_with_digits_or_symbols": 49,
+  "top_confusions": [
+    {
+      "reference": "km",
+      "hypothesis": "kilometer",
+      "count": 5
+    },
+    {
+      "reference": "dass",
+      "hypothesis": "sodass",
+      "count": 5
+    },
+    {
+      "reference": "zum",
+      "hypothesis": "zu",
+      "count": 4
+    },
+    {
+      "reference": "hurrikan",
+      "hypothesis": "hurricane",
+      "count": 4
+    },
+    {
+      "reference": "gizeh",
+      "hypothesis": "giza",
+      "count": 4
+    },
+    {
+      "reference": "warnung",
+      "hypothesis": "tsunamiwarnung",
+      "count": 4
+    },
+    {
+      "reference": "webseite",
+      "hypothesis": "website",
+      "count": 4
+    },
+    {
+      "reference": "eine",
+      "hypothesis": "einer",
+      "count": 3
+    },
+    {
+      "reference": "chr",
+      "hypothesis": "christus",
+      "count": 3
+    },
+    {
+      "reference": "addenbrooke's",
+      "hypothesis": "edinburgh",
+      "count": 3
+    },
+    {
+      "reference": "s",
+      "hypothesis": "seite",
+      "count": 3
+    },
+    {
+      "reference": "zu",
+      "hypothesis": "zur",
+      "count": 3
+    },
+    {
+      "reference": "genutzt",
+      "hypothesis": "genützt",
+      "count": 3
+    },
+    {
+      "reference": "sachin",
+      "hypothesis": "sahin",
+      "count": 3
+    },
+    {
+      "reference": "runs",
+      "hypothesis": "trans",
+      "count": 3
+    },
+    {
+      "reference": "sankt",
+      "hypothesis": "st",
+      "count": 3
+    },
+    {
+      "reference": "park",
+      "hypothesis": "nationalpark",
+      "count": 3
+    },
+    {
+      "reference": "u",
+      "hypothesis": "unter",
+      "count": 3
+    },
+    {
+      "reference": "a",
+      "hypothesis": "anderem",
+      "count": 3
+    },
+    {
+      "reference": "kischinau",
+      "hypothesis": "chisinau",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "x",
+      "count": 11
+    },
+    {
+      "word": "so",
+      "count": 5
+    },
+    {
+      "word": "tsunami",
+      "count": 4
+    },
+    {
+      "word": "sie",
+      "count": 4
+    },
+    {
+      "word": "00",
+      "count": 4
+    },
+    {
+      "word": "prozent",
+      "count": 3
+    },
+    {
+      "word": "in",
+      "count": 3
+    },
+    {
+      "word": "man",
+      "count": 3
+    },
+    {
+      "word": "south",
+      "count": 3
+    },
+    {
+      "word": "wild",
+      "count": 3
+    },
+    {
+      "word": "die",
+      "count": 3
+    },
+    {
+      "word": "dreissig",
+      "count": 3
+    },
+    {
+      "word": "fertig",
+      "count": 3
+    },
+    {
+      "word": "darüber",
+      "count": 2
+    },
+    {
+      "word": "xi'an",
+      "count": 2
+    },
+    {
+      "word": "national",
+      "count": 2
+    },
+    {
+      "word": "riss",
+      "count": 2
+    },
+    {
+      "word": "6",
+      "count": 2
+    },
+    {
+      "word": "scotturb",
+      "count": 1
+    },
+    {
+      "word": "zusammen",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "vielen",
+      "count": 9
+    },
+    {
+      "word": "dank",
+      "count": 8
+    },
+    {
+      "word": "zu",
+      "count": 6
+    },
+    {
+      "word": "und",
+      "count": 4
+    },
+    {
+      "word": "in",
+      "count": 3
+    },
+    {
+      "word": "original",
+      "count": 3
+    },
+    {
+      "word": "bis",
+      "count": 3
+    },
+    {
+      "word": "so",
+      "count": 3
+    },
+    {
+      "word": "uhr",
+      "count": 3
+    },
+    {
+      "word": "hinaus",
+      "count": 3
+    },
+    {
+      "word": "blog",
+      "count": 2
+    },
+    {
+      "word": "es",
+      "count": 2
+    },
+    {
+      "word": "analogfilm",
+      "count": 2
+    },
+    {
+      "word": "cannabis",
+      "count": 2
+    },
+    {
+      "word": "neunundzwanzig",
+      "count": 2
+    },
+    {
+      "word": "mal",
+      "count": 2
+    },
+    {
+      "word": "internetradio",
+      "count": 2
+    },
+    {
+      "word": "3",
+      "count": 2
+    },
+    {
+      "word": "100",
+      "count": 2
+    },
+    {
+      "word": "der",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_de_13340325550442074798",
+      "errors": 7,
+      "reference_words": 36,
+      "reference": "da die lichtverschmutzung während ihrer hochphase nicht das problem darstellte das es heute ist befinden sie sich in der regel in städten oder auf universitätsgeländen die leichter zu erreichen sind als die in neuerer zeit errichteten",
+      "hypothesis": "da die lichtverschmutzung während ihrer hauchphase nicht das problem darstellt das es heute ist befinden sie sich in der regel in städten oder auf universitätsgelände die leichter zu erreichen sind als die neueren zeiterrichteten"
+    },
+    {
+      "utterance_id": "fleurs_de_4996376112031788319",
+      "errors": 6,
+      "reference_words": 25,
+      "reference": "der australier mitchell gourley wurde elfter im stehenden super g der männer der tschechische konkurrent oldrich jelinek wurde sechzehnter im sitzenden super g der männer",
+      "hypothesis": "der australier mitchell golly wurde 11 im stehenden super g der männer der tschechische konkurrent aldrich jelinek wurde 16 im sitzenden super g der männer vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_6819214157962336157",
+      "errors": 6,
+      "reference_words": 25,
+      "reference": "ein einfaches beliebtes abendessen besonders im sommer ist das pa amb oli brot mit olivenöl tomaten und jeglicher gerade verfügbarer zutat wie käse thunfisch usw",
+      "hypothesis": "ein einfaches beliebtes abendessen besonders im sommer ist das paar amp oli bot mit olivenöl tomaten und jeglicher gerade verfügbarer zutat wie käse thunfisch und so weiter"
+    },
+    {
+      "utterance_id": "fleurs_de_11321324965961472908",
+      "errors": 6,
+      "reference_words": 32,
+      "reference": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29¾ zoll x 24½ zoll misst zu beginn seines lebens zur aufbewahrung zusammengerollt wurde",
+      "hypothesis": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches neunundzwanzig dreiviertel zoll mal vierundzwanzig einhalb zoll ist zu beginn seines lebens zur aufbewahrung zusammengerollt wurde"
+    },
+    {
+      "utterance_id": "fleurs_de_6482660284125644969",
+      "errors": 6,
+      "reference_words": 32,
+      "reference": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29¾ zoll x 24½ zoll misst zu beginn seines lebens zur aufbewahrung zusammengerollt wurde",
+      "hypothesis": "so weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 23 ¾ zoll und 24 ½ zoll misst zu beginn seines lebens zur aufbewahrung zusammengerollt wurde"
+    }
+  ]
+}

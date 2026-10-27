@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/small-float16",
+  "manifest": "data/fleurs_en/test.jsonl",
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_utterances": 647,
+  "substitutions": 696,
+  "deletions": 104,
+  "insertions": 154,
+  "distinct_confusion_pairs": 545,
+  "substitutions_with_digits_or_symbols": 54,
+  "top_confusions": [
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 14
+    },
+    {
+      "reference": "a",
+      "hypothesis": "the",
+      "count": 9
+    },
+    {
+      "reference": "travellers",
+      "hypothesis": "travelers",
+      "count": 7
+    },
+    {
+      "reference": "the",
+      "hypothesis": "a",
+      "count": 6
+    },
+    {
+      "reference": "the",
+      "hypothesis": "that",
+      "count": 4
+    },
+    {
+      "reference": "had",
+      "hypothesis": "has",
+      "count": 4
+    },
+    {
+      "reference": "its",
+      "hypothesis": "his",
+      "count": 4
+    },
+    {
+      "reference": "and",
+      "hypothesis": "in",
+      "count": 4
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometers",
+      "count": 4
+    },
+    {
+      "reference": "davey",
+      "hypothesis": "davy",
+      "count": 4
+    },
+    {
+      "reference": "d",
+      "hypothesis": "ad",
+      "count": 4
+    },
+    {
+      "reference": "savanna",
+      "hypothesis": "savannah",
+      "count": 3
+    },
+    {
+      "reference": "others",
+      "hypothesis": "other",
+      "count": 3
+    },
+    {
+      "reference": "us",
+      "hypothesis": "s",
+      "count": 3
+    },
+    {
+      "reference": "schengen",
+      "hypothesis": "shenzhen",
+      "count": 3
+    },
+    {
+      "reference": "travelling",
+      "hypothesis": "traveling",
+      "count": 3
+    },
+    {
+      "reference": "is",
+      "hypothesis": "was",
+      "count": 3
+    },
+    {
+      "reference": "pm",
+      "hypothesis": "m",
+      "count": 3
+    },
+    {
+      "reference": "is",
+      "hypothesis": "it's",
+      "count": 3
+    },
+    {
+      "reference": "year",
+      "hypothesis": "years",
+      "count": 2
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 13
+    },
+    {
+      "word": "a",
+      "count": 11
+    },
+    {
+      "word": "it",
+      "count": 6
+    },
+    {
+      "word": "that",
+      "count": 5
+    },
+    {
+      "word": "and",
+      "count": 3
+    },
+    {
+      "word": "of",
+      "count": 3
+    },
+    {
+      "word": "party",
+      "count": 2
+    },
+    {
+      "word": "germ",
+      "count": 2
+    },
+    {
+      "word": "one",
+      "count": 2
+    },
+    {
+      "word": "hundred",
+      "count": 2
+    },
+    {
+      "word": "thirty",
+      "count": 2
+    },
+    {
+      "word": "at",
+      "count": 2
+    },
+    {
+      "word": "only",
+      "count": 2
+    },
+    {
+      "word": "team",
+      "count": 2
+    },
+    {
+      "word": "dragon",
+      "count": 2
+    },
+    {
+      "word": "percent",
+      "count": 2
+    },
+    {
+      "word": "in",
+      "count": 2
+    },
+    {
+      "word": "no",
+      "count": 2
+    },
+    {
+      "word": "w",
+      "count": 2
+    },
+    {
+      "word": "or",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "to",
+      "count": 14
+    },
+    {
+      "word": "the",
+      "count": 14
+    },
+    {
+      "word": "a",
+      "count": 6
+    },
+    {
+      "word": "and",
+      "count": 4
+    },
+    {
+      "word": "of",
+      "count": 4
+    },
+    {
+      "word": "u",
+      "count": 4
+    },
+    {
+      "word": "be",
+      "count": 3
+    },
+    {
+      "word": "who",
+      "count": 2
+    },
+    {
+      "word": "that",
+      "count": 2
+    },
+    {
+      "word": "sundar",
+      "count": 2
+    },
+    {
+      "word": "mosa",
+      "count": 2
+    },
+    {
+      "word": "spring",
+      "count": 2
+    },
+    {
+      "word": "next",
+      "count": 2
+    },
+    {
+      "word": "tuna",
+      "count": 2
+    },
+    {
+      "word": "p",
+      "count": 2
+    },
+    {
+      "word": "70",
+      "count": 2
+    },
+    {
+      "word": "kilometers",
+      "count": 2
+    },
+    {
+      "word": "end",
+      "count": 2
+    },
+    {
+      "word": "as",
+      "count": 2
+    },
+    {
+      "word": "ship",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_en_4446007980468141561",
+      "errors": 10,
+      "reference_words": 41,
+      "reference": "while this is often only an inaccurate stereotype the best way to get along in paris still is to be on your best behavior acting like someone who is bien élevé well brought up it will make getting about considerably easier",
+      "hypothesis": "while it is often an inaccurate stereotype the best way to get along in paris is to still be on your best behavior acting like somebody who is beyond ill being well brought up it would make getting around about considerably easier"
+    },
+    {
+      "utterance_id": "fleurs_en_3927163358777802368",
+      "errors": 10,
+      "reference_words": 49,
+      "reference": "researchers from princeton university in the united states and uppsala university in sweden reported the new species evolved in just two generations though this process had been believed to take much longer due to breeding between an endemic darwin finch geospiza fortes and the immigrant cactus finch geospiza conirostris",
+      "hypothesis": "researchers from princeton university in the united states and uppsala university in sweden reported the new species involved in just two generations though this process has the ability to take much longer due to the breeding between an endemic darwin finch jospisa fortes and the immigrant cactus binge jospisa coni rostris"
+    },
+    {
+      "utterance_id": "fleurs_en_7213249863906599090",
+      "errors": 8,
+      "reference_words": 22,
+      "reference": "its renown for being an epicenter of luxury began in about 400 a d and lasted up until about 1100 a d",
+      "hypothesis": "this renown for being at the center of luxury began in about 400 ad and lasted up until about 1100 ad"
+    },
+    {
+      "utterance_id": "fleurs_en_3100569628927735189",
+      "errors": 8,
+      "reference_words": 31,
+      "reference": "greenland was settled sparsely in the norse sagas they say that erik the red was exiled from iceland for murder and when travelling further west found greenland and named it greenland",
+      "hypothesis": "greenland was settled sparsely and the north sagas they said that eric the red was exiled from iceland for murder and went traveling for their west found greenland and named it greenland"
+    },
+    {
+      "utterance_id": "fleurs_en_9924305423057523453",
+      "errors": 8,
+      "reference_words": 33,
+      "reference": "while no one knows for certain who wrote it it is known that early in its life the large parchment document it measures 29¾ inches by 24½ inches was rolled up for storage",
+      "hypothesis": "while no one knows for certain who wrote it it is known that early in its life the large parchment document measures 29 3 4 inches by 24 and a half inches was rolled up for storage"
+    }
+  ]
+}

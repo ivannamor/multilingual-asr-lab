@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_it/test.jsonl",
+  "normalizer": [
+    "it-v1"
+  ],
+  "n_utterances": 865,
+  "substitutions": 450,
+  "deletions": 52,
+  "insertions": 59,
+  "distinct_confusion_pairs": 312,
+  "substitutions_with_digits_or_symbols": 51,
+  "top_confusions": [
+    {
+      "reference": "martelly",
+      "hypothesis": "martelli",
+      "count": 6
+    },
+    {
+      "reference": "$",
+      "hypothesis": "dollari",
+      "count": 6
+    },
+    {
+      "reference": "nyiragongo",
+      "hypothesis": "niragongo",
+      "count": 5
+    },
+    {
+      "reference": "d",
+      "hypothesis": "di",
+      "count": 4
+    },
+    {
+      "reference": "cinque",
+      "hypothesis": "5",
+      "count": 4
+    },
+    {
+      "reference": "e",
+      "hypothesis": "è",
+      "count": 4
+    },
+    {
+      "reference": "20",
+      "hypothesis": "vent",
+      "count": 3
+    },
+    {
+      "reference": "skimo",
+      "hypothesis": "schimo",
+      "count": 3
+    },
+    {
+      "reference": "la",
+      "hypothesis": "alla",
+      "count": 3
+    },
+    {
+      "reference": "gli",
+      "hypothesis": "i",
+      "count": 3
+    },
+    {
+      "reference": "20",
+      "hypothesis": "venti",
+      "count": 3
+    },
+    {
+      "reference": "precristiano",
+      "hypothesis": "cristiano",
+      "count": 3
+    },
+    {
+      "reference": "2",
+      "hypothesis": "due",
+      "count": 3
+    },
+    {
+      "reference": "3",
+      "hypothesis": "tre",
+      "count": 3
+    },
+    {
+      "reference": "dodici",
+      "hypothesis": "12",
+      "count": 3
+    },
+    {
+      "reference": "gourley",
+      "hypothesis": "gurley",
+      "count": 3
+    },
+    {
+      "reference": "ceco",
+      "hypothesis": "cieco",
+      "count": 3
+    },
+    {
+      "reference": "è",
+      "hypothesis": "e",
+      "count": 3
+    },
+    {
+      "reference": "diciannove",
+      "hypothesis": "19",
+      "count": 3
+    },
+    {
+      "reference": "km",
+      "hypothesis": "chilometri",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "a",
+      "count": 8
+    },
+    {
+      "word": "00",
+      "count": 8
+    },
+    {
+      "word": "e",
+      "count": 5
+    },
+    {
+      "word": "è",
+      "count": 4
+    },
+    {
+      "word": "ft",
+      "count": 3
+    },
+    {
+      "word": "ha",
+      "count": 2
+    },
+    {
+      "word": "addenbrooke",
+      "count": 2
+    },
+    {
+      "word": "eee",
+      "count": 2
+    },
+    {
+      "word": "tutt",
+      "count": 2
+    },
+    {
+      "word": "wild",
+      "count": 2
+    },
+    {
+      "word": "tra",
+      "count": 1
+    },
+    {
+      "word": "i",
+      "count": 1
+    },
+    {
+      "word": "aria",
+      "count": 1
+    },
+    {
+      "word": "tarda",
+      "count": 1
+    },
+    {
+      "word": "il",
+      "count": 1
+    },
+    {
+      "word": "l",
+      "count": 1
+    },
+    {
+      "word": "quanto",
+      "count": 1
+    },
+    {
+      "word": "con",
+      "count": 1
+    },
+    {
+      "word": "valle",
+      "count": 1
+    },
+    {
+      "word": "dei",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "a",
+      "count": 6
+    },
+    {
+      "word": "l",
+      "count": 5
+    },
+    {
+      "word": "il",
+      "count": 4
+    },
+    {
+      "word": "e",
+      "count": 4
+    },
+    {
+      "word": "pre",
+      "count": 3
+    },
+    {
+      "word": "grazie",
+      "count": 3
+    },
+    {
+      "word": "la",
+      "count": 3
+    },
+    {
+      "word": "i",
+      "count": 3
+    },
+    {
+      "word": "sun",
+      "count": 3
+    },
+    {
+      "word": "4",
+      "count": 2
+    },
+    {
+      "word": "pagina",
+      "count": 2
+    },
+    {
+      "word": "in",
+      "count": 2
+    },
+    {
+      "word": "è",
+      "count": 2
+    },
+    {
+      "word": "si",
+      "count": 1
+    },
+    {
+      "word": "tutti",
+      "count": 1
+    },
+    {
+      "word": "ciò",
+      "count": 1
+    },
+    {
+      "word": "gli",
+      "count": 1
+    },
+    {
+      "word": "dell",
+      "count": 1
+    },
+    {
+      "word": "d",
+      "count": 1
+    },
+    {
+      "word": "suo",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_it_14713762785067230586",
+      "errors": 7,
+      "reference_words": 18,
+      "reference": "lakkha singh ha inoltre presentato il bhajan per il chhappan bhog lo ha accompagnato il cantante raju khandelwal",
+      "hypothesis": "l h sing ha inoltre presentato il bhajan per chappan bog lo ha accompagnato il cantante raju kandelwal"
+    },
+    {
+      "utterance_id": "fleurs_it_4045850852858959263",
+      "errors": 7,
+      "reference_words": 18,
+      "reference": "lakkha singh ha inoltre presentato il bhajan per il chhappan bhog lo ha accompagnato il cantante raju khandelwal",
+      "hypothesis": "lakka singh ha inoltre presentato il bajan per il chappan bog l ho accompagnato il cantante raju kandelkval"
+    },
+    {
+      "utterance_id": "fleurs_it_4354497654731436053",
+      "errors": 7,
+      "reference_words": 28,
+      "reference": "nel corso della lotta per l indipendenza organizzata dal movimento mau un raduno pacifico nella città ha portato all uccisione di tupua tamasese lealofi iii il capo supremo",
+      "hypothesis": "nel corso della lotta per l indipendenza organizzata dal movimento mao un raduno specifico nella città un raduno pacifico nella città ha portato all uccisione di tupua tamazese lealofi iii il capo supremo"
+    },
+    {
+      "utterance_id": "fleurs_it_18373693905354838786",
+      "errors": 6,
+      "reference_words": 23,
+      "reference": "l esistenza di un vero e proprio team invisibile larson e lafasto 1989 p109 è inoltre un elemento fondamentale di un team virtuale",
+      "hypothesis": "l esistenza di un viewer o proprio team invisibile l arson e la fasto 1989 p109 è inoltre un elemento fondamentale di un team virtuale"
+    },
+    {
+      "utterance_id": "fleurs_it_2971775224423893260",
+      "errors": 5,
+      "reference_words": 21,
+      "reference": "nella notte furono prodotte tra le 150 e le 200 copie oggi note con il nome di i manifesti di dunlap",
+      "hypothesis": "nella notte furono prodotte fra le 150 e le 200 coppie oggi note col nome di i manifesti di doomlap"
+    }
+  ]
+}

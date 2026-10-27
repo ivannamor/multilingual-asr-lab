@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_en/test.jsonl",
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_utterances": 647,
+  "substitutions": 517,
+  "deletions": 110,
+  "insertions": 97,
+  "distinct_confusion_pairs": 387,
+  "substitutions_with_digits_or_symbols": 50,
+  "top_confusions": [
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 10
+    },
+    {
+      "reference": "travellers",
+      "hypothesis": "travelers",
+      "count": 7
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometers",
+      "count": 6
+    },
+    {
+      "reference": "the",
+      "hypothesis": "a",
+      "count": 6
+    },
+    {
+      "reference": "and",
+      "hypothesis": "in",
+      "count": 5
+    },
+    {
+      "reference": "savanna",
+      "hypothesis": "savannah",
+      "count": 4
+    },
+    {
+      "reference": "travelling",
+      "hypothesis": "traveling",
+      "count": 4
+    },
+    {
+      "reference": "d",
+      "hypothesis": "ad",
+      "count": 4
+    },
+    {
+      "reference": "a",
+      "hypothesis": "the",
+      "count": 4
+    },
+    {
+      "reference": "capital",
+      "hypothesis": "capitol",
+      "count": 3
+    },
+    {
+      "reference": "theatre",
+      "hypothesis": "theater",
+      "count": 3
+    },
+    {
+      "reference": "schengen",
+      "hypothesis": "shenzhen",
+      "count": 3
+    },
+    {
+      "reference": "expressions",
+      "hypothesis": "microexpressions",
+      "count": 3
+    },
+    {
+      "reference": "had",
+      "hypothesis": "has",
+      "count": 3
+    },
+    {
+      "reference": "the",
+      "hypothesis": "that",
+      "count": 3
+    },
+    {
+      "reference": "pm",
+      "hypothesis": "m",
+      "count": 3
+    },
+    {
+      "reference": "year",
+      "hypothesis": "years",
+      "count": 2
+    },
+    {
+      "reference": "sintra",
+      "hypothesis": "cintra",
+      "count": 2
+    },
+    {
+      "reference": "twentieth",
+      "hypothesis": "20th",
+      "count": 2
+    },
+    {
+      "reference": "twelve",
+      "hypothesis": "12",
+      "count": 2
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 11
+    },
+    {
+      "word": "a",
+      "count": 9
+    },
+    {
+      "word": "that",
+      "count": 5
+    },
+    {
+      "word": "and",
+      "count": 4
+    },
+    {
+      "word": "it",
+      "count": 4
+    },
+    {
+      "word": "one",
+      "count": 3
+    },
+    {
+      "word": "micro",
+      "count": 3
+    },
+    {
+      "word": "co",
+      "count": 2
+    },
+    {
+      "word": "south",
+      "count": 2
+    },
+    {
+      "word": "germ",
+      "count": 2
+    },
+    {
+      "word": "hundred",
+      "count": 2
+    },
+    {
+      "word": "had",
+      "count": 2
+    },
+    {
+      "word": "thirty",
+      "count": 2
+    },
+    {
+      "word": "only",
+      "count": 2
+    },
+    {
+      "word": "team",
+      "count": 2
+    },
+    {
+      "word": "dragon",
+      "count": 2
+    },
+    {
+      "word": "percent",
+      "count": 2
+    },
+    {
+      "word": "of",
+      "count": 2
+    },
+    {
+      "word": "no",
+      "count": 2
+    },
+    {
+      "word": "eee",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "to",
+      "count": 12
+    },
+    {
+      "word": "the",
+      "count": 9
+    },
+    {
+      "word": "a",
+      "count": 4
+    },
+    {
+      "word": "u",
+      "count": 3
+    },
+    {
+      "word": "p",
+      "count": 3
+    },
+    {
+      "word": "that",
+      "count": 2
+    },
+    {
+      "word": "spring",
+      "count": 2
+    },
+    {
+      "word": "next",
+      "count": 2
+    },
+    {
+      "word": "tuna",
+      "count": 2
+    },
+    {
+      "word": "70",
+      "count": 2
+    },
+    {
+      "word": "kilometers",
+      "count": 2
+    },
+    {
+      "word": "ship",
+      "count": 2
+    },
+    {
+      "word": "be",
+      "count": 2
+    },
+    {
+      "word": "page",
+      "count": 2
+    },
+    {
+      "word": "mid",
+      "count": 2
+    },
+    {
+      "word": "water",
+      "count": 2
+    },
+    {
+      "word": "and",
+      "count": 1
+    },
+    {
+      "word": "are",
+      "count": 1
+    },
+    {
+      "word": "in",
+      "count": 1
+    },
+    {
+      "word": "an",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_en_15842229443202938478",
+      "errors": 7,
+      "reference_words": 27,
+      "reference": "a simple popular dinner especially during the summer is the pa amb oli bread with olive oil tomato and any available condiments such as cheese tunafish etc",
+      "hypothesis": "a simple popular dimmer especially during the summer is pa'am oli breaded with olive oil tomato and any available condiments such as cheese tuna fish etc"
+    },
+    {
+      "utterance_id": "fleurs_en_7489324500816890474",
+      "errors": 7,
+      "reference_words": 28,
+      "reference": "during the struggle for independence organised by the mau movement a peaceful gathering in the town resulted in the killing of the paramount chief tupua tamasese lealofi iii",
+      "hypothesis": "during the struggle for independence organized by the mao movement a peaceful gathering in the town resulted in the killing of paramount chief tuba tuba si'ai luf iii"
+    },
+    {
+      "utterance_id": "fleurs_en_4446007980468141561",
+      "errors": 7,
+      "reference_words": 41,
+      "reference": "while this is often only an inaccurate stereotype the best way to get along in paris still is to be on your best behavior acting like someone who is bien élevé well brought up it will make getting about considerably easier",
+      "hypothesis": "while it is often an inaccurate stereotype the best way to get along in paris is to still be on your best behavior acting like somebody who is a bien élevé well brought up it would make getting about considerably easier"
+    },
+    {
+      "utterance_id": "fleurs_en_394135166243682296",
+      "errors": 6,
+      "reference_words": 22,
+      "reference": "asus eee pc earlier launched world wide for cost saving and functionality factors became a hot topic in 2007 taipei it month",
+      "hypothesis": "asus epc earlier launched worldwide for cost saving functionality factors became a hot topic in 2007 taipai it month"
+    },
+    {
+      "utterance_id": "fleurs_en_7213249863906599090",
+      "errors": 6,
+      "reference_words": 22,
+      "reference": "its renown for being an epicenter of luxury began in about 400 a d and lasted up until about 1100 a d",
+      "hypothesis": "this renown for being epicenter of luxury began in about 400 ad and lasted up until about 1100 ad"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "metric": "wer",
+  "manifest": "data/fleurs_de/test.jsonl",
+  "n_utterances": 862,
+  "a": {
+    "run": "experiments/runs/whisper-small-float16-fleurs-de",
+    "model": "faster-whisper/small-float16",
+    "normalizer": [
+      "de-v1"
+    ],
+    "rate": 0.0913222477677378
+  },
+  "b": {
+    "run": "experiments/runs/whisper-large-v3-turbo-float16-fleurs-de",
+    "model": "faster-whisper/large-v3-turbo-float16",
+    "normalizer": [
+      "de-v1"
+    ],
+    "rate": 0.04448484200395658
+  },
+  "delta": -0.04683740576378122,
+  "confidence_intervals": {
+    "utterance": {
+      "low": -0.0514952617218813,
+      "high": -0.04174763223375506,
+      "prob_b_better": 1.0,
+      "significant": true,
+      "n_units": 862,
+      "level": 0.95,
+      "n_resamples": 1000
+    },
+    "sentence_id": {
+      "low": -0.05260663004590563,
+      "high": -0.04152400450367187,
+      "prob_b_better": 1.0,
+      "significant": true,
+      "n_units": 347,
+      "level": 0.95,
+      "n_resamples": 1000
+    }
+  },
+  "headline_unit": "sentence_id",
+  "significant": true
+}

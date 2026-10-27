@@ -19,7 +19,12 @@ that regenerates it.
   beam size 5) reaches **6.66% WER in English** (95% CI [5.98, 7.36]), **7.46% in Italian**
   ([6.81, 8.08]) and **9.31% in German** ([8.58, 10.11]); Whisper-base reaches 10.03%, 16.09% and
   18.07%.
-- **The benefit of the larger model depends on the language.** Whisper-small removes about half of
+- **Large models: 2.26% WER in Italian.** Whisper-large-v3 (float16, GPU) reaches 2.26% in Italian
+  (95% CI [1.93, 2.64]), 4.02% in German and 4.62% in English. The language ranking reverses:
+  English, easiest for the small models, is now the hardest, partly because the simple English
+  normalizer counts British versus American spellings as errors. large-v3-turbo is about twice as
+  fast and 0.4 points worse in every language.
+- **The benefit of a larger model depends on the language.** Whisper-small removes about half of
   Whisper-base's word errors in Italian (54%) and German (48%), but only a third in English (34%),
   where the smaller model is already much better.
 - **Language is confounded with speaker gender.** The German test set has only male voices and the
@@ -69,11 +74,11 @@ representative of male voices or German result of female voices.
 
 | | |
 |---|---|
-| Models | Whisper-small and Whisper-base (OpenAI), through faster-whisper 1.2.1 (CTranslate2) |
-| Precision | int8 weights |
+| Models | Whisper-base, Whisper-small, Whisper-large-v3-turbo and Whisper-large-v3 (OpenAI), through faster-whisper 1.2.1 (CTranslate2) |
+| Precision | int8 weights on the CPU, float16 on the GPU |
 | Decoding | beam size 5, language forced to the test set's language, `condition_on_previous_text` disabled, no voice activity detection |
-| Hardware | 12-core ARM64 laptop CPU (Snapdragon X Elite), WSL2 Ubuntu, no GPU, 4 threads |
-| Speed | real-time factor 0.11-0.20 for small (24 min for 3.5 h of Italian audio) and 0.06-0.11 for base; German was the slowest language for both models |
+| Hardware | base and small: 12-core ARM64 laptop CPU (Snapdragon X Elite), WSL2 Ubuntu, 4 threads; large models and a bridge run of small: NVIDIA T4 GPU on Google Colab |
+| Speed (CPU) | real-time factor 0.11-0.20 for small (24 min for 3.5 h of Italian audio) and 0.06-0.11 for base; German was the slowest language for both models. GPU speeds are in [E1](#larger-models-on-a-gpu) |
 
 faster-whisper was chosen after a benchmark on this machine: it was about six times faster than
 the PyTorch implementation, and more than 4 threads made it slower
@@ -104,14 +109,16 @@ the PyTorch implementation, and more than 4 threads made it slower
 
 ## E1. Baseline
 
-**Question.** How accurate are two off-the-shelf multilingual models, Whisper-small and
-Whisper-base, on read speech in Italian, German and English, and how much does the larger model
+**Question.** How accurate are off-the-shelf multilingual Whisper models, from Whisper-base to
+Whisper-large-v3, on read speech in Italian, German and English, and how much does a larger model
 gain in each language?
 
-**Method.** Each model transcribes each test set once, with the settings in [Setup](#models).
+**Method.** Each model transcribes each test set once, with the settings in [Setup](#models):
+Whisper-base and Whisper-small on the CPU, the large models on a GPU (see
+[below](#larger-models-on-a-gpu)).
 Transcripts are scored with the normalizer of their language: `it-v1`, `de-v1` (`basic-v1` plus
-"ß" → "ss") and `en-v1` (`basic-v1`); see [E3](#normalizers-compared) for what they do. The two
-models are compared with the paired bootstrap within each language. Languages are compared only
+"ß" → "ss") and `en-v1` (`basic-v1`); see [E3](#normalizers-compared) for what they do. Models are
+compared with the paired bootstrap within each language. Languages are compared only
 descriptively: the utterances differ, so no paired test is possible between them.
 
 <!-- BEGIN e1-baseline -->
@@ -133,20 +140,7 @@ descriptively: the utterances differ, so no paired test is possible between them
 | English: base → small | 10.03% | 6.66% | -3.37% [-3.98%, -2.76%] | 100.0% | yes |
 <!-- END e1-model-gap -->
 
-### Larger models on a GPU
-
-Whisper-large-v3-turbo and Whisper-large-v3 were transcribed in float16 on a Colab T4 GPU
-([notebook](notebooks/e1_large_colab.ipynb)), together with a *bridge* run of Whisper-small on the
-same GPU: comparing it with the CPU int8 run of the same model measures the effect of hardware and
-precision alone, so that the model comparisons below are not confounded with it.
-
-<!-- BEGIN e1-gpu -->
-<!-- END e1-gpu -->
-
-<!-- BEGIN e1-gpu-gaps -->
-<!-- END e1-gpu-gaps -->
-
-### Findings
+### Findings: Whisper-base and Whisper-small
 
 1. **English is the easiest language for both models, German the hardest.** Whisper-small reaches
    6.66% WER in English, 7.46% in Italian and 9.31% in German. The English and Italian intervals
@@ -179,7 +173,7 @@ speakers, so it says more about those speakers than about male voices in general
 were computed with a one-off script, not with a committed command, which is why they are not in a
 generated table.
 
-### Error analysis
+### Error analysis: Whisper-small
 
 The most frequent errors (`asr-lab errors`, Whisper-small) are different in each language, and
 many of them are about writing conventions rather than recognition.
@@ -223,6 +217,101 @@ for the model, who the speakers are, and how well the normalizer fits the langua
 conventions. The normalizers for German and English are much simpler than `it-v2` (E3), so their
 WER is probably inflated by formatting errors that `it-v2` would remove in Italian.
 
+### Larger models on a GPU
+
+Whisper-large-v3-turbo and Whisper-large-v3 were transcribed in float16 on a Colab T4 GPU
+([notebook](notebooks/e1_large_colab.ipynb)), together with a *bridge* run of Whisper-small on the
+same GPU: comparing it with the CPU int8 run of the same model measures the effect of hardware and
+precision alone, so that the model comparisons below are not confounded with it.
+
+<!-- BEGIN e1-gpu -->
+| System | Normalizer | Utterances / words | WER [95% CI] | S / D / I | CER [95% CI] |
+|---|---|---|---|---|---|
+| Italian · Whisper-small | `it-v1` | 865 / 21,255 | 7.43% [6.80%, 8.09%] | 1,225 / 176 / 178 | 2.07% [1.85%, 2.29%] |
+| Italian · Whisper-large-v3-turbo | `it-v1` | 865 / 21,255 | 2.64% [2.23%, 3.07%] | 450 / 52 / 59 | 0.85% [0.67%, 1.04%] |
+| Italian · Whisper-large-v3 | `it-v1` | 865 / 21,255 | 2.26% [1.93%, 2.64%] | 387 / 52 / 42 | 0.75% [0.59%, 0.93%] |
+| German · Whisper-small | `de-v1` | 862 / 18,703 | 9.13% [8.43%, 9.90%] | 1,303 / 168 / 237 | 2.54% [2.29%, 2.80%] |
+| German · Whisper-large-v3-turbo | `de-v1` | 862 / 18,703 | 4.45% [3.91%, 5.01%] | 612 / 89 / 131 | 1.44% [1.20%, 1.69%] |
+| German · Whisper-large-v3 | `de-v1` | 862 / 18,703 | 4.02% [3.52%, 4.56%] | 540 / 101 / 111 | 1.44% [1.18%, 1.74%] |
+| English · Whisper-small | `en-v1` | 647 / 14,467 | 6.59% [5.93%, 7.27%] | 696 / 104 / 154 | 2.70% [2.39%, 3.03%] |
+| English · Whisper-large-v3-turbo | `en-v1` | 647 / 14,467 | 5.00% [4.45%, 5.55%] | 517 / 110 / 97 | 2.13% [1.85%, 2.42%] |
+| English · Whisper-large-v3 | `en-v1` | 647 / 14,467 | 4.62% [4.08%, 5.17%] | 488 / 100 / 80 | 2.05% [1.75%, 2.37%] |
+<!-- END e1-gpu -->
+
+<!-- BEGIN e1-gpu-gaps -->
+| Comparison | A | B | B - A [95% CI] | B better in | Significant |
+|---|---|---|---|---|---|
+| Italian: small, CPU int8 → GPU float16 | 7.46% | 7.43% | -0.03% [-0.26%, +0.21%] | 61.1% | no |
+| Italian: small → large-v3-turbo | 7.43% | 2.64% | -4.79% [-5.30%, -4.31%] | 100.0% | yes |
+| Italian: large-v3-turbo → large-v3 | 2.64% | 2.26% | -0.38% [-0.59%, -0.15%] | 100.0% | yes |
+| German: small, CPU int8 → GPU float16 | 9.31% | 9.13% | -0.18% [-0.37%, +0.01%] | 97.0% | no |
+| German: small → large-v3-turbo | 9.13% | 4.45% | -4.68% [-5.26%, -4.15%] | 100.0% | yes |
+| German: large-v3-turbo → large-v3 | 4.45% | 4.02% | -0.43% [-0.75%, -0.14%] | 100.0% | yes |
+| English: small, CPU int8 → GPU float16 | 6.66% | 6.59% | -0.06% [-0.23%, +0.10%] | 73.8% | no |
+| English: small → large-v3-turbo | 6.59% | 5.00% | -1.59% [-1.99%, -1.19%] | 100.0% | yes |
+| English: large-v3-turbo → large-v3 | 5.00% | 4.62% | -0.39% [-0.69%, -0.12%] | 99.8% | yes |
+<!-- END e1-gpu-gaps -->
+
+**Hardware and precision alone do not change the results.** The bridge comparisons (Whisper-small,
+CPU int8 → GPU float16) give -0.03 points in Italian (95% CI [-0.26, +0.21]), -0.18 in German
+([-0.37, +0.01]) and -0.06 in English ([-0.23, +0.10]): none is significant. Not significant does
+not mean zero, but any effect is at most a few tenths of a point, an order of magnitude below the
+model differences, so the GPU comparisons below are comparisons of models and the CPU and GPU
+tables can be read side by side.
+
+**The large models are much better, and the gain again depends on the language.** From
+Whisper-small to large-v3-turbo, WER drops by 4.79 points in Italian (65% of the errors), 4.68 in
+German (51%) and 1.59 in English (24%). Over the whole range, from Whisper-small on the CPU to
+large-v3, the reduction is 70%, 57% and 31%.
+
+**The language ranking reverses.** Whisper-large-v3 reaches **2.26% in Italian** (95% CI
+[1.93, 2.64]), **4.02% in German** ([3.52, 4.56]) and **4.62% in English** ([4.08, 5.17]): English,
+the easiest language for the small models, is now the hardest, level with German. Part of this is
+measurement rather than recognition. Substitutions involving digits or symbols stay at about the
+same count for every model (Italian 60 for Whisper-small on the GPU and 55 for large-v3, German 50
+and 49, English 54 and 53), so as recognition errors disappear, formatting takes a growing share:
+in Italian, from 5% to 14% of the substitutions. In English, the most frequent substitutions of
+large-v3 are British versus American spellings ("travellers" vs "travelers" 7 times, "travelling"
+4, "theatre" 3), which `en-v1` counts as errors. With a simple normalizer, the better the model, the
+more its WER measures writing conventions.
+
+**large-v3-turbo is about twice as fast as large-v3 and slightly less accurate.** On the GPU it is
+2.0 to 2.3 times faster; large-v3 is better by 0.38 points in Italian, 0.43 in German and 0.39 in
+English (8% to 14% fewer errors), a significant difference in every language but a small one in
+absolute terms.
+
+| Real-time factor, T4 GPU, float16 | Italian | German | English | GPU minutes, 3 languages |
+|---|---|---|---|---|
+| Whisper-small | 0.023 | 0.024 | 0.025 | 12 |
+| Whisper-large-v3-turbo | 0.034 | 0.037 | 0.044 | 19 |
+| Whisper-large-v3 | 0.078 | 0.082 | 0.087 | 41 |
+
+The turbo model has the encoder of large-v3 and 4 decoder layers instead of 32. The encoder does
+much of the work, and utterances are transcribed one at a time, which adds a fixed cost per
+utterance for every model: that is why it is not eight times faster, and why Whisper-small is only
+3.4 times faster than large-v3. These factors were measured on a shared Colab machine and are not
+comparable with the CPU ones in [Setup](#models).
+
+**Larger models hallucinate more closing phrases in German.** Utterances whose transcript ends with
+a phrase that is not in the reference, typical of subtitled videos in Whisper's training data:
+
+| Utterances with an invented closing phrase | small (CPU int8) | small | large-v3-turbo | large-v3 |
+|---|---|---|---|---|
+| Italian ("Sottotitoli a cura di QTSS", "grazie a tutti") | 5 | 4 | 3 | 2 |
+| German ("Vielen Dank", "Untertitelung des ZDF 2020") | 3 | 3 | 12 | 12 |
+| English ("thank you") | 0 | 1 | 0 | 1 |
+
+In German, 10 of the 12 utterances are the same for large-v3-turbo and large-v3, which share their
+encoder: something in those recordings triggers the phrase. Each case costs only two to six
+insertions, so the effect on WER is small, but in a product an invented "Vielen Dank" at the end
+of a dictated message is a visible error. Voice activity detection and Whisper's no-speech
+threshold, both disabled here, are the usual mitigations (experiment E2). These counts come from a
+one-off script that matches the phrases at the end of the normalized transcripts.
+
+**Speaker gender** (Whisper-large-v3, descriptive as above): Italian 2.19% for female voices
+([1.86, 2.56]) and 3.88% for the 38 male utterances ([2.03, 6.20]); English 4.40% ([3.77, 5.03])
+and 5.01% ([4.15, 6.04]). The intervals overlap in both languages.
+
 ### Limitations
 
 - Language is confounded with speaker gender, and speaker ids are not available.
@@ -230,16 +319,22 @@ WER is probably inflated by formatting errors that `it-v2` would remove in Itali
   compounds and `en-v1` keeps spelling variants. Comparing languages fairly needs normalizers of
   similar coverage.
 - The test sets are small (1.8 to 3.5 hours) and contain read Wikipedia text only.
-- No correction for multiple comparisons is applied to the three model comparisons; every one has
-  Whisper-small better in all 1,000 replicates, so a corrected threshold would not change any
-  verdict.
+- No correction for multiple comparisons is applied to the twelve comparisons of this chapter.
+  The nine model comparisons have the larger model better in at least 99.8% of the 1,000
+  replicates; the one closest to a Bonferroni-corrected threshold is English large-v3-turbo →
+  large-v3 (99.8%), which more resamples would be needed to settle.
+- The large models ran on a different machine (Colab T4 GPU, float16). The bridge run shows that
+  this does not change accuracy measurably, but speeds are not comparable across machines.
+- Hallucinated closing phrases are counted by matching a short list of known phrases, so other
+  invented endings are missed.
 
-E1 will be extended to other model families (larger Whisper models, wav2vec2 with CTC,
-Transducers).
+E1 will be extended to other model families (wav2vec2 with CTC, Transducers).
 
 **Reproduce:** `bash experiments/E1/run.sh` (or `experiments/E1/run.ps1` on Windows). With the
-committed transcripts it only rescores; without them it downloads the three test sets and
-transcribes them (about two hours on a laptop CPU).
+committed transcripts it only rescores. Without them it downloads the three test sets and
+transcribes them with Whisper-small and Whisper-base (about two hours on a laptop CPU); the GPU
+runs are transcribed with [`notebooks/e1_large_colab.ipynb`](notebooks/e1_large_colab.ipynb) on a
+Colab GPU (about 75 minutes of transcription on a T4, plus the download).
 
 ## E3. How much does text normalization change WER?
 
@@ -361,7 +456,7 @@ committed transcripts it only rescores; without them it first transcribes the te
 
 - All results so far are on FLEURS read speech, where language is confounded with speaker gender;
   noisier and spontaneous speech come next. The normalization study (E3) covers Italian only.
-- Only two Whisper sizes have been evaluated; other model families (CTC with an n-gram language
+- Only Whisper models have been evaluated; other model families (CTC with an n-gram language
   model, Transducers) are planned.
 - Decoding settings (beam size, temperature, voice activity detection, precision) are fixed here;
   their effect is the subject of a later experiment, compared with the same paired statistics.
