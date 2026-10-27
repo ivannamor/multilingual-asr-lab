@@ -33,6 +33,12 @@ from asr_lab.evaluation.scoring import (
 from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
 from asr_lab.reporting import render_results
+from asr_lab.tracking import log_comparison, log_scores
+
+_MLFLOW_HELP = (
+    "also log the result to this MLflow experiment (needs `uv sync --extra tracking`; "
+    "stored where MLFLOW_TRACKING_URI points, by default mlflow.db)"
+)
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -91,6 +97,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     score.add_argument("--n-resamples", type=int, default=DEFAULT_N_RESAMPLES)
     score.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    score.add_argument("--mlflow", metavar="EXPERIMENT", default=None, help=_MLFLOW_HELP)
 
     errors = commands.add_parser(
         "errors", help="most frequent errors and worst utterances of a run directory"
@@ -119,6 +126,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     compare.add_argument("--n-resamples", type=int, default=DEFAULT_N_RESAMPLES)
     compare.add_argument("--seed", type=int, default=DEFAULT_SEED)
     compare.add_argument("--output", type=Path, default=None, help="save the result as JSON")
+    compare.add_argument("--mlflow", metavar="EXPERIMENT", default=None, help=_MLFLOW_HELP)
 
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
@@ -135,6 +143,8 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
 
     args = parser.parse_args(argv)
+    if args.command == "compare" and args.mlflow and not args.output:
+        parser.error("--mlflow needs --output: MLflow mirrors a saved comparison file")
     if args.command == "transcribe":
         model = FasterWhisperModel(
             args.model_size,
@@ -164,6 +174,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         )
         print(format_summary(scores))
         print(f"Scores: {path}")
+        if args.mlflow:
+            print(f"MLflow run: {log_scores(scores, path, args.mlflow)}")
     elif args.command == "errors":
         normalizer = get_normalizer_by_name(args.normalizer) if args.normalizer else None
         utterances, report, path = analyze_run(
@@ -185,6 +197,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         if args.output:
             save_comparison(result, args.output)
             print(f"Comparison: {args.output}")
+            if args.mlflow:
+                print(f"MLflow run: {log_comparison(result, args.output, args.mlflow)}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,
