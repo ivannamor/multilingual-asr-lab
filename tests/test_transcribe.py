@@ -118,9 +118,11 @@ def test_running_again_when_complete_does_nothing(tmp_path: Path) -> None:
     manifest = _manifest(tmp_path)
     out = tmp_path / "run"
     transcribe_manifest(FakeModel(), manifest, out, progress=False)
+    run_json = (out / "run.json").read_text(encoding="utf-8")
     again = FakeModel()
     transcribe_manifest(again, manifest, out, progress=False)
     assert again.transcribed == []
+    assert (out / "run.json").read_text(encoding="utf-8") == run_json  # timing kept
 
 
 def test_different_settings_in_the_same_directory_are_rejected(tmp_path: Path) -> None:

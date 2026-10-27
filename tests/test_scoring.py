@@ -124,6 +124,29 @@ def test_score_run_writes_a_scores_file(tmp_path: Path) -> None:
     assert scores["wer"]["estimate"] == pytest.approx(2 / 13)
 
 
+def test_rescoring_unchanged_predictions_keeps_the_file(tmp_path: Path) -> None:
+    run_dir, _ = _run_dir(tmp_path)
+    _, path = score_run(run_dir, n_resamples=50)
+    saved = json.loads(path.read_text(encoding="utf-8"))
+    saved["scored_at"] = "2000-01-01T00:00:00+00:00"  # as if scored long ago
+    path.write_text(json.dumps(saved), encoding="utf-8")
+    text = path.read_text(encoding="utf-8")
+    scores, _ = score_run(run_dir, n_resamples=50)
+    assert path.read_text(encoding="utf-8") == text
+    assert scores["scored_at"] == "2000-01-01T00:00:00+00:00"
+
+
+def test_rescoring_changed_predictions_rewrites_the_file(tmp_path: Path) -> None:
+    run_dir, _ = _run_dir(tmp_path)
+    first, path = score_run(run_dir, n_resamples=50)
+    predictions = run_dir / "predictions.jsonl"
+    predictions.unlink()
+    append_predictions(predictions, [Hypothesis(h.utterance_id, "") for h in HYPOTHESES])
+    second, _ = score_run(run_dir, n_resamples=50)
+    assert second["wer"]["estimate"] == 1.0 != first["wer"]["estimate"]
+    assert json.loads(path.read_text(encoding="utf-8")) == second
+
+
 def test_score_run_respects_the_run_limit(tmp_path: Path) -> None:
     run_dir, _ = _run_dir(tmp_path, limit=2)
     scores, _ = score_run(run_dir, n_resamples=50)

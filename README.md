@@ -128,8 +128,10 @@ A run directory holds:
   reference/hypothesis pairs in the style of NIST sclite).
 
 Runs are resumable: running the same `transcribe` command again skips the utterances already
-transcribed, and running different settings in the same directory is an error. Run directories
-are not stored in git.
+transcribed (and leaves a complete run untouched), and running different settings in the same
+directory is an error. Rescoring unchanged predictions leaves the scores file as it is, so
+rerunning an experiment script does not modify the committed results. Run directories are not
+stored in git, except those used in the results (`experiments/runs/`).
 
 `asr-lab score` normalizes references and hypotheses with each utterance's language normalizer
 (or the one named by `--normalizer`), computes corpus WER and CER, and bootstraps confidence intervals for

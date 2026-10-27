@@ -7,9 +7,9 @@ A run directory contains:
   commit, environment, audio duration, processing time and real-time factor.
 
 Runs are resumable: running again with the same model, settings and manifest
-skips the utterances already in ``predictions.jsonl``. Running with different
-settings in the same directory is an error, so one directory is always one
-configuration.
+skips the utterances already in ``predictions.jsonl``, and does nothing at all
+once the run is complete. Running with different settings in the same directory
+is an error, so one directory is always one configuration.
 """
 
 from __future__ import annotations
@@ -60,6 +60,8 @@ def transcribe_manifest(
     run = _start_or_resume(run_path, model, manifest_path, entries, limit)
     done = _done_ids(predictions_path, {entry.utterance_id for entry in entries})
     todo = [entry for entry in entries if entry.utterance_id not in done]
+    if not todo and run["finished_at"] is not None:
+        return predictions_path  # already complete: keep run.json and its timing unchanged
 
     started = time.perf_counter()
     try:
