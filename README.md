@@ -17,7 +17,23 @@ Design decisions and their rationale are recorded in [docs/design.md](docs/desig
 
 **The full results, method and discussion are in [RESULTS.md](RESULTS.md).** FLEURS test sets
 (Italian, German and English; 1.8 to 3.5 hours each), corpus-level rates, 95% bootstrap confidence
-intervals resampling the distinct sentences:
+intervals resampling the distinct sentences. Large models, float16 on a Colab T4 GPU:
+
+<!-- BEGIN e1-gpu -->
+| System | Normalizer | Utterances / words | WER [95% CI] | S / D / I | CER [95% CI] |
+|---|---|---|---|---|---|
+| Italian · Whisper-small | `it-v1` | 865 / 21,255 | 7.43% [6.80%, 8.09%] | 1,225 / 176 / 178 | 2.07% [1.85%, 2.29%] |
+| Italian · Whisper-large-v3-turbo | `it-v1` | 865 / 21,255 | 2.64% [2.23%, 3.07%] | 450 / 52 / 59 | 0.85% [0.67%, 1.04%] |
+| Italian · Whisper-large-v3 | `it-v1` | 865 / 21,255 | 2.26% [1.93%, 2.64%] | 387 / 52 / 42 | 0.75% [0.59%, 0.93%] |
+| German · Whisper-small | `de-v1` | 862 / 18,703 | 9.13% [8.43%, 9.90%] | 1,303 / 168 / 237 | 2.54% [2.29%, 2.80%] |
+| German · Whisper-large-v3-turbo | `de-v1` | 862 / 18,703 | 4.45% [3.91%, 5.01%] | 612 / 89 / 131 | 1.44% [1.20%, 1.69%] |
+| German · Whisper-large-v3 | `de-v1` | 862 / 18,703 | 4.02% [3.52%, 4.56%] | 540 / 101 / 111 | 1.44% [1.18%, 1.74%] |
+| English · Whisper-small | `en-v1` | 647 / 14,467 | 6.59% [5.93%, 7.27%] | 696 / 104 / 154 | 2.70% [2.39%, 3.03%] |
+| English · Whisper-large-v3-turbo | `en-v1` | 647 / 14,467 | 5.00% [4.45%, 5.55%] | 517 / 110 / 97 | 2.13% [1.85%, 2.42%] |
+| English · Whisper-large-v3 | `en-v1` | 647 / 14,467 | 4.62% [4.08%, 5.17%] | 488 / 100 / 80 | 2.05% [1.75%, 2.37%] |
+<!-- END e1-gpu -->
+
+Whisper-base and Whisper-small, int8 on a laptop CPU:
 
 <!-- BEGIN e1-baseline -->
 | System | Normalizer | Utterances / words | WER [95% CI] | S / D / I | CER [95% CI] |
@@ -31,6 +47,11 @@ intervals resampling the distinct sentences:
 <!-- END e1-baseline -->
 
 Key findings so far:
+- **Whisper-large-v3 reaches 2.26% WER in Italian, 4.02% in German and 4.62% in English**, and the
+  language ranking reverses compared with the small models: as recognition errors disappear, a
+  growing share of what is left is writing conventions (numbers, British vs American spelling)
+  that a simple normalizer counts as errors. large-v3-turbo is about twice as fast and 0.4 points
+  worse in every language (experiment E1).
 - **The gain from a larger model depends on the language**: Whisper-small removes about half of
   Whisper-base's word errors in Italian and German, but only a third in English (experiment E1).
   The German test set has only male speakers and the Italian one is 96% female, so language and
@@ -111,7 +132,7 @@ its numbers (`run.sh`, and `run.ps1` for Windows) and a TOML spec of the tables 
 `experiments/runs/`, so every score and comparison can be recomputed without running a model:
 
 ```bash
-bash experiments/E1/run.sh    # baseline: Whisper-small and -base on Italian, German, English
+bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, German, English
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
 ```
 

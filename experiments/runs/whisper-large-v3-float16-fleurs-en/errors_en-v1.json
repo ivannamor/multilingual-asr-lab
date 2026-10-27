@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/large-v3-float16",
+  "manifest": "data/fleurs_en/test.jsonl",
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_utterances": 647,
+  "substitutions": 488,
+  "deletions": 100,
+  "insertions": 80,
+  "distinct_confusion_pairs": 362,
+  "substitutions_with_digits_or_symbols": 53,
+  "top_confusions": [
+    {
+      "reference": "travellers",
+      "hypothesis": "travelers",
+      "count": 7
+    },
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 7
+    },
+    {
+      "reference": "and",
+      "hypothesis": "in",
+      "count": 5
+    },
+    {
+      "reference": "the",
+      "hypothesis": "a",
+      "count": 5
+    },
+    {
+      "reference": "a",
+      "hypothesis": "the",
+      "count": 5
+    },
+    {
+      "reference": "savanna",
+      "hypothesis": "savannah",
+      "count": 4
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometers",
+      "count": 4
+    },
+    {
+      "reference": "had",
+      "hypothesis": "has",
+      "count": 4
+    },
+    {
+      "reference": "travelling",
+      "hypothesis": "traveling",
+      "count": 4
+    },
+    {
+      "reference": "d",
+      "hypothesis": "ad",
+      "count": 4
+    },
+    {
+      "reference": "others",
+      "hypothesis": "other",
+      "count": 3
+    },
+    {
+      "reference": "the",
+      "hypothesis": "that",
+      "count": 3
+    },
+    {
+      "reference": "theatre",
+      "hypothesis": "theater",
+      "count": 3
+    },
+    {
+      "reference": "schengen",
+      "hypothesis": "shenzhen",
+      "count": 3
+    },
+    {
+      "reference": "pm",
+      "hypothesis": "m",
+      "count": 3
+    },
+    {
+      "reference": "is",
+      "hypothesis": "it's",
+      "count": 3
+    },
+    {
+      "reference": "splendours",
+      "hypothesis": "splendors",
+      "count": 2
+    },
+    {
+      "reference": "twentieth",
+      "hypothesis": "20th",
+      "count": 2
+    },
+    {
+      "reference": "twelve",
+      "hypothesis": "12",
+      "count": 2
+    },
+    {
+      "reference": "bennet",
+      "hypothesis": "bennett",
+      "count": 2
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 13
+    },
+    {
+      "word": "a",
+      "count": 8
+    },
+    {
+      "word": "that",
+      "count": 5
+    },
+    {
+      "word": "and",
+      "count": 4
+    },
+    {
+      "word": "it",
+      "count": 4
+    },
+    {
+      "word": "of",
+      "count": 3
+    },
+    {
+      "word": "germ",
+      "count": 2
+    },
+    {
+      "word": "one",
+      "count": 2
+    },
+    {
+      "word": "hundred",
+      "count": 2
+    },
+    {
+      "word": "thirty",
+      "count": 2
+    },
+    {
+      "word": "only",
+      "count": 2
+    },
+    {
+      "word": "team",
+      "count": 2
+    },
+    {
+      "word": "dragon",
+      "count": 2
+    },
+    {
+      "word": "percent",
+      "count": 2
+    },
+    {
+      "word": "no",
+      "count": 2
+    },
+    {
+      "word": "eee",
+      "count": 2
+    },
+    {
+      "word": "w",
+      "count": 2
+    },
+    {
+      "word": "or",
+      "count": 1
+    },
+    {
+      "word": "country",
+      "count": 1
+    },
+    {
+      "word": "with",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "to",
+      "count": 9
+    },
+    {
+      "word": "the",
+      "count": 7
+    },
+    {
+      "word": "a",
+      "count": 6
+    },
+    {
+      "word": "and",
+      "count": 4
+    },
+    {
+      "word": "of",
+      "count": 2
+    },
+    {
+      "word": "u",
+      "count": 2
+    },
+    {
+      "word": "spring",
+      "count": 2
+    },
+    {
+      "word": "tuna",
+      "count": 2
+    },
+    {
+      "word": "p",
+      "count": 2
+    },
+    {
+      "word": "70",
+      "count": 2
+    },
+    {
+      "word": "kilometers",
+      "count": 2
+    },
+    {
+      "word": "ship",
+      "count": 2
+    },
+    {
+      "word": "be",
+      "count": 2
+    },
+    {
+      "word": "page",
+      "count": 2
+    },
+    {
+      "word": "twenty",
+      "count": 2
+    },
+    {
+      "word": "free",
+      "count": 1
+    },
+    {
+      "word": "are",
+      "count": 1
+    },
+    {
+      "word": "scott",
+      "count": 1
+    },
+    {
+      "word": "most",
+      "count": 1
+    },
+    {
+      "word": "cross",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_en_9924305423057523453",
+      "errors": 9,
+      "reference_words": 33,
+      "reference": "while no one knows for certain who wrote it it is known that early in its life the large parchment document it measures 29¾ inches by 24½ inches was rolled up for storage",
+      "hypothesis": "while no one knows for certain who wrote it it is known that early in its life the large parchment document it measures twenty nine three fourths inches by twenty four and a half inches was rolled up for storage"
+    },
+    {
+      "utterance_id": "fleurs_en_4446007980468141561",
+      "errors": 8,
+      "reference_words": 41,
+      "reference": "while this is often only an inaccurate stereotype the best way to get along in paris still is to be on your best behavior acting like someone who is bien élevé well brought up it will make getting about considerably easier",
+      "hypothesis": "while it is often an inaccurate stereotype the best way to get along in paris is to still be on your best behavior acting like somebody who is a bien élevé well brought up it would make getting around about considerably easier"
+    },
+    {
+      "utterance_id": "fleurs_en_1774013444539766052",
+      "errors": 6,
+      "reference_words": 22,
+      "reference": "its renown for being an epicenter of luxury began in about 400 a d and lasted up until about 1100 a d",
+      "hypothesis": "this renowned for being an epicenter of luxury began in about 400 ad and lasted up until about 1100 ad"
+    },
+    {
+      "utterance_id": "fleurs_en_7632932253248030737",
+      "errors": 6,
+      "reference_words": 22,
+      "reference": "it is one of the main attractions of south africa and it is considered the flagship of south african national parks sanparks",
+      "hypothesis": "it's one of the main attractions of south africa and it's considered the flagship of south african national parks sand parks"
+    },
+    {
+      "utterance_id": "fleurs_en_9154457394779597213",
+      "errors": 6,
+      "reference_words": 22,
+      "reference": "asus eee pc earlier launched world wide for cost saving and functionality factors became a hot topic in 2007 taipei it month",
+      "hypothesis": "asus epc early launch worldwide for cost saving and functionality factors became a hot topic in 2007 taipei it month"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "model": "faster-whisper/small-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "small",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 5,
+    "condition_on_previous_text": false,
+    "vad_filter": false
+  },
+  "manifest": "data/fleurs_en/test.jsonl",
+  "manifest_sha256": "5473ea7c268ab45f6d16fcd0c37ac2d3a85843a4f0a21212256a7c53dc924d81",
+  "n_utterances": 647,
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_empty_hypotheses": 0,
+  "wer": {
+    "estimate": 0.0659431810326951,
+    "n_reference_tokens": 14467,
+    "hits": 13667,
+    "substitutions": 696,
+    "deletions": 104,
+    "insertions": 154,
+    "confidence_intervals": {
+      "utterance": {
+        "low": 0.06046944007937241,
+        "high": 0.07180672125425147,
+        "level": 0.95,
+        "n_units": 647,
+        "n_resamples": 1000
+      },
+      "sentence_id": {
+        "low": 0.059291180116595475,
+        "high": 0.07272478491073278,
+        "level": 0.95,
+        "n_units": 350,
+        "n_resamples": 1000
+      }
+    },
+    "headline_unit": "sentence_id"
+  },
+  "cer": {
+    "estimate": 0.026986435263546858,
+    "n_reference_tokens": 83894,
+    "hits": 82317,
+    "substitutions": 759,
+    "deletions": 818,
+    "insertions": 687,
+    "confidence_intervals": {
+      "utterance": {
+        "low": 0.02427714960130045,
+        "high": 0.02977441491923665,
+        "level": 0.95,
+        "n_units": 647,
+        "n_resamples": 1000
+      },
+      "sentence_id": {
+        "low": 0.02385763973089604,
+        "high": 0.030262000367082015,
+        "level": 0.95,
+        "n_units": 350,
+        "n_resamples": 1000
+      }
+    },
+    "headline_unit": "sentence_id"
+  },
+  "scored_at": "2026-10-27T09:27:47+00:00",
+  "scoring_git_commit": "0841aeecd5a94e33c092dfc37c8a2555bff4d180"
+}

@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/small-float16",
+  "manifest": "data/fleurs_it/test.jsonl",
+  "normalizer": [
+    "it-v1"
+  ],
+  "n_utterances": 865,
+  "substitutions": 1225,
+  "deletions": 176,
+  "insertions": 178,
+  "distinct_confusion_pairs": 885,
+  "substitutions_with_digits_or_symbols": 60,
+  "top_confusions": [
+    {
+      "reference": "e",
+      "hypothesis": "è",
+      "count": 16
+    },
+    {
+      "reference": "è",
+      "hypothesis": "e",
+      "count": 8
+    },
+    {
+      "reference": "sci",
+      "hypothesis": "shi",
+      "count": 7
+    },
+    {
+      "reference": "l",
+      "hypothesis": "la",
+      "count": 7
+    },
+    {
+      "reference": "km",
+      "hypothesis": "chilometri",
+      "count": 7
+    },
+    {
+      "reference": "delle",
+      "hypothesis": "dell",
+      "count": 7
+    },
+    {
+      "reference": "d",
+      "hypothesis": "di",
+      "count": 6
+    },
+    {
+      "reference": "martelly",
+      "hypothesis": "martelli",
+      "count": 6
+    },
+    {
+      "reference": "giza",
+      "hypothesis": "gizza",
+      "count": 6
+    },
+    {
+      "reference": "fare",
+      "hypothesis": "far",
+      "count": 6
+    },
+    {
+      "reference": "migliore",
+      "hypothesis": "miglior",
+      "count": 6
+    },
+    {
+      "reference": "casablanca",
+      "hypothesis": "blanca",
+      "count": 5
+    },
+    {
+      "reference": "gli",
+      "hypothesis": "i",
+      "count": 5
+    },
+    {
+      "reference": "a",
+      "hypothesis": "al",
+      "count": 5
+    },
+    {
+      "reference": "oscura",
+      "hypothesis": "scura",
+      "count": 4
+    },
+    {
+      "reference": "paesi",
+      "hypothesis": "pesi",
+      "count": 4
+    },
+    {
+      "reference": "cui",
+      "hypothesis": "qui",
+      "count": 4
+    },
+    {
+      "reference": "$",
+      "hypothesis": "dollari",
+      "count": 4
+    },
+    {
+      "reference": "degli",
+      "hypothesis": "dei",
+      "count": 4
+    },
+    {
+      "reference": "la",
+      "hypothesis": "alla",
+      "count": 4
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "a",
+      "count": 23
+    },
+    {
+      "word": "e",
+      "count": 18
+    },
+    {
+      "word": "00",
+      "count": 8
+    },
+    {
+      "word": "è",
+      "count": 8
+    },
+    {
+      "word": "il",
+      "count": 7
+    },
+    {
+      "word": "in",
+      "count": 6
+    },
+    {
+      "word": "i",
+      "count": 6
+    },
+    {
+      "word": "ha",
+      "count": 5
+    },
+    {
+      "word": "le",
+      "count": 5
+    },
+    {
+      "word": "con",
+      "count": 4
+    },
+    {
+      "word": "si",
+      "count": 4
+    },
+    {
+      "word": "addenbrooke",
+      "count": 3
+    },
+    {
+      "word": "l",
+      "count": 3
+    },
+    {
+      "word": "clima",
+      "count": 2
+    },
+    {
+      "word": "tra",
+      "count": 2
+    },
+    {
+      "word": "città",
+      "count": 2
+    },
+    {
+      "word": "sotto",
+      "count": 2
+    },
+    {
+      "word": "tutt",
+      "count": 2
+    },
+    {
+      "word": "ai",
+      "count": 2
+    },
+    {
+      "word": "xi",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "a",
+      "count": 15
+    },
+    {
+      "word": "di",
+      "count": 11
+    },
+    {
+      "word": "l",
+      "count": 9
+    },
+    {
+      "word": "e",
+      "count": 7
+    },
+    {
+      "word": "è",
+      "count": 7
+    },
+    {
+      "word": "ha",
+      "count": 5
+    },
+    {
+      "word": "con",
+      "count": 5
+    },
+    {
+      "word": "casa",
+      "count": 5
+    },
+    {
+      "word": "sottotitoli",
+      "count": 4
+    },
+    {
+      "word": "cura",
+      "count": 4
+    },
+    {
+      "word": "qtss",
+      "count": 4
+    },
+    {
+      "word": "il",
+      "count": 3
+    },
+    {
+      "word": "i",
+      "count": 3
+    },
+    {
+      "word": "al",
+      "count": 3
+    },
+    {
+      "word": "in",
+      "count": 3
+    },
+    {
+      "word": "6",
+      "count": 2
+    },
+    {
+      "word": "7",
+      "count": 2
+    },
+    {
+      "word": "ti",
+      "count": 2
+    },
+    {
+      "word": "sud",
+      "count": 2
+    },
+    {
+      "word": "revisione",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_it_14309954849873750903",
+      "errors": 13,
+      "reference_words": 33,
+      "reference": "l eee pc di asus precedentemente lanciato a livello mondiale per aspetti legati al risparmio e alla funzionalità si è trasformato in tema controverso in occasione dell evento it month di taipei 2007",
+      "hypothesis": "lì pc di azus precedentemente lanciata a livello mondiali per aspetti legati a risparmi la funzionalità si è trasformato in tema controverso in occasione dell evento di t mont di type 2007"
+    },
+    {
+      "utterance_id": "fleurs_it_4354497654731436053",
+      "errors": 10,
+      "reference_words": 28,
+      "reference": "nel corso della lotta per l indipendenza organizzata dal movimento mau un raduno pacifico nella città ha portato all uccisione di tupua tamasese lealofi iii il capo supremo",
+      "hypothesis": "nel corso della lotta per l indipendenza organizzata dal movimento mau un raduno specifico nella città un raduno pacifico nella città apportato all uccisione di tupua tamasese l offie 3 il capo supremo"
+    },
+    {
+      "utterance_id": "fleurs_it_14763818879524162554",
+      "errors": 10,
+      "reference_words": 31,
+      "reference": "a nord si trova la romantica e incantevole città di sintra facilmente raggiungibile è diventata famosa agli occhi degli stranieri grazie al brillante racconto dei suoi splendori scritto da lord byron",
+      "hypothesis": "a nord si trova la romantica incattevole città di sintra facilmente raggiungibile e diventa tafamosa gli occhi degli stranieri grazie al berillante d acconto dei suoi splendori scritto dal lord byron"
+    },
+    {
+      "utterance_id": "fleurs_it_34609404880915251",
+      "errors": 10,
+      "reference_words": 37,
+      "reference": "la piana di giza o necropoli di giza nella valle dei re in egitto ospita numerose piramidi la più grande delle quali è la piramide di cheope varie tombe più piccole svariati templi e la grande sfinge",
+      "hypothesis": "la piana di gizza o necropoli di gizza nella valla di renegetto ospita numerose piramidi la più grande delle quali è la piramide di keope varie tombe più piccole svarie di templi e la grande sfinge"
+    },
+    {
+      "utterance_id": "fleurs_it_13945476758359960484",
+      "errors": 9,
+      "reference_words": 17,
+      "reference": "tra le 22 00 e le 23 00 mdt i detenuti hanno appiccato un incendio nel cortile",
+      "hypothesis": "dall event 2023 i detenuti hanno appiccato un incendio nel cortile"
+    }
+  ]
+}

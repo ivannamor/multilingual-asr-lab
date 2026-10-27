@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/small-float16",
+  "manifest": "data/fleurs_de/test.jsonl",
+  "normalizer": [
+    "de-v1"
+  ],
+  "n_utterances": 862,
+  "substitutions": 1303,
+  "deletions": 168,
+  "insertions": 237,
+  "distinct_confusion_pairs": 1040,
+  "substitutions_with_digits_or_symbols": 50,
+  "top_confusions": [
+    {
+      "reference": "chr",
+      "hypothesis": "christus",
+      "count": 8
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometer",
+      "count": 7
+    },
+    {
+      "reference": "n",
+      "hypothesis": "nach",
+      "count": 6
+    },
+    {
+      "reference": "blogs",
+      "hypothesis": "blocks",
+      "count": 5
+    },
+    {
+      "reference": "usw",
+      "hypothesis": "weiter",
+      "count": 5
+    },
+    {
+      "reference": "einen",
+      "hypothesis": "ein",
+      "count": 4
+    },
+    {
+      "reference": "von",
+      "hypothesis": "vom",
+      "count": 4
+    },
+    {
+      "reference": "das",
+      "hypothesis": "dass",
+      "count": 4
+    },
+    {
+      "reference": "webseite",
+      "hypothesis": "website",
+      "count": 4
+    },
+    {
+      "reference": "mekka",
+      "hypothesis": "mecca",
+      "count": 3
+    },
+    {
+      "reference": "gesichtsausdrucks",
+      "hypothesis": "gesichtsausdruck",
+      "count": 3
+    },
+    {
+      "reference": "gallonen",
+      "hypothesis": "galonen",
+      "count": 3
+    },
+    {
+      "reference": "um",
+      "hypothesis": "und",
+      "count": 3
+    },
+    {
+      "reference": "eine",
+      "hypothesis": "einer",
+      "count": 3
+    },
+    {
+      "reference": "gefleckte",
+      "hypothesis": "gepflegte",
+      "count": 3
+    },
+    {
+      "reference": "vom",
+      "hypothesis": "von",
+      "count": 3
+    },
+    {
+      "reference": "im",
+      "hypothesis": "am",
+      "count": 3
+    },
+    {
+      "reference": "larson",
+      "hypothesis": "larsson",
+      "count": 3
+    },
+    {
+      "reference": "s",
+      "hypothesis": "seite",
+      "count": 3
+    },
+    {
+      "reference": "élevé",
+      "hypothesis": "wohl",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "x",
+      "count": 11
+    },
+    {
+      "word": "schengen",
+      "count": 8
+    },
+    {
+      "word": "in",
+      "count": 6
+    },
+    {
+      "word": "und",
+      "count": 6
+    },
+    {
+      "word": "die",
+      "count": 5
+    },
+    {
+      "word": "so",
+      "count": 4
+    },
+    {
+      "word": "sie",
+      "count": 4
+    },
+    {
+      "word": "00",
+      "count": 4
+    },
+    {
+      "word": "man",
+      "count": 3
+    },
+    {
+      "word": "eee",
+      "count": 3
+    },
+    {
+      "word": "wild",
+      "count": 3
+    },
+    {
+      "word": "dreissig",
+      "count": 3
+    },
+    {
+      "word": "ringer",
+      "count": 3
+    },
+    {
+      "word": "gizeh",
+      "count": 3
+    },
+    {
+      "word": "rossby",
+      "count": 3
+    },
+    {
+      "word": "prozent",
+      "count": 2
+    },
+    {
+      "word": "nord",
+      "count": 2
+    },
+    {
+      "word": "zurücksetzen",
+      "count": 2
+    },
+    {
+      "word": "drei",
+      "count": 2
+    },
+    {
+      "word": "national",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "und",
+      "count": 10
+    },
+    {
+      "word": "zu",
+      "count": 10
+    },
+    {
+      "word": "in",
+      "count": 9
+    },
+    {
+      "word": "wieder",
+      "count": 5
+    },
+    {
+      "word": "bis",
+      "count": 4
+    },
+    {
+      "word": "so",
+      "count": 4
+    },
+    {
+      "word": "ihre",
+      "count": 3
+    },
+    {
+      "word": "sie",
+      "count": 3
+    },
+    {
+      "word": "vielen",
+      "count": 3
+    },
+    {
+      "word": "original",
+      "count": 3
+    },
+    {
+      "word": "befolgt",
+      "count": 3
+    },
+    {
+      "word": "die",
+      "count": 3
+    },
+    {
+      "word": "immer",
+      "count": 3
+    },
+    {
+      "word": "exzellenz",
+      "count": 3
+    },
+    {
+      "word": "nicht",
+      "count": 2
+    },
+    {
+      "word": "scott",
+      "count": 2
+    },
+    {
+      "word": "es",
+      "count": 2
+    },
+    {
+      "word": "6",
+      "count": 2
+    },
+    {
+      "word": "tage",
+      "count": 2
+    },
+    {
+      "word": "cannabis",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_de_5588377578874001231",
+      "errors": 12,
+      "reference_words": 52,
+      "reference": "forscher der princeton university in den vereinigten staaten und der uppsala university in schweden berichteten die neue art habe sich innerhalb von nur zwei generationen entwickelt obwohl man zuvor angenommen hatte dass dieser vorgang aufgrund der paarung zwischen einem einheimischen darwinfink geospiza fortes und dem eingewanderten kaktusfink geospiza conirostris viel länger dauerte",
+      "hypothesis": "forscher der princeton universität in den vereinigten staaten und der uppsale universität in schweden berichteten die neue art habe sich innerhalb von nur zwei generationen entwickelt obwohl man zuvor angenommen hatte dass dieser vorgang aufgrund der paarung zwischen einem einheimischen darwin fink geospizza fortes und dem eingewanderten cactus fink geospitze konni rostris viel länger dauert"
+    },
+    {
+      "utterance_id": "fleurs_de_4778495970815333333",
+      "errors": 11,
+      "reference_words": 43,
+      "reference": "auch wenn dies oft nur ein unzutreffendes klischee ist so findet man sich in paris doch am besten zurecht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der bien élevé wohlerzogen ist das wird das zurechtkommen erheblich erleichtern",
+      "hypothesis": "auch wenn dies oft nur ein unzutreffendes geschirr ist findet man sich in paris doch am besten zu recht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der björn elef wohl erzogen ist das wird das zu recht kommen erheblich erleichtern"
+    },
+    {
+      "utterance_id": "fleurs_de_5054808651382969097",
+      "errors": 10,
+      "reference_words": 24,
+      "reference": "er wurde von wong kan seng dem stellvertretenden premierminister singapurs begrüsst und sprach mit lee hsien loong dem premierminister singapurs über handels und terrorismusangelegenheiten",
+      "hypothesis": "er wurde von wong kang seng dem stellvertretenden premierminister singapurz begrüsst und sprach mit li he sing long dem premierminister singapurz über handels und terrorismus angelegen hatten"
+    },
+    {
+      "utterance_id": "fleurs_de_18258178889623554485",
+      "errors": 10,
+      "reference_words": 43,
+      "reference": "auch wenn dies oft nur ein unzutreffendes klischee ist so findet man sich in paris doch am besten zurecht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der bien élevé wohlerzogen ist das wird das zurechtkommen erheblich erleichtern",
+      "hypothesis": "auch wenn dies oft nur ein unzutreffendes klischee ist so findet man sich in paris doch am besten zu recht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der bjorn elef wohl erzogen ist das wird das zu recht kaum erleblich erleichtern"
+    },
+    {
+      "utterance_id": "fleurs_de_1463105846377948821",
+      "errors": 9,
+      "reference_words": 23,
+      "reference": "die offizielle währung der falklandinseln ist das falkland pound fkp dessen wert in einklang mit dem wert des britischen pfunds gbp festgelegt wird",
+      "hypothesis": "die offizielle währung der falkland inseln ist das falkland pound f k p dessen wert in einklang mit dem wert des politischen pfunds g b p festgelegt wird"
+    }
+  ]
+}

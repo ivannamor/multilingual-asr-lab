@@ -1,0 +1,316 @@
+{
+  "model": "faster-whisper/large-v3-float16",
+  "manifest": "data/fleurs_it/test.jsonl",
+  "normalizer": [
+    "it-v1"
+  ],
+  "n_utterances": 865,
+  "substitutions": 387,
+  "deletions": 52,
+  "insertions": 42,
+  "distinct_confusion_pairs": 260,
+  "substitutions_with_digits_or_symbols": 55,
+  "top_confusions": [
+    {
+      "reference": "martelly",
+      "hypothesis": "martelli",
+      "count": 6
+    },
+    {
+      "reference": "$",
+      "hypothesis": "dollari",
+      "count": 6
+    },
+    {
+      "reference": "e",
+      "hypothesis": "è",
+      "count": 6
+    },
+    {
+      "reference": "nyiragongo",
+      "hypothesis": "niragongo",
+      "count": 5
+    },
+    {
+      "reference": "d",
+      "hypothesis": "di",
+      "count": 4
+    },
+    {
+      "reference": "sci",
+      "hypothesis": "ski",
+      "count": 4
+    },
+    {
+      "reference": "davey",
+      "hypothesis": "davy",
+      "count": 4
+    },
+    {
+      "reference": "20",
+      "hypothesis": "vent",
+      "count": 3
+    },
+    {
+      "reference": "skimo",
+      "hypothesis": "schimo",
+      "count": 3
+    },
+    {
+      "reference": "cinque",
+      "hypothesis": "5",
+      "count": 3
+    },
+    {
+      "reference": "20",
+      "hypothesis": "venti",
+      "count": 3
+    },
+    {
+      "reference": "2",
+      "hypothesis": "due",
+      "count": 3
+    },
+    {
+      "reference": "3",
+      "hypothesis": "tre",
+      "count": 3
+    },
+    {
+      "reference": "dodici",
+      "hypothesis": "12",
+      "count": 3
+    },
+    {
+      "reference": "gourley",
+      "hypothesis": "gurley",
+      "count": 3
+    },
+    {
+      "reference": "ceco",
+      "hypothesis": "cieco",
+      "count": 3
+    },
+    {
+      "reference": "oldrich",
+      "hypothesis": "aldrich",
+      "count": 3
+    },
+    {
+      "reference": "diciannove",
+      "hypothesis": "19",
+      "count": 3
+    },
+    {
+      "reference": "km",
+      "hypothesis": "chilometri",
+      "count": 3
+    },
+    {
+      "reference": "h",
+      "hypothesis": "orari",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "a",
+      "count": 9
+    },
+    {
+      "word": "00",
+      "count": 6
+    },
+    {
+      "word": "e",
+      "count": 6
+    },
+    {
+      "word": "è",
+      "count": 4
+    },
+    {
+      "word": "addenbrooke",
+      "count": 3
+    },
+    {
+      "word": "eee",
+      "count": 3
+    },
+    {
+      "word": "il",
+      "count": 2
+    },
+    {
+      "word": "wild",
+      "count": 2
+    },
+    {
+      "word": "ft",
+      "count": 2
+    },
+    {
+      "word": "tra",
+      "count": 1
+    },
+    {
+      "word": "i",
+      "count": 1
+    },
+    {
+      "word": "ha",
+      "count": 1
+    },
+    {
+      "word": "città",
+      "count": 1
+    },
+    {
+      "word": "tarda",
+      "count": 1
+    },
+    {
+      "word": "terreno",
+      "count": 1
+    },
+    {
+      "word": "frutta",
+      "count": 1
+    },
+    {
+      "word": "daru",
+      "count": 1
+    },
+    {
+      "word": "tutt",
+      "count": 1
+    },
+    {
+      "word": "1989",
+      "count": 1
+    },
+    {
+      "word": "15",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "a",
+      "count": 7
+    },
+    {
+      "word": "il",
+      "count": 4
+    },
+    {
+      "word": "e",
+      "count": 4
+    },
+    {
+      "word": "sun",
+      "count": 3
+    },
+    {
+      "word": "grazie",
+      "count": 2
+    },
+    {
+      "word": "4",
+      "count": 2
+    },
+    {
+      "word": "pagina",
+      "count": 2
+    },
+    {
+      "word": "è",
+      "count": 2
+    },
+    {
+      "word": "di",
+      "count": 2
+    },
+    {
+      "word": "si",
+      "count": 1
+    },
+    {
+      "word": "tutti",
+      "count": 1
+    },
+    {
+      "word": "sunda",
+      "count": 1
+    },
+    {
+      "word": "ciò",
+      "count": 1
+    },
+    {
+      "word": "casa",
+      "count": 1
+    },
+    {
+      "word": "i",
+      "count": 1
+    },
+    {
+      "word": "dell",
+      "count": 1
+    },
+    {
+      "word": "la",
+      "count": 1
+    },
+    {
+      "word": "super",
+      "count": 1
+    },
+    {
+      "word": "tutt",
+      "count": 1
+    },
+    {
+      "word": "tra",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_it_14713762785067230586",
+      "errors": 7,
+      "reference_words": 18,
+      "reference": "lakkha singh ha inoltre presentato il bhajan per il chhappan bhog lo ha accompagnato il cantante raju khandelwal",
+      "hypothesis": "la ka sing ha inoltre presentato il bhajan per chappan bog lo ha accompagnato il cantante raju kandelval"
+    },
+    {
+      "utterance_id": "fleurs_it_4045850852858959263",
+      "errors": 6,
+      "reference_words": 18,
+      "reference": "lakkha singh ha inoltre presentato il bhajan per il chhappan bhog lo ha accompagnato il cantante raju khandelwal",
+      "hypothesis": "la kasing ha inoltre presentato il bajan per il chapambog lo ha accompagnato il cantante raju kandelkval"
+    },
+    {
+      "utterance_id": "fleurs_it_7655228652716745245",
+      "errors": 6,
+      "reference_words": 29,
+      "reference": "cochamó valley la più importante destinazione per arrampicate del cile nota come lo yosemite del sud america dove si trava un gran numero di enormi pareti e falesie granitiche",
+      "hypothesis": "cochamo valley la più importante destinazione per arrampicata del cile nota come l oiesemite del sud america dove si trova un gran numero di enormi pareti e falessie granitiche"
+    },
+    {
+      "utterance_id": "fleurs_it_12103438688786487405",
+      "errors": 5,
+      "reference_words": 28,
+      "reference": "le sundarbans sono la più ampia fascia litoranea di mangrovie a livello mondiale si estende per 80 km 50 mi dalla costa nell entroterra di bangladesh e india",
+      "hypothesis": "le sunda bunts sono la più alta fascia litoranea di mangrovie a livello mondiale si estende per 80 km 50 miglia dalla costa dell entroterra di bangladesh e india"
+    },
+    {
+      "utterance_id": "fleurs_it_2971775224423893260",
+      "errors": 4,
+      "reference_words": 21,
+      "reference": "nella notte furono prodotte tra le 150 e le 200 copie oggi note con il nome di i manifesti di dunlap",
+      "hypothesis": "nella notte furono prodotte fra le 150 e le 200 coppie oggi note col nome di i manifesti di dunlap"
+    }
+  ]
+}

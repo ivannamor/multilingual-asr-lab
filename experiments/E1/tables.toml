@@ -20,3 +20,34 @@ rows = [
   { label = "German: base → small", file = "experiments/E1/results/model_base_vs_small_de.json" },
   { label = "English: base → small", file = "experiments/E1/results/model_base_vs_small_en.json" },
 ]
+
+# GPU runs (float16 on a Colab T4), transcribed with notebooks/e1_large_colab.ipynb
+[[table]]
+name = "e1-gpu"
+kind = "scores"
+rows = [
+  { label = "Italian · Whisper-small", file = "experiments/runs/whisper-small-float16-fleurs-it/scores_it-v1.json" },
+  { label = "Italian · Whisper-large-v3-turbo", file = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-it/scores_it-v1.json" },
+  { label = "Italian · Whisper-large-v3", file = "experiments/runs/whisper-large-v3-float16-fleurs-it/scores_it-v1.json" },
+  { label = "German · Whisper-small", file = "experiments/runs/whisper-small-float16-fleurs-de/scores_de-v1.json" },
+  { label = "German · Whisper-large-v3-turbo", file = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-de/scores_de-v1.json" },
+  { label = "German · Whisper-large-v3", file = "experiments/runs/whisper-large-v3-float16-fleurs-de/scores_de-v1.json" },
+  { label = "English · Whisper-small", file = "experiments/runs/whisper-small-float16-fleurs-en/scores_en-v1.json" },
+  { label = "English · Whisper-large-v3-turbo", file = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-en/scores_en-v1.json" },
+  { label = "English · Whisper-large-v3", file = "experiments/runs/whisper-large-v3-float16-fleurs-en/scores_en-v1.json" },
+]
+
+[[table]]
+name = "e1-gpu-gaps"
+kind = "comparisons"
+rows = [
+  { label = "Italian: small, CPU int8 → GPU float16", file = "experiments/E1/results/precision_small_int8_vs_float16_it.json" },
+  { label = "Italian: small → large-v3-turbo", file = "experiments/E1/results/model_small_vs_large-v3-turbo_it.json" },
+  { label = "Italian: large-v3-turbo → large-v3", file = "experiments/E1/results/model_large-v3-turbo_vs_large-v3_it.json" },
+  { label = "German: small, CPU int8 → GPU float16", file = "experiments/E1/results/precision_small_int8_vs_float16_de.json" },
+  { label = "German: small → large-v3-turbo", file = "experiments/E1/results/model_small_vs_large-v3-turbo_de.json" },
+  { label = "German: large-v3-turbo → large-v3", file = "experiments/E1/results/model_large-v3-turbo_vs_large-v3_de.json" },
+  { label = "English: small, CPU int8 → GPU float16", file = "experiments/E1/results/precision_small_int8_vs_float16_en.json" },
+  { label = "English: small → large-v3-turbo", file = "experiments/E1/results/model_small_vs_large-v3-turbo_en.json" },
+  { label = "English: large-v3-turbo → large-v3", file = "experiments/E1/results/model_large-v3-turbo_vs_large-v3_en.json" },
+]
