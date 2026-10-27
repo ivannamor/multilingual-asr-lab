@@ -68,7 +68,8 @@ class FasterWhisperModel(ASRModel):
         vad_filter: remove non-speech audio with Silero VAD before decoding.
         hallucination_silence_threshold: skip silences longer than this many seconds
             around a likely hallucination; needs word timestamps, which it enables.
-        model: an already built model, used by tests to avoid downloading weights.
+        model: an already built model, to share loaded weights (see ``with_decoding``)
+            or, in tests, to avoid downloading them.
     """
 
     def __init__(
@@ -141,6 +142,21 @@ class FasterWhisperModel(ASRModel):
     def implicit_config(self) -> dict[str, Any]:
         """Values used by runs saved before these settings were recorded (1.2.1 defaults)."""
         return dict(_IMPLICIT_CONFIG)
+
+    def with_decoding(self, **options: Any) -> FasterWhisperModel:
+        """The same loaded weights with other decoding options (the rest at their defaults).
+
+        Loading a large checkpoint takes longer than transcribing a short test set,
+        so a sweep of decoding options loads it once.
+        """
+        return FasterWhisperModel(
+            self.model_size,
+            device=self.device,
+            compute_type=self.compute_type,
+            cpu_threads=self.cpu_threads,
+            model=self._model,
+            **options,
+        )
 
     def _transcribe_batch(self, samples: Sequence[AudioSample]) -> list[Hypothesis]:
         return [self._transcribe_one(sample) for sample in samples]

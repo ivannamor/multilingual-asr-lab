@@ -1,0 +1,48 @@
+# Experiment E2: decoding options of Whisper-large-v3-turbo, chosen on the FLEURS dev sets.
+#
+# Each configuration lists only the options that differ from faster-whisper's defaults,
+# which are the E1 setup: beam size 5, temperature fallback, no voice activity detection.
+# One option changes at a time. Read by asr_lab.sweep (run_sweep, select_configuration).
+
+model_size = "large-v3-turbo"
+languages = ["it", "de", "en"]
+manifest = "data/fleurs_{lang}/{split}.jsonl"
+run_dir = "experiments/runs/e2-turbo-{config}-fleurs-{lang}-{split}"
+
+[normalizers]
+it = "it-v1"
+de = "de-v1"
+en = "en-v1"
+
+[[config]]
+name = "baseline"  # first: kept if no configuration is safe in every language
+
+[[config]]
+name = "beam1"
+options = { beam_size = 1 }  # greedy decoding
+
+[[config]]
+name = "beam2"
+options = { beam_size = 2 }
+
+[[config]]
+name = "beam8"
+options = { beam_size = 8 }
+
+[[config]]
+name = "no-fallback"
+options = { temperature = [0.0] }  # never resample: deterministic
+
+[[config]]
+name = "vad"
+options = { vad_filter = true }  # Silero VAD removes non-speech audio first
+
+[[config]]
+name = "hst2"
+options = { hallucination_silence_threshold = 2.0 }  # also turns on word timestamps
+
+[[config]]
+name = "baseline-repeat"
+# The baseline again, last: how much two identical runs differ in WER and speed
+# (sampling in the fallback, GPU timing, drift over the session). Not a candidate.
+selectable = false

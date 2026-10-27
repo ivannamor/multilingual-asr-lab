@@ -217,6 +217,10 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--metric` | `wer` | `wer` or `cer` |
 | | `--output` | none | save the comparison as JSON |
 | | `--mlflow` | off | also log the saved comparison to this MLflow experiment (needs `--output`) |
+| `asr-lab select` | `--spec` | (required) | TOML sweep spec, e.g. `experiments/E2/sweep.toml`; picks the fastest configuration not significantly worse than the best one in any language |
+| | `--split` | `dev` | split whose runs are compared (never the test set) |
+| | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings |
+| | `--output` | none | save the selection as JSON |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |
