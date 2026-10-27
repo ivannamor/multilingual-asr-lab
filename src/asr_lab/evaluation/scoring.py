@@ -35,6 +35,8 @@ from asr_lab.provenance import file_sha256, git_commit, utc_now
 
 DEFAULT_N_RESAMPLES = 1000
 DEFAULT_SEED = 0
+# Fields of a scores file that record when and by which code it was computed.
+_PROVENANCE_FIELDS = ("scored_at", "scoring_git_commit")
 
 
 def score_predictions(
@@ -92,7 +94,10 @@ def score_run(
 
     The manifest defaults to the one recorded in the run's ``run.json``. The
     file name depends on the scoring settings (see ``scores_filename``), so
-    scoring the same run with another normalizer never overwrites a result.
+    scoring the same run with another normalizer never overwrites a result. If
+    the file already holds the same scores, it is left as it is (with its
+    original ``scored_at`` and ``scoring_git_commit``), so rescoring unchanged
+    predictions does not modify committed results.
 
     Returns:
         The scores and the path of the file they were written to.
@@ -111,8 +116,15 @@ def score_run(
     }
     path = run_dir / scores_filename(scores["normalizer"], n_resamples, seed)
     text = json.dumps(scores, ensure_ascii=False, indent=2) + "\n"
+    previous = json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
+    if previous is not None and _results_only(previous) == _results_only(json.loads(text)):
+        return previous, path
     path.write_text(text, encoding="utf-8", newline="\n")
     return scores, path
+
+
+def _results_only(scores: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in scores.items() if key not in _PROVENANCE_FIELDS}
 
 
 def scores_filename(normalizers: Sequence[str], n_resamples: int, seed: int) -> str:
