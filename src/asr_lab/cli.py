@@ -7,12 +7,14 @@ Usage::
     uv run asr-lab errors --run runs/whisper-small-it
     uv run asr-lab compare --a runs/A --b runs/B
     uv run asr-lab select --spec experiments/E2/sweep.toml --output selection.json
+    uv run asr-lab plot-selection --selection selection.json --output pareto.png
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -33,6 +35,7 @@ from asr_lab.evaluation.scoring import (
 )
 from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
+from asr_lab.plots import plot_selection
 from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
 from asr_lab.tracking import log_comparison, log_scores
@@ -141,6 +144,12 @@ def main(argv: Sequence[str] | None = None) -> None:
     select.add_argument("--seed", type=int, default=DEFAULT_SEED)
     select.add_argument("--output", type=Path, default=None, help="save the result as JSON")
 
+    plot = commands.add_parser(
+        "plot-selection", help="plot WER against processing time for the runs of a sweep"
+    )
+    plot.add_argument("--selection", required=True, type=Path, help="JSON saved by select")
+    plot.add_argument("--output", required=True, type=Path, help="PNG file")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -220,6 +229,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         if args.output:
             save_selection(selection, args.output)
             print(f"Selection: {args.output}")
+    elif args.command == "plot-selection":
+        selection = json.loads(args.selection.read_text(encoding="utf-8"))
+        print(f"Figure: {plot_selection(selection, args.output)}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,

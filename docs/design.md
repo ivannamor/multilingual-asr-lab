@@ -520,3 +520,36 @@ which errs on the side of accuracy).
 minimum of several noisy estimates, so the test comparison with E1 is the result to report.
 Speeds are measured on a shared Colab GPU: they are comparable within one session only, and the
 repeated baseline shows how much they vary.
+
+**After E2.** The rule selected the hallucination-silence threshold, which differs from the
+baseline in four dev transcripts, because its German interval against voice activity detection
+reached +0.56 points without excluding zero. "Not significantly worse" is not "as good": the next
+sweep should fix a non-inferiority margin in advance (eligible only if the upper bound of the
+difference is below it). The rule was not changed after the results.
+
+## 23. Hallucinated closing phrases are counted in the error report; figures are an optional extra
+
+**Context.** E1 found that the large models end some German transcripts with "Vielen Dank", a
+phrase learned from subtitled videos. It costs little WER but is very visible to a user, and E2
+tests settings meant to reduce it, so it has to be counted the same way for every run. The E1
+counts came from a one-off script. E2 also needs tables that are not scores or comparisons (the
+selection, counts per configuration) and a figure of WER against speed.
+
+**Decision.** `asr_lab.evaluation.hallucination` matches a short list of closing phrases per
+language at the end of the normalized hypothesis, when the normalized reference does not end the
+same way; `asr-lab errors` writes the matches to the error report
+(`invented_closing_phrases`), so the count is recomputed from the saved predictions like every
+other number. `asr-lab render-results` gained two table kinds, `selection` (from `select`'s JSON)
+and `closing-phrases` (one error report per cell), so these tables are generated and checked by
+the test suite too. The figure is drawn by `asr-lab plot-selection` with matplotlib, an optional
+extra (`plots`), imported only when a figure is drawn; every number in it is also in a table.
+
+**Alternatives rejected.** A generic hallucination detector (insertions at the end of an
+utterance): it would also count genuine recognition errors, and the known phrases are what users
+notice; a separate command for the count (one more file per run, while the error report already
+holds the alignment); matplotlib as a core dependency (the pipeline and the Colab notebooks do not
+need it); an interactive figure (GitHub shows static images only).
+
+**Consequences.** The counts are a lower bound: invented endings not in the list are missed, and
+adding a phrase changes past counts, so the list is part of the method and is versioned with the
+code. Rerunning `asr-lab errors` on older runs only adds the new field.

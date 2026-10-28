@@ -1,0 +1,89 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "large-v3-turbo",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 1,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "vad_filter": false,
+    "hallucination_silence_threshold": null,
+    "word_timestamps": false,
+    "condition_on_previous_text": false,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0
+  },
+  "manifest": "data/fleurs_it/dev.jsonl",
+  "manifest_sha256": "4a96dd62a67a48260c96a46183ed0f3a3e88fce7312fd05a0e031332f78f4b1b",
+  "n_utterances": 391,
+  "normalizer": [
+    "it-v1"
+  ],
+  "n_empty_hypotheses": 0,
+  "wer": {
+    "estimate": 0.023619427811044577,
+    "n_reference_tokens": 9018,
+    "hits": 8832,
+    "substitutions": 167,
+    "deletions": 19,
+    "insertions": 27,
+    "confidence_intervals": {
+      "utterance": {
+        "low": 0.01955616858584724,
+        "high": 0.027549122843146225,
+        "level": 0.95,
+        "n_units": 391,
+        "n_resamples": 1000
+      },
+      "sentence_id": {
+        "low": 0.018361908453921567,
+        "high": 0.029192756201062004,
+        "level": 0.95,
+        "n_units": 147,
+        "n_resamples": 1000
+      }
+    },
+    "headline_unit": "sentence_id"
+  },
+  "cer": {
+    "estimate": 0.006416281087333719,
+    "n_reference_tokens": 55328,
+    "hits": 55064,
+    "substitutions": 135,
+    "deletions": 129,
+    "insertions": 91,
+    "confidence_intervals": {
+      "utterance": {
+        "low": 0.005162886657616172,
+        "high": 0.007593533173509061,
+        "level": 0.95,
+        "n_units": 391,
+        "n_resamples": 1000
+      },
+      "sentence_id": {
+        "low": 0.004812198341504653,
+        "high": 0.008160813702946489,
+        "level": 0.95,
+        "n_units": 147,
+        "n_resamples": 1000
+      }
+    },
+    "headline_unit": "sentence_id"
+  },
+  "scored_at": "2026-10-27T19:50:31+00:00",
+  "scoring_git_commit": "bc30fef894f6751106ce32aeba3c79c894446929"
+}

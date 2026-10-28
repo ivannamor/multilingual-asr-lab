@@ -1,0 +1,46 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "large-v3-turbo",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 1,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "vad_filter": false,
+    "hallucination_silence_threshold": null,
+    "word_timestamps": false,
+    "condition_on_previous_text": false,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0
+  },
+  "manifest_sha256": "ab89f6a2a8db5fcfed82fdb1f126233da09d4d2ad43fdcd1325775be02350fdf",
+  "limit": null,
+  "manifest": "data/fleurs_en/dev.jsonl",
+  "n_utterances": 394,
+  "audio_seconds": 3765.18,
+  "git_commit": "bc30fef894f6751106ce32aeba3c79c894446929",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux x86_64",
+    "executable_is_venv": false
+  },
+  "started_at": "2026-10-27T17:31:11+00:00",
+  "finished_at": "2026-10-27T17:33:36+00:00",
+  "processing_seconds": 145.754513266,
+  "rtf": 0.03871116739863699
+}

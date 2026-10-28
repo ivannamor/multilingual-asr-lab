@@ -1,0 +1,274 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_it/dev.jsonl",
+  "normalizer": [
+    "it-v1"
+  ],
+  "n_utterances": 391,
+  "substitutions": 174,
+  "deletions": 17,
+  "insertions": 24,
+  "distinct_confusion_pairs": 115,
+  "substitutions_with_digits_or_symbols": 14,
+  "top_confusions": [
+    {
+      "reference": "giavanese",
+      "hypothesis": "giovanese",
+      "count": 5
+    },
+    {
+      "reference": "bhajan",
+      "hypothesis": "bajan",
+      "count": 4
+    },
+    {
+      "reference": "dazi",
+      "hypothesis": "dazzi",
+      "count": 4
+    },
+    {
+      "reference": "m",
+      "hypothesis": "metri",
+      "count": 3
+    },
+    {
+      "reference": "diciotto",
+      "hypothesis": "18",
+      "count": 3
+    },
+    {
+      "reference": "paesi",
+      "hypothesis": "pesi",
+      "count": 3
+    },
+    {
+      "reference": "timbuctù",
+      "hypothesis": "timbuktu",
+      "count": 3
+    },
+    {
+      "reference": "incantanti",
+      "hypothesis": "incantati",
+      "count": 3
+    },
+    {
+      "reference": "uthappa",
+      "hypothesis": "utappa",
+      "count": 3
+    },
+    {
+      "reference": "fours",
+      "hypothesis": "force",
+      "count": 3
+    },
+    {
+      "reference": "martelly",
+      "hypothesis": "martelli",
+      "count": 3
+    },
+    {
+      "reference": "niigata",
+      "hypothesis": "nigata",
+      "count": 3
+    },
+    {
+      "reference": "fi",
+      "hypothesis": "wifi",
+      "count": 3
+    },
+    {
+      "reference": "arly",
+      "hypothesis": "arli",
+      "count": 3
+    },
+    {
+      "reference": "velasquez",
+      "hypothesis": "velázquez",
+      "count": 3
+    },
+    {
+      "reference": "michele",
+      "hypothesis": "michelle",
+      "count": 3
+    },
+    {
+      "reference": "cañitas",
+      "hypothesis": "canitas",
+      "count": 3
+    },
+    {
+      "reference": "otto",
+      "hypothesis": "8",
+      "count": 3
+    },
+    {
+      "reference": "ciononostante",
+      "hypothesis": "nonostante",
+      "count": 3
+    },
+    {
+      "reference": "curry",
+      "hypothesis": "carry",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "i",
+      "count": 3
+    },
+    {
+      "word": "wi",
+      "count": 3
+    },
+    {
+      "word": "a",
+      "count": 2
+    },
+    {
+      "word": "7",
+      "count": 2
+    },
+    {
+      "word": "re",
+      "count": 2
+    },
+    {
+      "word": "su",
+      "count": 1
+    },
+    {
+      "word": "sua",
+      "count": 1
+    },
+    {
+      "word": "ski",
+      "count": 1
+    },
+    {
+      "word": "mal",
+      "count": 1
+    },
+    {
+      "word": "e",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "john",
+      "count": 3
+    },
+    {
+      "word": "ciò",
+      "count": 3
+    },
+    {
+      "word": "grazie",
+      "count": 2
+    },
+    {
+      "word": "a",
+      "count": 2
+    },
+    {
+      "word": "il",
+      "count": 2
+    },
+    {
+      "word": "sud",
+      "count": 1
+    },
+    {
+      "word": "nei",
+      "count": 1
+    },
+    {
+      "word": "o",
+      "count": 1
+    },
+    {
+      "word": "gli",
+      "count": 1
+    },
+    {
+      "word": "klocker",
+      "count": 1
+    },
+    {
+      "word": "l",
+      "count": 1
+    },
+    {
+      "word": "di",
+      "count": 1
+    },
+    {
+      "word": "ottanta",
+      "count": 1
+    },
+    {
+      "word": "per",
+      "count": 1
+    },
+    {
+      "word": "bird",
+      "count": 1
+    },
+    {
+      "word": "non",
+      "count": 1
+    },
+    {
+      "word": "è",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_it_13949867380394980392",
+      "errors": 7,
+      "reference_words": 37,
+      "reference": "lo sciatore polacco non vedente maciej krezel e la sua guida anna ogarzynska si sono classificati al tredicesimo posto nel super g il sudcoreano jong seork park si è classificato al ventiquattresimo posto nel super g maschile",
+      "hypothesis": "lo sciatore polacco non vedente marcie krezle e la seguida anna ogarzinska si sono classificati al tredicesimo posto nel super g il sudcoreano jang seor park si è classificato al ventiquattresimo posto nel super g maschile"
+    },
+    {
+      "utterance_id": "fleurs_it_8203283692284203347",
+      "errors": 6,
+      "reference_words": 53,
+      "reference": "il 6 ottobre 1789 una folla di donne del mercato costrinse re luigi xvi in preda al terrore a lasciare versailles per tornare a parigi insieme alla regina maria antonietta ai loro due figli piccoli maria teresa di 11 anni e luigi carlo di 4 anni e ad elisabetta la sorella del re",
+      "hypothesis": "il 6 ottobre 1789 una folla di donne del mercato costrinse il re luigi xvi in preda al terrore a lasciare versailles per tornare a parigi insieme alla regina maria antonietta ai loro due figli piccoli maria teresa di undici anni e luigi carlo di quattro anni e ad elisabetta la sorala de ra"
+    },
+    {
+      "utterance_id": "fleurs_it_5902318884782723035",
+      "errors": 5,
+      "reference_words": 16,
+      "reference": "ciononostante l 80 delle nostre merci è stato tassato con dazi nei paesi dell america centrale",
+      "hypothesis": "ciò nonostante l ottanta per cento delle nostre merci è stato tassato con dazi nei paesi dell america centrale"
+    },
+    {
+      "utterance_id": "fleurs_it_18375199394116261276",
+      "errors": 5,
+      "reference_words": 31,
+      "reference": "nel 2000 ha ottenuto il suo millesimo francobollo il magnifico great deeds by swedish kings grandi gesta dei re svedesi di david klöcker ehrenstrahl che è annoverato nel guinness dei primati",
+      "hypothesis": "nel 2000 ha ottenuto il suo millesimo francobollo il magnifico great deeds by swedish kings grandi gesta dei resvedesi di david klocker and restral che è annoverato nel guinness dei primati"
+    },
+    {
+      "utterance_id": "fleurs_it_11742648404757957657",
+      "errors": 4,
+      "reference_words": 21,
+      "reference": "alcuni cantanti famosi da tutto il paese hanno offerto ai piedi di shri shyam i bhajan ovvero dei canti di devozione",
+      "hypothesis": "alcuni cantanti famosi da tutto il paese hanno offerto i piedi di srin srian i bajan ovvero dei canti di devozione"
+    }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_it_13819260478414433281",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "fleurs_it_3736337517871588917",
+      "phrase": "grazie"
+    }
+  ]
+}

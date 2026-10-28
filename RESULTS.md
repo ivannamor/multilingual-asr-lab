@@ -10,8 +10,9 @@ that regenerates it.
 1. [Executive summary](#executive-summary)
 2. [Setup](#setup): data, models, metrics, statistics, hardware
 3. [E1. Baseline](#e1-baseline)
-4. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
-5. [Limitations and next steps](#limitations-and-next-steps)
+4. [E2. Which decoding settings?](#e2-which-decoding-settings)
+5. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
+6. [Limitations and next steps](#limitations-and-next-steps)
 
 ## Executive summary
 
@@ -30,6 +31,14 @@ that regenerates it.
 - **Language is confounded with speaker gender.** The German test set has only male voices and the
   Italian one is 96% female, so the gaps between languages cannot be attributed to the language
   alone.
+- **Decoding settings matter little for WER; voice activity detection matters for
+  hallucinations.** In a sweep on the dev sets, beam size, temperature fallback and Whisper's
+  hallucination-silence threshold move large-v3-turbo's WER by at most a quarter of a point.
+  Voice activity detection lowers German WER by 0.31 points on dev ([-0.59, -0.03]) and removes
+  the invented "Vielen Dank" endings (12 to 0 on the German test set), for 6% more processing
+  time. The pre-registered selection rule picked the hallucination-silence threshold, which is in
+  practice the baseline, after a borderline comparison: an example of why such a rule needs a
+  non-inferiority margin.
 - **Normalization is a large hidden variable.** On the same Whisper-small Italian transcripts, WER
   ranges from 13.87% with no normalization to 7.15% with the most complete Italian normalizer.
   Almost half of the raw word errors are casing, punctuation and formatting.
@@ -293,20 +302,25 @@ utterance for every model: that is why it is not eight times faster, and why Whi
 comparable with the CPU ones in [Setup](#models).
 
 **Larger models hallucinate more closing phrases in German.** Utterances whose transcript ends with
-a phrase that is not in the reference, typical of subtitled videos in Whisper's training data:
+a phrase that is not in the reference, typical of subtitled videos in Whisper's training data
+("Sottotitoli a cura di QTSS" and "grazie a tutti" in Italian, "Vielen Dank" and "Untertitelung des
+ZDF 2020" in German, "thank you" in English):
 
+<!-- BEGIN e1-closing-phrases -->
 | Utterances with an invented closing phrase | small (CPU int8) | small | large-v3-turbo | large-v3 |
 |---|---|---|---|---|
-| Italian ("Sottotitoli a cura di QTSS", "grazie a tutti") | 5 | 4 | 3 | 2 |
-| German ("Vielen Dank", "Untertitelung des ZDF 2020") | 3 | 3 | 12 | 12 |
-| English ("thank you") | 0 | 1 | 0 | 1 |
+| Italian | 5 | 4 | 3 | 2 |
+| German | 3 | 3 | 12 | 12 |
+| English | 0 | 1 | 0 | 1 |
+<!-- END e1-closing-phrases -->
 
 In German, 10 of the 12 utterances are the same for large-v3-turbo and large-v3, which share their
 encoder: something in those recordings triggers the phrase. Each case costs only two to six
 insertions, so the effect on WER is small, but in a product an invented "Vielen Dank" at the end
-of a dictated message is a visible error. Voice activity detection and Whisper's no-speech
-threshold, both disabled here, are the usual mitigations (experiment E2). These counts come from a
-one-off script that matches the phrases at the end of the normalized transcripts.
+of a dictated message is a visible error. Voice activity detection, disabled here, removes them
+almost entirely ([E2](#e2-which-decoding-settings)). The counts are part of the error report
+(`asr-lab errors`), which matches a short list of known phrases at the end of the normalized
+transcript when the reference does not end the same way.
 
 **Speaker gender** (Whisper-large-v3, descriptive as above): Italian 2.19% for female voices
 ([1.86, 2.56]) and 3.88% for the 38 male utterances ([2.03, 6.20]); English 4.40% ([3.77, 5.03])
@@ -335,6 +349,192 @@ committed transcripts it only rescores. Without them it downloads the three test
 transcribes them with Whisper-small and Whisper-base (about two hours on a laptop CPU); the GPU
 runs are transcribed with [`notebooks/e1_large_colab.ipynb`](notebooks/e1_large_colab.ipynb) on a
 Colab GPU (about 75 minutes of transcription on a T4, plus the download).
+
+## E2. Which decoding settings?
+
+**Question.** E1 used fixed decoding settings. Do the usual alternatives (a smaller or larger
+beam, no temperature fallback, voice activity detection, Whisper's hallucination-silence
+threshold) make large-v3-turbo more accurate or faster, and which settings should a product use?
+
+**Method.**
+- **One factor at a time.** Each configuration changes one option of the E1 settings (beam size 5,
+  temperature fallback on, no voice activity detection), listed in
+  [`experiments/E2/sweep.toml`](experiments/E2/sweep.toml).
+- **Tuned on dev, confirmed on test.** Every configuration transcribes the three FLEURS dev sets
+  (Italian 391 utterances / 9,018 words, German 363 / 7,410, English 394 / 8,241; no sentence is
+  shared with the test sets), in one Colab session on a T4 GPU, with the model loaded once and a
+  warm-up before timing. The baseline configuration is run a second time at the end of the session
+  (`baseline-repeat`): this measures run-to-run variation, both in the transcripts and in the
+  timings.
+- **One configuration for all languages, chosen by a rule fixed before the runs**
+  (`asr-lab select`, [decision 22](docs/design.md#22-decoding-options-are-chosen-on-the-dev-set-by-a-rule-written-in-code)).
+  In each language, find the configuration with the lowest WER. A configuration is eligible if a
+  paired bootstrap does not find it significantly worse than that best one in any language. Among
+  the eligible ones, pick the fastest, by total processing time over the three dev sets. If none
+  is eligible, keep the baseline.
+- **The test sets are used once**, for the selected configuration only, against the E1 run of
+  large-v3-turbo, which has the baseline settings. Voice activity detection was also run on the
+  test sets, as an **exploratory** comparison decided after seeing the dev results (see below).
+
+### Results on the dev sets
+
+The selection, as computed by `asr-lab select` (best WER of each language in bold; times are the
+total over the three dev sets):
+
+<!-- BEGIN e2-selection -->
+| Configuration | Change from the baseline | WER it | WER de | WER en | RTF | Time vs baseline | Eligible |
+|---|---|---|---|---|---|---|---|
+| baseline | none | 2.37% | 5.16% | **5.33%** | 0.037 | +0.0% | no |
+| beam1 | `beam_size = 1` | 2.36% | 5.38% | 5.47% | 0.033 | -12.6% | no |
+| beam2 | `beam_size = 2` | 2.34% | 5.30% | 5.36% | 0.034 | -8.8% | no |
+| beam8 | `beam_size = 8` | 2.38% | 5.14% | 5.35% | 0.042 | +13.1% | no |
+| no-fallback | `temperature = [0.0]` | 2.37% | 5.16% | 5.33% | 0.038 | +0.7% | no |
+| vad | `vad_filter = True` | **2.30%** | **4.84%** | 5.41% | 0.040 | +6.2% | yes |
+| **hst2** (selected) | `hallucination_silence_threshold = 2.0` | 2.37% | 5.13% | 5.33% | 0.038 | +2.3% | yes |
+| baseline-repeat | none | 2.37% | 5.16% | 5.33% | 0.038 | +0.6% | n/a |
+<!-- END e2-selection -->
+
+![WER against processing time on the dev sets, one panel per language](reports/e2_pareto.png)
+
+*Each point is a configuration; the dashed line joins the configurations that no other one beats
+on both WER and time (the Pareto front); the selected one is blue. The WER axis spans the same
+number of points in every panel.*
+
+Effect of each option against the baseline (B - A, negative when the option lowers WER):
+
+<!-- BEGIN e2-dev-effects -->
+| Comparison | A | B | B - A [95% CI] | B better in | Significant |
+|---|---|---|---|---|---|
+| Italian: beam1 | 2.37% | 2.36% | -0.01% [-0.16%, +0.13%] | 55.0% | no |
+| Italian: beam2 | 2.37% | 2.34% | -0.03% [-0.16%, +0.07%] | 67.4% | no |
+| Italian: beam8 | 2.37% | 2.38% | +0.01% [+0.00%, +0.04%] | 0.0% | no |
+| Italian: no-fallback | 2.37% | 2.37% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+| Italian: vad | 2.37% | 2.30% | -0.08% [-0.25%, +0.10%] | 78.6% | no |
+| Italian: hst2 | 2.37% | 2.37% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+| Italian: baseline-repeat | 2.37% | 2.37% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+| German: beam1 | 5.16% | 5.38% | +0.23% [+0.00%, +0.48%] | 2.0% | no |
+| German: beam2 | 5.16% | 5.30% | +0.15% [-0.01%, +0.35%] | 3.5% | no |
+| German: beam8 | 5.16% | 5.14% | -0.01% [-0.10%, +0.07%] | 56.6% | no |
+| German: no-fallback | 5.16% | 5.16% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+| German: vad | 5.16% | 4.84% | -0.31% [-0.59%, -0.03%] | 98.3% | yes |
+| German: hst2 | 5.16% | 5.13% | -0.03% [-0.07%, +0.00%] | 86.3% | no |
+| German: baseline-repeat | 5.16% | 5.16% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+| English: beam1 | 5.33% | 5.47% | +0.15% [+0.01%, +0.30%] | 1.8% | yes |
+| English: beam2 | 5.33% | 5.36% | +0.04% [-0.09%, +0.17%] | 26.6% | no |
+| English: beam8 | 5.33% | 5.35% | +0.02% [-0.06%, +0.12%] | 23.9% | no |
+| English: no-fallback | 5.33% | 5.33% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+| English: vad | 5.33% | 5.41% | +0.08% [-0.13%, +0.30%] | 21.2% | no |
+| English: hst2 | 5.33% | 5.33% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+| English: baseline-repeat | 5.33% | 5.33% | +0.00% [+0.00%, +0.00%] | 0.0% | no |
+<!-- END e2-dev-effects -->
+
+Utterances with an invented closing phrase (see [E1](#larger-models-on-a-gpu)):
+
+<!-- BEGIN e2-closing-phrases-dev -->
+| Utterances with an invented closing phrase | baseline | beam1 | beam2 | beam8 | no-fallback | vad | hst2 | baseline-repeat |
+|---|---|---|---|---|---|---|---|---|
+| Italian (dev) | 2 | 2 | 2 | 2 | 2 | 1 | 3 | 2 |
+| German (dev) | 2 | 2 | 2 | 3 | 2 | 0 | 2 | 2 |
+| English (dev) | 1 | 1 | 1 | 1 | 1 | 0 | 1 | 1 |
+<!-- END e2-closing-phrases-dev -->
+
+### Results on the test sets
+
+The E1 run of large-v3-turbo (baseline settings) against the selected configuration and against
+voice activity detection:
+
+<!-- BEGIN e2-test -->
+| Comparison | A | B | B - A [95% CI] | B better in | Significant |
+|---|---|---|---|---|---|
+| Italian: baseline → hst2 (selected) | 2.64% | 2.64% | +0.00% [-0.03%, +0.03%] | 35.4% | no |
+| Italian: baseline → vad (exploratory) | 2.64% | 2.70% | +0.06% [-0.09%, +0.19%] | 21.7% | no |
+| German: baseline → hst2 (selected) | 4.45% | 4.46% | +0.01% [-0.01%, +0.04%] | 14.8% | no |
+| German: baseline → vad (exploratory) | 4.45% | 4.25% | -0.20% [-0.41%, +0.01%] | 96.6% | no |
+| English: baseline → hst2 (selected) | 5.00% | 5.02% | +0.01% [+0.00%, +0.04%] | 0.0% | no |
+| English: baseline → vad (exploratory) | 5.00% | 4.94% | -0.07% [-0.24%, +0.11%] | 77.0% | no |
+<!-- END e2-test -->
+
+<!-- BEGIN e2-closing-phrases-test -->
+| Utterances with an invented closing phrase | baseline (E1) | hst2 (selected) | vad (exploratory) |
+|---|---|---|---|
+| Italian (test) | 3 | 2 | 2 |
+| German (test) | 12 | 13 | 0 |
+| English (test) | 0 | 0 | 0 |
+<!-- END e2-closing-phrases-test -->
+
+### Findings
+
+1. **Decoding is deterministic, and the temperature fallback never triggers on this data.**
+   `baseline-repeat` produces the same transcripts as `baseline` in all 1,148 dev utterances, and
+   so does `no-fallback`: the fallback re-decodes a segment at a higher temperature only when the
+   output looks wrong (too repetitive or too unlikely), and on short read sentences it never did.
+   Timings vary by about 1% between identical runs, so smaller speed differences are noise.
+2. **The beam size changes speed more than accuracy.** Greedy decoding (`beam1`) is 12.6% faster
+   than beam 5 and worse in German (+0.23 points) and English (+0.15, the only beam effect
+   significant before correction). A beam of 8 is 13.1% slower and changes nothing. Beam 5, the
+   default, is a reasonable setting for this model.
+3. **Voice activity detection is the only option with a clear effect on accuracy.** It lowers WER
+   in German by 0.31 points on dev (95% CI [-0.59, -0.03]), mostly by removing insertions and
+   substitutions (S/D/I from 300/50/32 to 285/48/26), and removes almost every invented closing
+   phrase: on dev, 5 to 1 over the three languages; on the test sets, the 12 German ones of E1
+   disappear. It changes about a quarter of the transcripts (100, 86 and 79 dev utterances) and
+   costs 6.2% more processing time.
+4. **The selected configuration, `hst2`, is in practice the baseline.** The hallucination-silence
+   threshold acts only on silences longer than 2 seconds around a suspicious segment, which short
+   read utterances rarely contain: it changes 2 Italian and 2 German dev transcripts and none in
+   English. On the test sets it is indistinguishable from E1 (+0.00, +0.01 and +0.01 points, none
+   significant) and keeps the German closing phrases (13 against 12).
+5. **The selection was decided by a borderline comparison.** Only `vad` and `hst2` are eligible.
+   The baseline is excluded because it is significantly worse than `vad` in German (+0.31,
+   [+0.03, +0.59]), while `hst2`, which differs from it in two German transcripts, is not
+   (+0.28, [-0.01, +0.56]). The rule then picks `hst2` as the faster of the two (+2.3% against
+   +6.2%). The rule works as written, but "not significantly worse" is not "equivalent": a
+   configuration whose interval reaches +0.56 points is not shown to be as good. A rule with a
+   non-inferiority margin (eligible only if the upper bound of the difference stays below a fixed
+   margin) would make this explicit: with a margin of half a point it would have excluded `hst2`
+   and the baseline (+0.56 and +0.59 in German) and kept `vad` (+0.30, in English), while a margin
+   of 0.2 points would have excluded every configuration. Choosing the margin now, after seeing
+   these numbers, would choose the result, so it is left for the next sweep, fixed in advance.
+6. **On the test sets, voice activity detection confirms its direction in German but not
+   significantly.** As an exploratory comparison, it gives -0.20 points in German ([-0.41, +0.01],
+   lower in 96.6% of the replicates), -0.07 in English and +0.06 in Italian, none significant.
+   It again removes insertions (German 131 to 92) but adds deletions (Italian 52 to 65, German 89
+   to 101); among the deleted words are numbers (German, 5 to 14 deleted words with digits), as if
+   short segments were cut. This pattern does not appear on dev and is based on few words, so it
+   is an observation to check, not a finding.
+
+**Interpretation.** For large-v3-turbo on read speech, the decoding settings matter little for WER:
+apart from voice activity detection, no option moves it by more than a quarter of a point. The
+practical choice is between the baseline and voice activity detection, and it is about
+hallucinations rather than WER: VAD removes the invented closing phrases, which are rare but very
+visible to a user, at the cost of about 6% of processing time and possibly a few deleted words.
+For a dictation product we would adopt VAD and monitor deletions; the pre-registered rule, as
+written, selected `hst2`, and that is the result reported here.
+
+### Limitations
+
+- **Multiple comparisons.** The dev table has 21 comparisons (18 options and 3 repeats). The two
+  significant ones (`vad` in German and `beam1` in English) have B better in 98.3% and 1.8% of the
+  replicates, which a Bonferroni correction for 21 comparisons would not accept. The selection
+  rule itself compares every configuration with the best one of each language without
+  correction; a correction would make more configurations eligible, not fewer.
+- **Winner's curse.** The best configuration of each language on dev is partly best by chance, so
+  its dev WER is optimistic; the test runs, used once, are the unbiased estimate.
+- **The VAD test run is exploratory.** It was decided after seeing the dev results and is not
+  covered by the selection rule. Its speed was measured in a different Colab session from the E1
+  run it is compared with (about 5-8% slower, in line with the +6.2% on dev), so test speeds are
+  only indicative.
+- **Read speech only.** FLEURS utterances are short (test medians 9.5 to 13.9 seconds), with
+  little silence or noise. Voice activity detection and the hallucination-silence threshold are
+  designed for long recordings with pauses, where their effect is likely to be larger.
+- Options were varied one at a time; their interactions (for example VAD with a smaller beam) were
+  not tested.
+
+**Reproduce:** `bash experiments/E2/run.sh` (or `experiments/E2/run.ps1` on Windows). With the
+committed transcripts it only rescores, compares, selects and redraws the figure (the figure needs
+`uv sync --extra plots`). The transcripts are produced with
+[`notebooks/e2_decoding_colab.ipynb`](notebooks/e2_decoding_colab.ipynb) on a Colab GPU (about two
+hours on a T4 for the dev sweep, plus the download).
 
 ## E3. How much does text normalization change WER?
 
@@ -458,5 +658,6 @@ committed transcripts it only rescores; without them it first transcribes the te
   noisier and spontaneous speech come next. The normalization study (E3) covers Italian only.
 - Only Whisper models have been evaluated; other model families (CTC with an n-gram language
   model, Transducers) are planned.
-- Decoding settings (beam size, temperature, voice activity detection, precision) are fixed here;
-  their effect is the subject of a later experiment, compared with the same paired statistics.
+- Decoding settings were tuned for large-v3-turbo only, one option at a time and on read speech
+  (E2); the next sweep should fix a non-inferiority margin in advance and include long recordings
+  with pauses, where voice activity detection matters most.

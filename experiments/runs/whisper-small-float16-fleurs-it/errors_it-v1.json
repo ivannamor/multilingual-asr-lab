@@ -312,5 +312,23 @@
       "reference": "tra le 22 00 e le 23 00 mdt i detenuti hanno appiccato un incendio nel cortile",
       "hypothesis": "dall event 2023 i detenuti hanno appiccato un incendio nel cortile"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_it_12644283506490504083",
+      "phrase": "sottotitoli e revisione a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_12715874722470470383",
+      "phrase": "sottotitoli a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_14020623701255196900",
+      "phrase": "sottotitoli e revisione a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_16494784820933374813",
+      "phrase": "sottotitoli a cura di qtss"
+    }
   ]
 }

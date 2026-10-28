@@ -312,5 +312,15 @@
       "reference": "nella notte furono prodotte tra le 150 e le 200 copie oggi note con il nome di i manifesti di dunlap",
       "hypothesis": "nella notte furono prodotte fra le 150 e le 200 coppie oggi note col nome di i manifesti di dunlap"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_it_10765581971846086650",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "fleurs_it_18167323869030325965",
+      "phrase": "grazie"
+    }
   ]
 }

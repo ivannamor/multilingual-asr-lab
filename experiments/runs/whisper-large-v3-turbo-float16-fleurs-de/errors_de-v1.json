@@ -312,5 +312,55 @@
       "reference": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29¾ zoll x 24½ zoll misst zu beginn seines lebens zur aufbewahrung zusammengerollt wurde",
       "hypothesis": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29 ¾ zoll mal 24 ½ zoll ist zu beginn seines lebens zur aufbewahrung zusammengerollt wurde"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_de_11932235074173500388",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_13598528500304921206",
+      "phrase": "untertitelung des zdf 2020"
+    },
+    {
+      "utterance_id": "fleurs_de_16302613894874414457",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_17094668703447110905",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_3975961929423531534",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_4174379654895279374",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_4271181096460241283",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_4996376112031788319",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_5067850698728578589",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_6753945967797226570",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_7532002148152092770",
+      "phrase": "untertitelung des zdf 2020"
+    },
+    {
+      "utterance_id": "fleurs_de_9045243611409192005",
+      "phrase": "vielen dank"
+    }
   ]
 }

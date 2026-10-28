@@ -1,0 +1,317 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_en/test.jsonl",
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_utterances": 647,
+  "substitutions": 514,
+  "deletions": 109,
+  "insertions": 91,
+  "distinct_confusion_pairs": 393,
+  "substitutions_with_digits_or_symbols": 50,
+  "top_confusions": [
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 9
+    },
+    {
+      "reference": "travellers",
+      "hypothesis": "travelers",
+      "count": 7
+    },
+    {
+      "reference": "km",
+      "hypothesis": "kilometers",
+      "count": 6
+    },
+    {
+      "reference": "the",
+      "hypothesis": "a",
+      "count": 6
+    },
+    {
+      "reference": "and",
+      "hypothesis": "in",
+      "count": 5
+    },
+    {
+      "reference": "savanna",
+      "hypothesis": "savannah",
+      "count": 4
+    },
+    {
+      "reference": "travelling",
+      "hypothesis": "traveling",
+      "count": 4
+    },
+    {
+      "reference": "schengen",
+      "hypothesis": "shenzhen",
+      "count": 3
+    },
+    {
+      "reference": "expressions",
+      "hypothesis": "microexpressions",
+      "count": 3
+    },
+    {
+      "reference": "had",
+      "hypothesis": "has",
+      "count": 3
+    },
+    {
+      "reference": "the",
+      "hypothesis": "that",
+      "count": 3
+    },
+    {
+      "reference": "pm",
+      "hypothesis": "m",
+      "count": 3
+    },
+    {
+      "reference": "is",
+      "hypothesis": "it's",
+      "count": 3
+    },
+    {
+      "reference": "year",
+      "hypothesis": "years",
+      "count": 2
+    },
+    {
+      "reference": "sintra",
+      "hypothesis": "cintra",
+      "count": 2
+    },
+    {
+      "reference": "twentieth",
+      "hypothesis": "20th",
+      "count": 2
+    },
+    {
+      "reference": "twelve",
+      "hypothesis": "12",
+      "count": 2
+    },
+    {
+      "reference": "bennet",
+      "hypothesis": "bennett",
+      "count": 2
+    },
+    {
+      "reference": "capital",
+      "hypothesis": "capitol",
+      "count": 2
+    },
+    {
+      "reference": "gorilla",
+      "hypothesis": "guerrilla",
+      "count": 2
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 14
+    },
+    {
+      "word": "a",
+      "count": 7
+    },
+    {
+      "word": "that",
+      "count": 5
+    },
+    {
+      "word": "one",
+      "count": 4
+    },
+    {
+      "word": "it",
+      "count": 4
+    },
+    {
+      "word": "and",
+      "count": 3
+    },
+    {
+      "word": "micro",
+      "count": 3
+    },
+    {
+      "word": "co",
+      "count": 2
+    },
+    {
+      "word": "south",
+      "count": 2
+    },
+    {
+      "word": "germ",
+      "count": 2
+    },
+    {
+      "word": "hundred",
+      "count": 2
+    },
+    {
+      "word": "had",
+      "count": 2
+    },
+    {
+      "word": "thirty",
+      "count": 2
+    },
+    {
+      "word": "only",
+      "count": 2
+    },
+    {
+      "word": "team",
+      "count": 2
+    },
+    {
+      "word": "dragon",
+      "count": 2
+    },
+    {
+      "word": "percent",
+      "count": 2
+    },
+    {
+      "word": "of",
+      "count": 2
+    },
+    {
+      "word": "no",
+      "count": 2
+    },
+    {
+      "word": "eee",
+      "count": 2
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "to",
+      "count": 11
+    },
+    {
+      "word": "the",
+      "count": 8
+    },
+    {
+      "word": "a",
+      "count": 3
+    },
+    {
+      "word": "u",
+      "count": 3
+    },
+    {
+      "word": "p",
+      "count": 3
+    },
+    {
+      "word": "and",
+      "count": 2
+    },
+    {
+      "word": "that",
+      "count": 2
+    },
+    {
+      "word": "spring",
+      "count": 2
+    },
+    {
+      "word": "next",
+      "count": 2
+    },
+    {
+      "word": "tuna",
+      "count": 2
+    },
+    {
+      "word": "70",
+      "count": 2
+    },
+    {
+      "word": "kilometers",
+      "count": 2
+    },
+    {
+      "word": "ship",
+      "count": 2
+    },
+    {
+      "word": "be",
+      "count": 2
+    },
+    {
+      "word": "page",
+      "count": 2
+    },
+    {
+      "word": "water",
+      "count": 2
+    },
+    {
+      "word": "are",
+      "count": 1
+    },
+    {
+      "word": "an",
+      "count": 1
+    },
+    {
+      "word": "scott",
+      "count": 1
+    },
+    {
+      "word": "v",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_en_16847628585853049714",
+      "errors": 10,
+      "reference_words": 23,
+      "reference": "you can use boda boda motorcycle taxi to get around goma the normal local price is ~500 congolese francs for the short ride",
+      "hypothesis": "you can use bota bota morris cycle taxi to get around goma the normal local price is 500 it can go these franks for the short ride"
+    },
+    {
+      "utterance_id": "fleurs_en_9154457394779597213",
+      "errors": 7,
+      "reference_words": 22,
+      "reference": "asus eee pc earlier launched world wide for cost saving and functionality factors became a hot topic in 2007 taipei it month",
+      "hypothesis": "asos epc early launch worldwide for cost saving and functionality factors became a hot topic in 2007 taipei it month"
+    },
+    {
+      "utterance_id": "fleurs_en_15842229443202938478",
+      "errors": 7,
+      "reference_words": 27,
+      "reference": "a simple popular dinner especially during the summer is the pa amb oli bread with olive oil tomato and any available condiments such as cheese tunafish etc",
+      "hypothesis": "a simple popular dimmer especially during the summer is pa'am oli breaded with olive oil tomato and any available condiments such as cheese tuna fish etc"
+    },
+    {
+      "utterance_id": "fleurs_en_7489324500816890474",
+      "errors": 7,
+      "reference_words": 28,
+      "reference": "during the struggle for independence organised by the mau movement a peaceful gathering in the town resulted in the killing of the paramount chief tupua tamasese lealofi iii",
+      "hypothesis": "during the struggle for independence organized by the mao movement a peaceful gathering in the town resulted in the killing of paramount chief tuba tuba si'ai luf iii"
+    },
+    {
+      "utterance_id": "fleurs_en_4446007980468141561",
+      "errors": 7,
+      "reference_words": 41,
+      "reference": "while this is often only an inaccurate stereotype the best way to get along in paris still is to be on your best behavior acting like someone who is bien élevé well brought up it will make getting about considerably easier",
+      "hypothesis": "while it is often an inaccurate stereotype the best way to get along in paris is to still be on your best behavior acting like somebody who is a bien élevé well brought up it would make getting about considerably easier"
+    }
+  ],
+  "invented_closing_phrases": []
+}

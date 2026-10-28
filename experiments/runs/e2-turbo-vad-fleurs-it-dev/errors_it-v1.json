@@ -1,0 +1,262 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_it/dev.jsonl",
+  "normalizer": [
+    "it-v1"
+  ],
+  "n_utterances": 391,
+  "substitutions": 168,
+  "deletions": 15,
+  "insertions": 24,
+  "distinct_confusion_pairs": 108,
+  "substitutions_with_digits_or_symbols": 13,
+  "top_confusions": [
+    {
+      "reference": "dazi",
+      "hypothesis": "dazzi",
+      "count": 7
+    },
+    {
+      "reference": "giavanese",
+      "hypothesis": "giovanese",
+      "count": 5
+    },
+    {
+      "reference": "bhajan",
+      "hypothesis": "bajan",
+      "count": 4
+    },
+    {
+      "reference": "m",
+      "hypothesis": "metri",
+      "count": 3
+    },
+    {
+      "reference": "diciotto",
+      "hypothesis": "18",
+      "count": 3
+    },
+    {
+      "reference": "paesi",
+      "hypothesis": "pesi",
+      "count": 3
+    },
+    {
+      "reference": "timbuctù",
+      "hypothesis": "timbuktu",
+      "count": 3
+    },
+    {
+      "reference": "incantanti",
+      "hypothesis": "incantati",
+      "count": 3
+    },
+    {
+      "reference": "uthappa",
+      "hypothesis": "utappa",
+      "count": 3
+    },
+    {
+      "reference": "fours",
+      "hypothesis": "force",
+      "count": 3
+    },
+    {
+      "reference": "martelly",
+      "hypothesis": "martelli",
+      "count": 3
+    },
+    {
+      "reference": "niigata",
+      "hypothesis": "nigata",
+      "count": 3
+    },
+    {
+      "reference": "arly",
+      "hypothesis": "arli",
+      "count": 3
+    },
+    {
+      "reference": "velasquez",
+      "hypothesis": "velázquez",
+      "count": 3
+    },
+    {
+      "reference": "michele",
+      "hypothesis": "michelle",
+      "count": 3
+    },
+    {
+      "reference": "cañitas",
+      "hypothesis": "canitas",
+      "count": 3
+    },
+    {
+      "reference": "otto",
+      "hypothesis": "8",
+      "count": 3
+    },
+    {
+      "reference": "ciononostante",
+      "hypothesis": "nonostante",
+      "count": 3
+    },
+    {
+      "reference": "curry",
+      "hypothesis": "carry",
+      "count": 3
+    },
+    {
+      "reference": "stanley",
+      "hypothesis": "stelle",
+      "count": 2
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "i",
+      "count": 4
+    },
+    {
+      "word": "a",
+      "count": 2
+    },
+    {
+      "word": "wi",
+      "count": 2
+    },
+    {
+      "word": "7",
+      "count": 2
+    },
+    {
+      "word": "sua",
+      "count": 1
+    },
+    {
+      "word": "ski",
+      "count": 1
+    },
+    {
+      "word": "re",
+      "count": 1
+    },
+    {
+      "word": "con",
+      "count": 1
+    },
+    {
+      "word": "116",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "john",
+      "count": 3
+    },
+    {
+      "word": "ciò",
+      "count": 3
+    },
+    {
+      "word": "l",
+      "count": 2
+    },
+    {
+      "word": "a",
+      "count": 2
+    },
+    {
+      "word": "bird",
+      "count": 2
+    },
+    {
+      "word": "il",
+      "count": 2
+    },
+    {
+      "word": "sud",
+      "count": 1
+    },
+    {
+      "word": "chilometri",
+      "count": 1
+    },
+    {
+      "word": "nei",
+      "count": 1
+    },
+    {
+      "word": "gli",
+      "count": 1
+    },
+    {
+      "word": "klocker",
+      "count": 1
+    },
+    {
+      "word": "grazie",
+      "count": 1
+    },
+    {
+      "word": "di",
+      "count": 1
+    },
+    {
+      "word": "non",
+      "count": 1
+    },
+    {
+      "word": "è",
+      "count": 1
+    },
+    {
+      "word": "e",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_it_13949867380394980392",
+      "errors": 7,
+      "reference_words": 37,
+      "reference": "lo sciatore polacco non vedente maciej krezel e la sua guida anna ogarzynska si sono classificati al tredicesimo posto nel super g il sudcoreano jong seork park si è classificato al ventiquattresimo posto nel super g maschile",
+      "hypothesis": "lo sciatore polacco non vedente marcie krezle e la seguida anna ogarzinska si sono classificati al tredicesimo posto nel super g il sudcoreano jang seor park si è classificato al ventiquattresimo posto nel super g maschile"
+    },
+    {
+      "utterance_id": "fleurs_it_18375199394116261276",
+      "errors": 6,
+      "reference_words": 31,
+      "reference": "nel 2000 ha ottenuto il suo millesimo francobollo il magnifico great deeds by swedish kings grandi gesta dei re svedesi di david klöcker ehrenstrahl che è annoverato nel guinness dei primati",
+      "hypothesis": "nel 2000 ha ottenuto il suo millesimo francobollo il magnifico great deeds by swedish kings grande gesta dei resvedesi di david klocker and restral che è annoverato nel guinness dei primati"
+    },
+    {
+      "utterance_id": "fleurs_it_11742648404757957657",
+      "errors": 4,
+      "reference_words": 21,
+      "reference": "alcuni cantanti famosi da tutto il paese hanno offerto ai piedi di shri shyam i bhajan ovvero dei canti di devozione",
+      "hypothesis": "alcuni cantanti famosi da tutto il paese hanno offerto i piedi di srin srian i bajan ovvero dei canti di devozione"
+    },
+    {
+      "utterance_id": "fleurs_it_6340962355483297280",
+      "errors": 4,
+      "reference_words": 31,
+      "reference": "nel 2000 ha ottenuto il suo millesimo francobollo il magnifico great deeds by swedish kings grandi gesta dei re svedesi di david klöcker ehrenstrahl che è annoverato nel guinness dei primati",
+      "hypothesis": "nel 2000 ha ottenuto il suo millesimo francobollo il magnifico great deeds by swedish kings grandi gesta dei res vedesi di david klocker erenstral che è annoverato nel guinness dei primati"
+    },
+    {
+      "utterance_id": "fleurs_it_13542501952805160515",
+      "errors": 3,
+      "reference_words": 12,
+      "reference": "poi lakkha singh ha preso l iniziativa iniziando a cantare i bhajan",
+      "hypothesis": "poi l h singh ha preso l iniziativa iniziando a cantare i bajan"
+    }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_it_3736337517871588917",
+      "phrase": "grazie"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "metric": "wer",
+  "manifest": "data/fleurs_de/dev.jsonl",
+  "n_utterances": 363,
+  "a": {
+    "run": "experiments/runs/e2-turbo-baseline-fleurs-de-dev",
+    "model": "faster-whisper/large-v3-turbo-float16",
+    "normalizer": [
+      "de-v1"
+    ],
+    "rate": 0.05155195681511471
+  },
+  "b": {
+    "run": "experiments/runs/e2-turbo-beam8-fleurs-de-dev",
+    "model": "faster-whisper/large-v3-turbo-float16",
+    "normalizer": [
+      "de-v1"
+    ],
+    "rate": 0.051417004048582994
+  },
+  "delta": -0.00013495276653171379,
+  "confidence_intervals": {
+    "utterance": {
+      "low": -0.0010701807184143432,
+      "high": 0.0005622987804040719,
+      "prob_b_better": 0.582,
+      "significant": false,
+      "n_units": 363,
+      "level": 0.95,
+      "n_resamples": 1000
+    },
+    "sentence_id": {
+      "low": -0.0009703623901500316,
+      "high": 0.0006706981058967857,
+      "prob_b_better": 0.566,
+      "significant": false,
+      "n_units": 147,
+      "level": 0.95,
+      "n_resamples": 1000
+    }
+  },
+  "headline_unit": "sentence_id",
+  "significant": false
+}

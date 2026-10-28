@@ -1,0 +1,322 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_en/dev.jsonl",
+  "normalizer": [
+    "en-v1"
+  ],
+  "n_utterances": 394,
+  "substitutions": 337,
+  "deletions": 75,
+  "insertions": 39,
+  "distinct_confusion_pairs": 247,
+  "substitutions_with_digits_or_symbols": 57,
+  "top_confusions": [
+    {
+      "reference": "javanese",
+      "hypothesis": "japanese",
+      "count": 9
+    },
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 9
+    },
+    {
+      "reference": "chillies",
+      "hypothesis": "chilies",
+      "count": 3
+    },
+    {
+      "reference": "n",
+      "hypothesis": "un",
+      "count": 3
+    },
+    {
+      "reference": "eight",
+      "hypothesis": "8",
+      "count": 3
+    },
+    {
+      "reference": "thirteenth",
+      "hypothesis": "13th",
+      "count": 3
+    },
+    {
+      "reference": "fourth",
+      "hypothesis": "24th",
+      "count": 3
+    },
+    {
+      "reference": "ten",
+      "hypothesis": "10",
+      "count": 3
+    },
+    {
+      "reference": "five",
+      "hypothesis": "5",
+      "count": 3
+    },
+    {
+      "reference": "percent",
+      "hypothesis": "80",
+      "count": 3
+    },
+    {
+      "reference": "the",
+      "hypothesis": "a",
+      "count": 3
+    },
+    {
+      "reference": "martelly's",
+      "hypothesis": "martelli's",
+      "count": 3
+    },
+    {
+      "reference": "2",
+      "hypothesis": "two",
+      "count": 3
+    },
+    {
+      "reference": "000th",
+      "hypothesis": "1000th",
+      "count": 3
+    },
+    {
+      "reference": "travellers",
+      "hypothesis": "travelers",
+      "count": 3
+    },
+    {
+      "reference": "east",
+      "hypothesis": "northeast",
+      "count": 3
+    },
+    {
+      "reference": "100m",
+      "hypothesis": "meter",
+      "count": 3
+    },
+    {
+      "reference": "200m",
+      "hypothesis": "meter",
+      "count": 3
+    },
+    {
+      "reference": "mayotte",
+      "hypothesis": "mayat",
+      "count": 3
+    },
+    {
+      "reference": "bell",
+      "hypothesis": "doorbell",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 11
+    },
+    {
+      "word": "to",
+      "count": 4
+    },
+    {
+      "word": "u",
+      "count": 3
+    },
+    {
+      "word": "per",
+      "count": 3
+    },
+    {
+      "word": "cent",
+      "count": 3
+    },
+    {
+      "word": "twenty",
+      "count": 3
+    },
+    {
+      "word": "eighty",
+      "count": 3
+    },
+    {
+      "word": "1",
+      "count": 3
+    },
+    {
+      "word": "knp",
+      "count": 3
+    },
+    {
+      "word": "north",
+      "count": 3
+    },
+    {
+      "word": "of",
+      "count": 3
+    },
+    {
+      "word": "and",
+      "count": 2
+    },
+    {
+      "word": "a",
+      "count": 2
+    },
+    {
+      "word": "though",
+      "count": 2
+    },
+    {
+      "word": "somehow",
+      "count": 1
+    },
+    {
+      "word": "ms",
+      "count": 1
+    },
+    {
+      "word": "open",
+      "count": 1
+    },
+    {
+      "word": "common",
+      "count": 1
+    },
+    {
+      "word": "nsw",
+      "count": 1
+    },
+    {
+      "word": "path",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "a",
+      "count": 3
+    },
+    {
+      "word": "100",
+      "count": 3
+    },
+    {
+      "word": "200",
+      "count": 3
+    },
+    {
+      "word": "of",
+      "count": 2
+    },
+    {
+      "word": "was",
+      "count": 2
+    },
+    {
+      "word": "u",
+      "count": 2
+    },
+    {
+      "word": "john",
+      "count": 2
+    },
+    {
+      "word": "that",
+      "count": 1
+    },
+    {
+      "word": "an",
+      "count": 1
+    },
+    {
+      "word": "masi",
+      "count": 1
+    },
+    {
+      "word": "4",
+      "count": 1
+    },
+    {
+      "word": "nijigata",
+      "count": 1
+    },
+    {
+      "word": "to",
+      "count": 1
+    },
+    {
+      "word": "our",
+      "count": 1
+    },
+    {
+      "word": "even",
+      "count": 1
+    },
+    {
+      "word": "this",
+      "count": 1
+    },
+    {
+      "word": "the",
+      "count": 1
+    },
+    {
+      "word": "so",
+      "count": 1
+    },
+    {
+      "word": "lakh",
+      "count": 1
+    },
+    {
+      "word": "tour",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_en_16522271426775743376",
+      "errors": 12,
+      "reference_words": 28,
+      "reference": "the tibetan buddhism is based on the teachings of buddha but were extended by the mahayana path of love and by a lot of techniques from indian yoga",
+      "hypothesis": "the tibetan buddhism is based on the teachings of buddha but were extended by mahayana by the mahayana"
+    },
+    {
+      "utterance_id": "fleurs_en_9904302921340515520",
+      "errors": 10,
+      "reference_words": 31,
+      "reference": "poland's men's visually impaired skier maciej krezel and guide anna ogarzynska finished thirteenth in the super g south korea's jong seork park finished twenty fourth in the men's sitting super g",
+      "hypothesis": "poland's men visually impaired skier maciej kraszajl and guide anna ogrzczynska finished 13th in the super g south korea's john sorpark finished 24th in the men sitting super g"
+    },
+    {
+      "utterance_id": "fleurs_en_4578728585885434459",
+      "errors": 8,
+      "reference_words": 20,
+      "reference": "previously ring's ceo jamie siminoff remarked the company started when his doorbell wasn't audible from his shop in his garage",
+      "hypothesis": "previously ring ceo jamie simenoff remarked the company's sergeant when his tour bell was an audible from his shop in his garage"
+    },
+    {
+      "utterance_id": "fleurs_en_11770783782625118114",
+      "errors": 8,
+      "reference_words": 31,
+      "reference": "poland's men's visually impaired skier maciej krezel and guide anna ogarzynska finished thirteenth in the super g south korea's jong seork park finished twenty fourth in the men's sitting super g",
+      "hypothesis": "poland's men's visually impaired skier masi jeff kreskel and guide anna ogarzinska finished 13th in the super g south korea's jong seok park finished 24th in the men's sitting super g"
+    },
+    {
+      "utterance_id": "fleurs_en_5529721028988116416",
+      "errors": 7,
+      "reference_words": 18,
+      "reference": "new kingdom ancient egyptians marvelled at their predecessors monuments which were then well over a thousand year old",
+      "hypothesis": "new kingdom ancient egyptians marveled at their predecessor's moments when they were well over a thousand years old"
+    }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_en_8126899585335816719",
+      "phrase": "thank you"
+    }
+  ]
+}

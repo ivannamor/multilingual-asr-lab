@@ -312,5 +312,27 @@
       "reference": "a nord si trova la romantica e incantevole città di sintra facilmente raggiungibile è diventata famosa agli occhi degli stranieri grazie al brillante racconto dei suoi splendori scritto da lord byron",
       "hypothesis": "a nord si trova la romantica incattevole città di sintra facilmente raggiungibile e diventa tafamosa gli occhi degli stranieri grazie al berillante d acconto dei suoi splendori scritto dal lord byron"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_it_11123778747631522404",
+      "phrase": "sottotitoli a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_12715874722470470383",
+      "phrase": "sottotitoli e revisione a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_13542381279665389917",
+      "phrase": "sottotitoli a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_1716205486491786506",
+      "phrase": "sottotitoli e revisione a cura di qtss"
+    },
+    {
+      "utterance_id": "fleurs_it_5107281728415491984",
+      "phrase": "sottotitoli e revisione a cura di qtss"
+    }
   ]
 }

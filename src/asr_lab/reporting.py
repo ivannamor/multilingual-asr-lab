@@ -56,19 +56,76 @@ def comparisons_table(rows: Sequence[tuple[str, dict[str, Any]]]) -> str:
     return "\n".join(lines)
 
 
+def selection_table(selection: dict[str, Any]) -> str:
+    """Markdown table of a decoding sweep: WER per language (best in bold), speed, eligibility.
+
+    Speeds are relative to the first configuration, the baseline.
+    """
+    languages = selection["languages"]
+    configs = selection["configs"]
+    baseline_seconds = next(iter(configs.values()))["processing_seconds"]
+    lines = [
+        "| Configuration | Change from the baseline | "
+        + " | ".join(f"WER {lang}" for lang in languages)
+        + " | RTF | Time vs baseline | Eligible |",
+        "|---|---|" + "---|" * len(languages) + "---|---|---|",
+    ]
+    for name, result in configs.items():
+        cells = [
+            f"**{result['wer'][lang]:.2%}**"
+            if selection["best"][lang] == name
+            else f"{result['wer'][lang]:.2%}"
+            for lang in languages
+        ]
+        change = ", ".join(f"`{key} = {value}`" for key, value in result["options"].items())
+        eligible = ("yes" if result["eligible"] else "no") if result["selectable"] else "n/a"
+        label = f"**{name}** (selected)" if name == selection["selected"] else name
+        relative = result["processing_seconds"] / baseline_seconds - 1
+        lines.append(
+            f"| {label} | {change or 'none'} | {' | '.join(cells)} "
+            f"| {result['rtf']:.3f} | {relative:+.1%} | {eligible} |"
+        )
+    return "\n".join(lines)
+
+
+def closing_phrases_table(
+    columns: Sequence[str], rows: Sequence[tuple[str, list[dict[str, Any]]]]
+) -> str:
+    """Markdown table of utterances with an invented closing phrase, from error reports."""
+    lines = [
+        "| Utterances with an invented closing phrase | " + " | ".join(columns) + " |",
+        "|---|" + "---|" * len(columns),
+    ]
+    for label, reports in rows:
+        counts = [str(len(report["invented_closing_phrases"])) for report in reports]
+        lines.append(f"| {label} | " + " | ".join(counts) + " |")
+    return "\n".join(lines)
+
+
 def build_tables(spec_path: Path) -> dict[str, str]:
-    """Build every table described in a TOML spec; returns marker name -> Markdown."""
+    """Build every table described in a TOML spec; returns marker name -> Markdown.
+
+    Table kinds: ``scores`` and ``comparisons`` (one JSON file per row),
+    ``closing-phrases`` (one error report per row and column) and ``selection``
+    (a single selection file).
+    """
     spec = tomllib.loads(spec_path.read_text(encoding="utf-8"))
-    builders = {"scores": scores_table, "comparisons": comparisons_table}
+    row_builders = {"scores": scores_table, "comparisons": comparisons_table}
     tables = {}
     for table in spec.get("table", []):
-        if table["kind"] not in builders:
-            raise ValueError(f"{spec_path}: unknown table kind {table['kind']!r}")
-        rows = [
-            (row["label"], json.loads(Path(row["file"]).read_text(encoding="utf-8")))
-            for row in table["rows"]
-        ]
-        tables[table["name"]] = builders[table["kind"]](rows)
+        kind = table["kind"]
+        if kind in row_builders:
+            rows = [(row["label"], _read_json(row["file"])) for row in table["rows"]]
+            tables[table["name"]] = row_builders[kind](rows)
+        elif kind == "closing-phrases":
+            rows = [
+                (row["label"], [_read_json(file) for file in row["files"]]) for row in table["rows"]
+            ]
+            tables[table["name"]] = closing_phrases_table(table["columns"], rows)
+        elif kind == "selection":
+            tables[table["name"]] = selection_table(_read_json(table["file"]))
+        else:
+            raise ValueError(f"{spec_path}: unknown table kind {kind!r}")
     return tables
 
 
@@ -126,3 +183,7 @@ def render_results(
 def _rate_with_ci(report: dict[str, Any]) -> str:
     ci = report["confidence_intervals"][report["headline_unit"]]
     return f"{report['estimate']:.2%} [{ci['low']:.2%}, {ci['high']:.2%}]"
+
+
+def _read_json(path: str) -> Any:
+    return json.loads(Path(path).read_text(encoding="utf-8"))

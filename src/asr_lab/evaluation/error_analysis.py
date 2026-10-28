@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from asr_lab.data.manifest import ManifestEntry
+from asr_lab.evaluation.hallucination import find_invented_closing_phrases
 from asr_lab.evaluation.metrics import (
     AlignedPair,
     EditOp,
@@ -189,6 +190,12 @@ def analyze_run(
         "manifest": run.manifest_path.as_posix(),
         "normalizer": names,
         **error_report(utterances, top=top, worst=worst),
+        "invented_closing_phrases": find_invented_closing_phrases(
+            [u.utterance_id for u in utterances],
+            [u.reference for u in utterances],
+            [u.hypothesis for u in utterances],
+            [entry.lang for entry in run.entries],
+        ),
     }
     path = run_dir / f"errors_{'+'.join(names)}.json"
     path.write_text(
@@ -218,6 +225,14 @@ def format_errors(
         + ", ".join(f"{d['word']} ({d['count']})" for d in report["top_deletions"]),
         "Most inserted: "
         + ", ".join(f"{i['word']} ({i['count']})" for i in report["top_insertions"]),
+    ]
+    if "invented_closing_phrases" in report:
+        invented = Counter(item["phrase"] for item in report["invented_closing_phrases"])
+        lines.append(
+            f"Invented closing phrases: {invented.total()} utterance(s)"
+            + "".join(f", {phrase!r} ({count})" for phrase, count in invented.most_common())
+        )
+    lines += [
         "",
         f"Utterances with the most errors (first {show}):",
     ]

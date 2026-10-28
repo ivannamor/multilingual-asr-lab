@@ -47,6 +47,6 @@ uv run asr-lab errors --run "$SMALL" --normalizer it-v1
 uv run asr-lab errors --run "$SMALL" --normalizer it-v2
 
 # 6. Regenerate the tables of RESULTS.md and README.md
-SPECS=(--spec experiments/E1/tables.toml --spec experiments/E3/tables.toml)
+SPECS=(--spec experiments/E1/tables.toml --spec experiments/E2/tables.toml --spec experiments/E3/tables.toml)
 uv run asr-lab render-results "${SPECS[@]}" --document RESULTS.md
 uv run asr-lab render-results "${SPECS[@]}" --document README.md --allow-missing-markers
