@@ -12,7 +12,9 @@ that regenerates it.
 3. [E1. Baseline](#e1-baseline)
 4. [E2. Which decoding settings?](#e2-which-decoding-settings)
 5. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
-6. [Limitations and next steps](#limitations-and-next-steps)
+6. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
+   (simulated traffic, real audio and errors)
+7. [Limitations and next steps](#limitations-and-next-steps)
 
 ## Executive summary
 
@@ -51,6 +53,13 @@ that regenerates it.
   ranges from 40% (no normalization) to 55%.
 - **Numbers matter.** Writing numbers, symbols and units in words (`it-v2`) lowers Whisper-small's
   WER by 0.31 points (95% CI [0.15, 0.48]) and removes most digit/symbol substitutions (56 to 10).
+- **In simulated usage, competing speakers are the problem, and confidence helps find it.** On
+  3,000 sessions with simulated traffic but real noise, telephone degradations and transcripts,
+  large-v3-turbo's WER is 3.56% in quiet rooms and 45.47% with babble at 0 dB on a headset, where
+  it transcribes a background voice instead of the speaker in 12.6% of the sessions. Babble
+  segments hold 41.5% of all errors as avoidable, the telephone channel alone under 2%. Reviewing
+  the least confident 5% of sessions catches 34% of all word errors, while a simulated correction
+  rate understates how bad the worst conditions are.
 
 ## Setup
 
@@ -652,12 +661,254 @@ normalizer designed for one dataset can silently penalize another.
 committed transcripts it only rescores; without them it first transcribes the test set
 (about 40 minutes on a laptop CPU).
 
+## E10. Usage analytics: where should a product team invest?
+
+> **Simulated usage.** No real usage logs are available. In this chapter the **traffic** (which
+> sessions exist: language, channel, environment, noise level) and the **users' corrections** are
+> simulated, with the assumptions stated below. The **audio, the noise and telephone degradations
+> applied to it, the model's transcripts, its errors and its confidence are real.** Error rates
+> per condition are measurements; anything weighted by traffic (shares of errors, priorities) or
+> involving corrections depends on the simulated assumptions.
+
+**Question.** A dictation product built on the model of E2 receives sessions in three languages,
+from headsets and phone calls, in quiet rooms and in noise. From its logs, a product team wants to
+know: where do the errors come from, which improvement would remove the most of them, can the
+model flag its own mistakes for review, and what would the product's telemetry (the users'
+corrections) actually show?
+
+**Method** ([decisions 24](docs/design.md#24-simulated-usage-sessions-with-real-degradations) and
+[25](docs/design.md#25-usage-analytics-priorities-as-avoidable-errors-confidence-as-a-review-budget)).
+- **Sessions.** 3,000 sessions (10.57 hours, 65,445 reference words) drawn with a fixed seed from
+  the FLEURS **dev** sets, which nothing in this chapter tunes; the test sets are left untouched.
+  The traffic mix is set in
+  [`experiments/E10/simulation.toml`](experiments/E10/simulation.toml): Italian 50%, German 30%,
+  English 20%; headset 65%, phone 35%; quiet 50%, stationary noise 25%, babble 25%, with the
+  signal-to-noise ratio (SNR) drawn uniformly from 15, 10, 5 and 0 dB.
+- **Real degradations** (`asr_lab.data.augment`). Stationary noise is pink noise (power falling
+  with frequency, like fans, engines or traffic). Babble is four other FLEURS speakers of the same
+  language reading other sentences, as in a café. Noise is mixed at the exact SNR over the whole
+  utterance. The phone channel resamples to 8 kHz (nothing above 4 kHz) and applies G.711 mu-law
+  coding, after the noise, as in a call from a noisy room.
+- **Model.** Whisper-large-v3-turbo with the decoding settings selected in E2 (`hst2`), float16 on
+  a Colab T4 GPU (real-time factor 0.037). Confidence is the average log-probability of the
+  transcript.
+- **Statistics.** Corpus-level WER with each language's normalizer (`it-v1`, `de-v1`, `en-v1`).
+  The 3,000 sessions reuse 1,021 recordings of about 150 distinct sentences, and FLEURS sentence ids
+  are shared across languages (translations of the same sentence), so the bootstrap resamples the
+  150 sentences, keeping every session of a sentence together in any language. This is
+  conservative and makes the intervals wide; segments with few sessions have very wide intervals.
+  Segments are described, not tested against each other: with about 50 segments, any comparison
+  picked from the tables after the fact would need a multiple-comparison correction.
+- **Simulated users.** Each word error is noticed with probability 0.5; a transcript with a noticed
+  error is corrected; a transcript without errors is edited anyway with probability 0.02.
+
+### Where the errors come from
+
+<!-- BEGIN e10-segments -->
+| Segment | Sessions (share) | Words | WER [95% CI] | Share of all word errors |
+|---|---|---|---|---|
+| all sessions | 3,000 (100%) | 65,445 | 8.81% [7.76%, 9.89%] | 100% |
+| Italian | 1,510 (50%) | 34,958 | 5.33% [4.54%, 6.19%] | 32% |
+| German | 862 (29%) | 17,346 | 13.27% [11.12%, 15.40%] | 40% |
+| English | 628 (21%) | 13,141 | 12.18% [10.12%, 14.47%] | 28% |
+| headset | 1,916 (64%) | 42,155 | 8.12% [7.05%, 9.21%] | 59% |
+| phone | 1,084 (36%) | 23,290 | 10.04% [8.70%, 11.59%] | 41% |
+| quiet | 1,467 (49%) | 31,617 | 3.56% [2.93%, 4.21%] | 20% |
+| stationary | 784 (26%) | 17,380 | 9.81% [8.54%, 11.24%] | 30% |
+| babble | 749 (25%) | 16,448 | 17.84% [15.49%, 20.32%] | 51% |
+<!-- END e10-segments -->
+
+WER per acoustic condition and channel, all languages together (number of sessions in
+parentheses):
+
+<!-- BEGIN e10-conditions -->
+| Condition | headset: WER [95% CI] (sessions) | phone: WER [95% CI] (sessions) |
+|---|---|---|
+| quiet | 3.31% [2.70%, 3.97%] (911) | 3.96% [3.21%, 4.77%] (556) |
+| stationary 15 dB | 4.88% [3.63%, 6.37%] (128) | 7.64% [5.17%, 10.55%] (68) |
+| stationary 10 dB | 5.53% [3.87%, 7.18%] (138) | 7.31% [4.91%, 9.81%] (61) |
+| stationary 5 dB | 7.35% [5.69%, 9.54%] (114) | 12.64% [8.79%, 16.73%] (71) |
+| stationary 0 dB | 14.86% [12.19%, 17.63%] (134) | 23.39% [18.97%, 28.14%] (70) |
+| babble 15 dB | 3.78% [2.85%, 4.79%] (138) | 7.00% [4.54%, 10.01%] (62) |
+| babble 10 dB | 6.29% [4.72%, 7.90%] (104) | 7.73% [5.44%, 10.36%] (80) |
+| babble 5 dB | 10.16% [7.90%, 12.57%] (122) | 16.45% [11.02%, 22.26%] (61) |
+| babble 0 dB | 45.47% [38.04%, 53.29%] (127) | 53.56% [42.50%, 65.56%] (55) |
+<!-- END e10-conditions -->
+
+![WER against the signal-to-noise ratio, per language, noise type and channel](reports/e10_wer_vs_snr.png)
+
+### Where to invest
+
+The **priority** of a segment is the share of all word errors it would lose if it were as accurate
+as quiet headset sessions of its language. It combines how much traffic the segment has
+(simulated) with how much worse it is (measured), in a unit that adds up across segments:
+
+<!-- BEGIN e10-priorities -->
+| Segment | Sessions (share) | WER | WER in quiet, headset | Share of all word errors | Avoidable share of all word errors |
+|---|---|---|---|---|---|
+| German, headset, babble | 136 (5%) | 24.42% | 4.91% | 12.1% | 9.6% |
+| Italian, headset, babble | 243 (8%) | 10.65% | 1.88% | 10.7% | 8.8% |
+| English, headset, babble | 112 (4%) | 23.04% | 4.79% | 9.0% | 7.1% |
+| German, headset, stationary | 139 (5%) | 17.68% | 4.91% | 8.7% | 6.3% |
+| Italian, phone, babble | 129 (4%) | 13.19% | 1.88% | 6.4% | 5.5% |
+| English, phone, babble | 62 (2%) | 27.44% | 4.79% | 6.5% | 5.4% |
+| German, phone, babble | 67 (2%) | 25.88% | 4.91% | 6.3% | 5.1% |
+| German, phone, stationary | 81 (3%) | 19.04% | 4.91% | 5.2% | 3.9% |
+| Italian, phone, stationary | 132 (4%) | 8.27% | 1.88% | 4.4% | 3.4% |
+| Italian, headset, stationary | 279 (9%) | 4.17% | 1.88% | 4.8% | 2.7% |
+| English, phone, stationary | 57 (2%) | 17.76% | 4.79% | 3.6% | 2.6% |
+| English, headset, stationary | 96 (3%) | 7.95% | 4.79% | 2.8% | 1.1% |
+| English, phone, quiet | 118 (4%) | 6.07% | 4.79% | 2.7% | 0.6% |
+| Italian, phone, quiet | 281 (9%) | 2.38% | 1.88% | 2.6% | 0.6% |
+| German, phone, quiet | 157 (5%) | 5.51% | 4.91% | 2.9% | 0.3% |
+| German, headset, quiet | 282 (9%) | 4.91% | 4.91% | 4.9% | 0.0% |
+| English, headset, quiet | 183 (6%) | 4.79% | 4.79% | 3.1% | 0.0% |
+| Italian, headset, quiet | 446 (15%) | 1.88% | 1.88% | 3.3% | 0.0% |
+<!-- END e10-priorities -->
+
+### Can the model flag its own errors?
+
+Sessions sorted by confidence, least confident first: the share of all word errors that a human
+review of a fixed share of sessions would catch, against a random review and the best possible one
+(an oracle that knows the errors):
+
+<!-- BEGIN e10-confidence -->
+| Sessions reviewed | Word errors caught: lowest confidence first | At random | Best possible | Background-voice transcripts reached |
+|---|---|---|---|---|
+| 5% (150) | 34% | 5% | 41% | 18 of 24 |
+| 10% (300) | 48% | 10% | 57% | 20 of 24 |
+| 20% (600) | 64% | 20% | 76% | 23 of 24 |
+| 30% (900) | 72% | 30% | 87% | 24 of 24 |
+<!-- END e10-confidence -->
+
+The last column follows a failure found in the worst transcripts: in loud babble, the model
+sometimes transcribes **one of the background voices instead of the speaker**. A session is
+counted as such when its transcript is closer, in WER, to a background voice's sentence than to
+the speaker's:
+
+<!-- BEGIN e10-capture -->
+| Condition | Sessions | Transcript follows a background voice | Their share of the condition's word errors |
+|---|---|---|---|
+| babble 15 dB | 200 | 0 (0.0%) | 0.0% |
+| babble 10 dB | 184 | 0 (0.0%) | 0.0% |
+| babble 5 dB | 183 | 1 (0.5%) | 3.1% |
+| babble 0 dB | 182 | 23 (12.6%) | 27.5% |
+<!-- END e10-capture -->
+
+### What the product's telemetry would show
+
+A product does not see WER; at best it sees whether a user corrected a transcript. Under the
+simulated user model:
+
+<!-- BEGIN e10-corrections -->
+| Condition | Sessions | WER | Sessions with at least one error | Sessions corrected (simulated users) |
+|---|---|---|---|---|
+| all sessions | 3,000 | 8.81% | 52% | 39% |
+| quiet | 1,467 | 3.56% | 38% | 27% |
+| stationary 15 dB | 196 | 5.77% | 54% | 37% |
+| stationary 10 dB | 199 | 6.05% | 51% | 37% |
+| stationary 5 dB | 185 | 9.33% | 60% | 46% |
+| stationary 0 dB | 204 | 17.80% | 78% | 71% |
+| babble 15 dB | 200 | 4.73% | 50% | 34% |
+| babble 10 dB | 184 | 6.90% | 59% | 40% |
+| babble 5 dB | 183 | 12.26% | 73% | 51% |
+| babble 0 dB | 182 | 47.93% | 98% | 93% |
+<!-- END e10-corrections -->
+
+### Findings
+
+1. **Babble at low SNR is where the errors are.** Babble is a quarter of the sessions and half of
+   the word errors (WER 17.84%, [15.49, 20.32]). Most of it comes from the loudest level: babble
+   at 0 dB is 7% of the headset sessions and 38% of their errors (WER 45.47%, [38.04, 53.29]). Down
+   to 10 dB, babble and stationary noise give similar WERs; between 5 and 0 dB babble collapses,
+   in every language, while stationary noise degrades gradually (headset, 0 dB: 14.86%).
+2. **At 0 dB of babble the model can follow the wrong speaker.** 23 of the 182 babble sessions at
+   0 dB (12.6%) are transcribed as a background voice's sentence, and they account for 27.5% of
+   that condition's errors. The resulting text is fluent and plausible, so a user may not notice
+   it is someone else's speech. This is not a recognition error that more training on noisy
+   speech would obviously fix: with four voices at the speaker's level, which one is "the speaker"
+   is ambiguous from the audio alone.
+3. **The telephone channel costs little on its own and more in noise.** In quiet rooms, phone
+   sessions have about the same WER as headset ones (3.96% against 3.31%), and all quiet phone
+   segments together hold under 2% of the errors as avoidable. Combined with noise, the
+   narrowband channel hurts more: stationary noise at 0 dB, 14.86% on headset against 23.39% on the
+   phone.
+4. **German degrades fastest in stationary noise, but language is confounded with voice.** At
+   5 dB of stationary noise on a headset, German reaches 17.82% against 2.84% in Italian. The
+   German sessions are all male voices and the Italian ones 97% female; pink noise carries most of
+   its power at low frequencies, where male voices are, so the difference may be about voices
+   rather than language. The English sessions, read by both, point the same way, but the cells are
+   too small to separate the two.
+5. **Priorities: babble first, in every language.** The three headset babble segments lead the
+   ranking (German 9.6%, Italian 8.8%, English 7.1% of all errors avoidable). Of all errors, 62.9%
+   are avoidable in this sense: 41.5% in babble segments, about a fifth in stationary noise.
+   Italian headset babble ranks second with the lowest WER of the three (10.65%), because Italian
+   has the most traffic and the lowest quiet reference (1.88%): the ranking is driven by traffic
+   as much as by the error rate, which is why it must be recomputed on real traffic.
+6. **Confidence is a useful review signal.** Its rank correlation with session WER is -0.53.
+   Reviewing the least confident 5% of sessions catches 34% of all word errors (an oracle would
+   catch 41%), and 20% catches 64% (oracle 76%). It also finds the background-voice transcripts:
+   18 of the 24 are in the least confident 5%, 23 in the least confident 20%.
+7. **The correction rate hides how bad the worst conditions are.** From quiet sessions to babble
+   at 0 dB, WER grows about 13 times (3.56% to 47.93%) while the simulated correction rate grows
+   only 3.4 times (27% to 93%): a session is corrected once, however many errors it has, so the
+   rate saturates. It also counts sessions, not words: 38% of quiet sessions contain at least one
+   error although their WER is 3.56%. A dashboard of correction rates would rank conditions
+   correctly but understate the gap, and its absolute level depends on how attentive users are,
+   which is the simulated part.
+
+**Interpretation.** For this traffic mix, the investment with the largest return is robustness to
+competing speakers, not to noise in general or to the telephone channel: babble segments hold
+about two thirds of the avoidable errors, and at the loudest level the problem changes nature,
+from misrecognized words to transcribing the wrong person. Two actions follow, in order of cost.
+First, use confidence to route the least confident sessions to review or to ask the user to
+repeat: at a 5% budget it already catches a third of the errors and most wrong-speaker
+transcripts. Second, evaluate speech enhancement or target-speaker front-ends on the babble
+segments, with the same sessions as a regression set. Product telemetry alone would not have
+shown the size of the babble problem, which argues for keeping a small, regularly transcribed
+sample of real sessions as ground truth.
+
+### Limitations
+
+- **Simulated traffic and users.** Every share of errors and every priority depends on the
+  simulated mix, and the correction results on the user model; they illustrate the analysis and
+  its pitfalls, not a real product. The error rates per condition are measured, but on read
+  Wikipedia sentences.
+- **Synthetic degradations.** Pink noise and FLEURS babble mixed at a fixed SNR, and a
+  simulated telephone channel, are simplifications: real rooms add reverberation, real noise
+  varies over time, and real calls add packet loss and other codecs. The SNRs were chosen, not
+  measured from real usage.
+- **Few sessions per cell.** The 3,000 sessions spread over 54 cells of language, channel and
+  condition, some with 10 to 20 sessions; their intervals are wide and the non-monotone steps in
+  the figure (for example English babble on headset between 10 and 5 dB) are within noise.
+- **Language and voice gender are confounded** (see finding 4).
+- **The background-capture flag was defined after seeing the worst transcripts.** It is a simple
+  definition, not a tuned threshold, and changes no other number; with four voices reading other
+  sentences, a transcript that merely shares common words with a background sentence is unlikely
+  to be flagged, but sessions that mix the speaker and a background voice are not counted.
+- Confidence is the average log-probability of the whole transcript; word-level confidence or a
+  calibrated model was not evaluated.
+- The sessions reuse the dev recordings on which E2 selected the decoding settings. The selected
+  configuration changes 4 of 1,148 dev transcripts compared with the defaults, so the optimism
+  this adds is negligible next to the effects reported here.
+
+**Reproduce:** `bash experiments/E10/run.sh` (or `experiments/E10/run.ps1` on Windows). With the
+committed transcripts it checks that the session plan is unchanged, then scores, analyses and
+redraws the figure (`uv sync --extra plots`); it needs the FLEURS dev manifests, which it
+downloads if missing. The transcripts are produced with
+[`notebooks/e10_sessions_colab.ipynb`](notebooks/e10_sessions_colab.ipynb), which rebuilds the
+degraded audio and transcribes it on a Colab GPU (about 25 minutes on a T4).
+
 ## Limitations and next steps
 
 - All results so far are on FLEURS read speech, where language is confounded with speaker gender;
-  noisier and spontaneous speech come next. The normalization study (E3) covers Italian only.
+  E10 adds synthetic noise and a telephone channel, but real noisy recordings and spontaneous
+  speech are still missing. The normalization study (E3) covers Italian only.
 - Only Whisper models have been evaluated; other model families (CTC with an n-gram language
   model, Transducers) are planned.
 - Decoding settings were tuned for large-v3-turbo only, one option at a time and on read speech
   (E2); the next sweep should fix a non-inferiority margin in advance and include long recordings
   with pauses, where voice activity detection matters most.
+- The usage analysis (E10) runs on simulated traffic; with real sessions, the same code would give
+  real priorities. Speech enhancement or target-speaker methods for babble are the natural next
+  experiment.

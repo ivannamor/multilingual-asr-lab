@@ -59,7 +59,8 @@ foreach ($lang in @("it", "de", "en")) {
 }
 
 # 6. Regenerate the tables of RESULTS.md and README.md
-$Specs = @("--spec", "experiments/E1/tables.toml", "--spec", "experiments/E2/tables.toml",
-    "--spec", "experiments/E3/tables.toml")
+# Every experiment's tables spec, so that no document misses a table
+$Specs = @(Get-ChildItem experiments/*/tables.toml |
+    ForEach-Object { "--spec", "experiments/$($_.Directory.Name)/tables.toml" })
 Invoke-Checked asr-lab render-results @Specs --document RESULTS.md
 Invoke-Checked asr-lab render-results @Specs --document README.md --allow-missing-markers

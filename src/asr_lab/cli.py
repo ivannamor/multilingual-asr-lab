@@ -10,6 +10,7 @@ Usage::
     uv run asr-lab plot-selection --selection selection.json --output pareto.png
     uv run asr-lab plan-sessions --spec experiments/E10/simulation.toml --output sessions.jsonl
     uv run asr-lab render-sessions --manifest sessions.jsonl
+    uv run asr-lab usage --run runs/e10 --spec experiments/E10/simulation.toml --output usage.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -22,6 +23,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from asr_lab.analytics.sessions import load_simulation_spec, plan_sessions, render_sessions
+from asr_lab.analytics.usage import analyze_usage, load_user_model, save_usage
 from asr_lab.data.manifest import write_manifest
 from asr_lab.evaluation.comparison import (
     METRICS,
@@ -39,7 +41,7 @@ from asr_lab.evaluation.scoring import (
 )
 from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
-from asr_lab.plots import plot_selection
+from asr_lab.plots import plot_selection, plot_usage
 from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
 from asr_lab.tracking import log_comparison, log_scores
@@ -166,6 +168,20 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     render_cmd.add_argument("--manifest", required=True, type=Path, help="written by plan-sessions")
 
+    usage = commands.add_parser(
+        "usage",
+        help="usage analytics of transcribed sessions: errors per segment, priorities, "
+        "confidence review, simulated corrections (experiment E10)",
+    )
+    usage.add_argument("--run", required=True, type=Path, help="run directory of the sessions")
+    usage.add_argument(
+        "--spec", required=True, type=Path, help="TOML simulation spec with a [users] table"
+    )
+    usage.add_argument("--n-resamples", type=int, default=DEFAULT_N_RESAMPLES)
+    usage.add_argument("--seed", type=int, default=DEFAULT_SEED)
+    usage.add_argument("--output", required=True, type=Path, help="JSON report")
+    usage.add_argument("--figure", type=Path, default=None, help="also plot WER against SNR (PNG)")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -254,6 +270,19 @@ def main(argv: Sequence[str] | None = None) -> None:
     elif args.command == "render-sessions":
         written = render_sessions(args.manifest)
         print(f"Audio: {written} session(s) written next to {args.manifest}")
+    elif args.command == "usage":
+        report = analyze_usage(
+            args.run, load_user_model(args.spec), n_resamples=args.n_resamples, seed=args.seed
+        )
+        save_usage(report, args.output)
+        overall = report["overall"]
+        print(
+            f"{report['sessions']} sessions, WER {overall['wer']:.2%} "
+            f"[{overall['ci_low']:.2%}, {overall['ci_high']:.2%}]"
+        )
+        print(f"Usage report: {args.output}")
+        if args.figure:
+            print(f"Figure: {plot_usage(report, args.figure)}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,

@@ -11,6 +11,8 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+import numpy as np
+
 # Chart chrome (light theme) and the one highlight colour.
 SURFACE = "#fcfcfb"
 INK = "#0b0b0b"
@@ -93,6 +95,64 @@ def plot_selection(selection: dict[str, Any], path: Path) -> Path:
     figure.savefig(path, dpi=150, facecolor=SURFACE, metadata={"Software": None})
     plt.close(figure)
     return path
+
+
+def plot_usage(report: dict[str, Any], path: Path) -> Path:
+    """WER against the signal-to-noise ratio of the E10 sessions, one panel per language: one
+    line per noise type (colour) and channel (solid for headset, dashed for phone), each
+    starting from the quiet sessions of its channel.
+    """
+    plt = _import_pyplot()
+    languages = list(report["by_language_condition"])
+    positions = {"quiet": 0}
+    figure, axes = plt.subplots(
+        1, len(languages), figsize=(3.6 * len(languages), 4.2), sharey=True, facecolor=SURFACE
+    )
+    axes = np.atleast_1d(axes)
+    snrs: set[float] = set()
+    for axis, lang in zip(axes, languages, strict=True):
+        for channel, rows in report["by_language_condition"][lang].items():
+            by_condition = {row["segment"]: row for row in rows}
+            for environment, colour in NOISE_COLOURS.items():
+                points = sorted(
+                    (float(name.split()[1]), row["wer"])
+                    for name, row in by_condition.items()
+                    if name.startswith(environment)
+                )[::-1]  # from the highest SNR to the lowest
+                snrs.update(snr for snr, _ in points)
+                xs = [positions["quiet"]] + [_SNR_OFFSET - snr for snr, _ in points]
+                ys = [by_condition["quiet"]["wer"]] + [wer for _, wer in points]
+                axis.plot(
+                    xs, [100 * y for y in ys], color=colour, linewidth=2, marker="o",
+                    markersize=5, markeredgecolor=SURFACE, markeredgewidth=1,
+                    linestyle="-" if channel == "headset" else "--",
+                    label=f"{environment}, {channel}",
+                )  # fmt: skip
+        _style(axis)
+        axis.margins(x=0.08)
+        axis.set_title(LANGUAGE_NAMES.get(lang, lang), loc="left", fontsize=10, color=INK)
+    ticks = [positions["quiet"], *(_SNR_OFFSET - snr for snr in sorted(snrs, reverse=True))]
+    labels = ["quiet", *(f"{snr:g}" for snr in sorted(snrs, reverse=True))]
+    for axis in axes:
+        axis.set_xticks(ticks, labels)
+    axes[0].set_ylabel("WER (%)", color=SECONDARY, fontsize=9)
+    figure.supxlabel("Signal-to-noise ratio (dB)", color=SECONDARY, fontsize=9)
+    handles, names = axes[0].get_legend_handles_labels()
+    figure.legend(
+        handles, names, loc="upper center", ncol=len(names), frameon=False, fontsize=8,
+        labelcolor=SECONDARY, bbox_to_anchor=(0.5, 1.0),
+    )  # fmt: skip
+    figure.tight_layout(rect=(0, 0, 1, 0.93))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    figure.savefig(path, dpi=150, facecolor=SURFACE, metadata={"Software": None})
+    plt.close(figure)
+    return path
+
+
+# Noise types of E10 (categorical slots 1 and 2 of the palette) and the x position of an SNR:
+# quiet at 0, then 15 dB at 5 ... 0 dB at 20, so that the noise grows to the right.
+NOISE_COLOURS = {"stationary": HIGHLIGHT, "babble": "#eb6834"}
+_SNR_OFFSET = 20.0
 
 
 # Label positions (offset in points, alignment): single labels go up right of their

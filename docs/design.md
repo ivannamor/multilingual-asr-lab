@@ -585,3 +585,41 @@ original plan (FLEURS is all Wikipedia text, so a domain label would have no rea
 conditions, but their sizes depend on the simulated SNRs and on read speech; the traffic shares,
 and therefore any "priority" computed from them, are assumptions and are reported as such. The
 same analysis code would run unchanged on a manifest of real sessions.
+
+## 25. Usage analytics: priorities as avoidable errors, confidence as a review budget
+
+**Context.** E10 has to turn per-session errors into answers a product team can act on: where
+the errors come from, where to invest, whether the model can flag its own mistakes, and what
+the product's own telemetry would show. Each of these needs a definition that is simple to
+explain and does not depend on arbitrary weights.
+
+**Decision.** `asr_lab.analytics.usage` (command `asr-lab usage`) computes, from the saved
+predictions and each session's language normalizer:
+- **WER per segment** (language, channel, environment, SNR), corpus-level, with bootstrap
+  intervals that resample sentences, and each segment's share of all word errors;
+- **priority** of a segment (language × channel × environment) = the errors it would lose if
+  it were as accurate as quiet headset sessions of the same language, as a share of all errors.
+  It multiplies traffic (simulated) by the gap to the best condition (measured), in a unit that
+  adds up across segments, instead of a matrix with arbitrary frequency and severity scores;
+- **confidence as a review budget**: sessions sorted by Whisper's average log-probability, and
+  the share of all word errors found by reviewing the least confident 5-30%, next to a random
+  review and the best possible one (an oracle), plus the Spearman correlation with session WER;
+- **background capture**: a babble session whose transcript is closer (in WER) to one of its
+  background voices than to the speaker is flagged, counted per condition and followed through
+  the review. Added after the first look at the worst transcripts, which repeated a background
+  sentence; it is a definition, not a tuned threshold, and changes no other number;
+- **corrections by simulated users**: each word error is noticed with a fixed probability and a
+  transcript with a noticed error is corrected; the correction rate, the only signal real
+  telemetry has, is compared with the true WER and the share of sessions with errors.
+Tables are generated (`usage` table kind) in RESULTS.md and in a one-page summary
+(`reports/e10_summary.md`), which the document test also checks.
+
+**Alternatives rejected.** A frequency × severity matrix with hand-set severity levels (hard to
+defend, and not additive); expected calibration error of word confidences (faster-whisper gives
+segment log-probabilities, not calibrated word probabilities, and a review budget answers the
+product question directly); a correction model fitted to data (there is none: the model is a
+declared assumption, and its parameters are in the spec).
+
+**Consequences.** Priorities depend on the simulated traffic mix and should be recomputed with
+real traffic; error rates per condition and the confidence results are measured. The correction
+analysis only shows what a correction rate can and cannot reveal under the stated user model.

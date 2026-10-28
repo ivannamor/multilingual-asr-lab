@@ -9,8 +9,8 @@ data-centric optimization.
 
 > **Status:** early development. The evaluation pipeline (FLEURS ingestion, Whisper inference,
 > WER/CER with versioned normalizers and bootstrap confidence intervals) works end to end and has
-> produced the first results (baseline, decoding settings and text normalization); more
-> experiments are next.
+> produced the first results (baseline, decoding settings, text normalization and usage
+> analytics on simulated traffic); more experiments are next.
 
 Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
 
@@ -74,8 +74,17 @@ Key findings so far:
 
 ![WER against processing time for each decoding configuration, on the dev sets](reports/e2_pareto.png)
 
-To reproduce: `experiments/E1/run.sh`, `experiments/E2/run.sh` and `experiments/E3/run.sh` (see
-[Experiments](#experiments)).
+- **In simulated usage, competing speakers are the problem** (experiment E10; the traffic and the
+  users' corrections are simulated, the noise, telephone degradations and transcripts are real).
+  large-v3-turbo goes from 3.56% WER in quiet rooms to 45.47% with babble at 0 dB on a headset,
+  where it sometimes transcribes a background voice instead of the speaker. Reviewing the least
+  confident 5% of sessions catches 34% of all word errors. The one-page
+  [usage summary](reports/e10_summary.md) turns this into investment priorities.
+
+![WER against the signal-to-noise ratio, per language, noise type and channel](reports/e10_wer_vs_snr.png)
+
+To reproduce: `experiments/E1/run.sh`, `experiments/E2/run.sh`, `experiments/E3/run.sh` and
+`experiments/E10/run.sh` (see [Experiments](#experiments)).
 
 ## Try it in your browser
 
@@ -145,6 +154,7 @@ its numbers (`run.sh`, and `run.ps1` for Windows) and a TOML spec of the tables 
 bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, German, English
 bash experiments/E2/run.sh    # decoding settings: selection on dev, test comparisons, figure
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
+bash experiments/E10/run.sh   # usage analytics on simulated sessions: segments, priorities, review
 ```
 
 ### Run directories
@@ -236,6 +246,9 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | `asr-lab plot-selection` | `--selection`, `--output` | (required) | JSON saved by `select`, PNG file; WER against processing time, one panel per language (needs `uv sync --extra plots`) |
 | `asr-lab plan-sessions` | `--spec`, `--output` | (required) | TOML simulation spec (e.g. `experiments/E10/simulation.toml`), session manifest to write; draws simulated usage sessions from FLEURS recordings |
 | `asr-lab render-sessions` | `--manifest` | (required) | writes each session's audio next to the manifest: background noise at its SNR, then its channel (headset or telephone); resumable |
+| `asr-lab usage` | `--run`, `--spec`, `--output` | (required) | run directory of transcribed sessions, simulation spec with a `[users]` table, JSON report: WER per segment, priorities, confidence review, background-voice transcripts, simulated corrections |
+| | `--figure` | none | also plot WER against SNR per language (PNG, needs `uv sync --extra plots`) |
+| | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |
