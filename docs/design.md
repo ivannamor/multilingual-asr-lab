@@ -623,3 +623,37 @@ declared assumption, and its parameters are in the spec).
 **Consequences.** Priorities depend on the simulated traffic mix and should be recomputed with
 real traffic; error rates per condition and the confidence results are measured. The correction
 analysis only shows what a correction rate can and cannot reveal under the stated user model.
+
+## 26. Training-data quality: cheap features, pre-registered rules, clusters to read
+
+**Context.** Experiment E6 looks for problems in a sample of training data before it is used:
+transcripts that do not match the audio, empty transcripts, distorted or noisy audio, duplicates.
+The plan also listed learned embeddings (WavLM, ECAPA, sentence encoders) with UMAP and HDBSCAN;
+they need a GPU, several hours and are hard to interpret in a short report.
+
+**Decision.** A reduced version on cheap, interpretable features:
+- **Data.** Italian VoxPopuli (European Parliament speech with the parliament's transcripts, CC0),
+  three row groups of the training set (about 3,000 utterances, 10 hours), read with ranged
+  requests from the Hub's parquet files at a pinned revision
+  (`asr_lab.data.voxpopuli`, `asr-lab ingest-voxpopuli`). It is also the planned domain of the
+  fine-tuning experiment (E7). Ingestion keeps every utterance, empty transcripts included.
+- **Features** (`asr_lab.data.quality`): duration; speaking rate in letters per second of the
+  normalized transcript; a blind SNR estimate (energy ratio between the loudest and the quietest
+  25 ms frames); clipping; repeated transcripts and audio; and the WER of large-v3-turbo (E2
+  settings, transcribed on Colab) against each transcript, with its length ratio. The
+  normalizer is `it-v2`, so that digits against words are not counted as label noise.
+- **Rules** with thresholds written in `experiments/E6/quality.toml` before any feature was
+  computed. Each rule is reported on its own and as a union, in utterances and hours.
+- **Clusters** (`asr_lab.data.clustering`): k-means on standardized features, the number of
+  clusters chosen by the silhouette score among 2-8, each cluster described by the features it
+  stands out on and shown with the utterances closest to its centre.
+
+**Alternatives rejected.** Learned embeddings with UMAP and HDBSCAN (cost and interpretability,
+left for later); DNSMOS for audio quality (an extra model for audio that is mostly clean); filtering
+inside ingestion (it would hide what the checks are meant to find); Common Voice (its transcripts
+are prompts read aloud, so there is little label noise to find).
+
+**Consequences.** A high WER of the strong model is evidence, not proof, of a wrong transcript:
+it also follows hard audio and, in VoxPopuli, the parliament's edited transcripts, which drop
+hesitations and repair sentences. The clusters are there to separate these cases by listening to
+their examples; the rules are what a pipeline would apply.

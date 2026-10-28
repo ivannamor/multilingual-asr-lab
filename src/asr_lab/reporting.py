@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any
 
 from asr_lab.analytics.usage import usage_table
+from asr_lab.data.quality import quality_table
 
 
 def scores_table(rows: Sequence[tuple[str, dict[str, Any]]]) -> str:
@@ -109,7 +110,8 @@ def build_tables(spec_path: Path) -> dict[str, str]:
 
     Table kinds: ``scores`` and ``comparisons`` (one JSON file per row),
     ``closing-phrases`` (one error report per row and column), ``selection``
-    (a single selection file) and ``usage`` (one ``section`` of a usage report).
+    (a single selection file), ``usage`` (one ``section`` of a usage report) and ``quality``
+    (one ``section`` of a data quality report).
     """
     spec = tomllib.loads(spec_path.read_text(encoding="utf-8"))
     row_builders = {"scores": scores_table, "comparisons": comparisons_table}
@@ -128,6 +130,8 @@ def build_tables(spec_path: Path) -> dict[str, str]:
             tables[table["name"]] = selection_table(_read_json(table["file"]))
         elif kind == "usage":
             tables[table["name"]] = usage_table(_read_json(table["file"]), table["section"])
+        elif kind == "quality":
+            tables[table["name"]] = quality_table(_read_json(table["file"]), table["section"])
         else:
             raise ValueError(f"{spec_path}: unknown table kind {kind!r}")
     return tables
