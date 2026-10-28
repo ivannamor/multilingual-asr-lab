@@ -1,0 +1,38 @@
+# Tables of the E10 chapter of RESULTS.md and of reports/e10_summary.md
+# (rendered by: asr-lab render-results), all from the usage report of asr-lab usage
+
+[[table]]
+name = "e10-segments"
+kind = "usage"
+file = "experiments/E10/results/usage.json"
+section = "segments"
+
+[[table]]
+name = "e10-conditions"
+kind = "usage"
+file = "experiments/E10/results/usage.json"
+section = "conditions"
+
+[[table]]
+name = "e10-priorities"
+kind = "usage"
+file = "experiments/E10/results/usage.json"
+section = "priorities"
+
+[[table]]
+name = "e10-confidence"
+kind = "usage"
+file = "experiments/E10/results/usage.json"
+section = "confidence"
+
+[[table]]
+name = "e10-corrections"
+kind = "usage"
+file = "experiments/E10/results/usage.json"
+section = "corrections"
+
+[[table]]
+name = "e10-capture"
+kind = "usage"
+file = "experiments/E10/results/usage.json"
+section = "capture"

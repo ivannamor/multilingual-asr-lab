@@ -1,0 +1,396 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "experiments/E10/sessions.jsonl",
+  "normalizer": [
+    "de-v1",
+    "en-v1",
+    "it-v1"
+  ],
+  "n_utterances": 3000,
+  "substitutions": 4025,
+  "deletions": 675,
+  "insertions": 1064,
+  "distinct_confusion_pairs": 2768,
+  "substitutions_with_digits_or_symbols": 291,
+  "top_confusions": [
+    {
+      "reference": "javanese",
+      "hypothesis": "japanese",
+      "count": 24
+    },
+    {
+      "reference": "michele",
+      "hypothesis": "michelle",
+      "count": 20
+    },
+    {
+      "reference": "cañitas",
+      "hypothesis": "canitas",
+      "count": 17
+    },
+    {
+      "reference": "ciononostante",
+      "hypothesis": "nonostante",
+      "count": 16
+    },
+    {
+      "reference": "diciotto",
+      "hypothesis": "18",
+      "count": 15
+    },
+    {
+      "reference": "paesi",
+      "hypothesis": "pesi",
+      "count": 14
+    },
+    {
+      "reference": "timbuctù",
+      "hypothesis": "timbuktu",
+      "count": 13
+    },
+    {
+      "reference": "martelly",
+      "hypothesis": "martelli",
+      "count": 13
+    },
+    {
+      "reference": "000",
+      "hypothesis": "7000",
+      "count": 12
+    },
+    {
+      "reference": "e",
+      "hypothesis": "è",
+      "count": 12
+    },
+    {
+      "reference": "in",
+      "hypothesis": "and",
+      "count": 12
+    },
+    {
+      "reference": "al",
+      "hypothesis": "a",
+      "count": 12
+    },
+    {
+      "reference": "quelle",
+      "hypothesis": "quelli",
+      "count": 11
+    },
+    {
+      "reference": "curry",
+      "hypothesis": "carry",
+      "count": 11
+    },
+    {
+      "reference": "400",
+      "hypothesis": "1400",
+      "count": 11
+    },
+    {
+      "reference": "arly",
+      "hypothesis": "arli",
+      "count": 11
+    },
+    {
+      "reference": "konzentrierten",
+      "hypothesis": "konzentrieren",
+      "count": 11
+    },
+    {
+      "reference": "otto",
+      "hypothesis": "8",
+      "count": 11
+    },
+    {
+      "reference": "ai",
+      "hypothesis": "e",
+      "count": 10
+    },
+    {
+      "reference": "dazi",
+      "hypothesis": "dazzi",
+      "count": 10
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "the",
+      "count": 23
+    },
+    {
+      "word": "in",
+      "count": 20
+    },
+    {
+      "word": "a",
+      "count": 15
+    },
+    {
+      "word": "7",
+      "count": 13
+    },
+    {
+      "word": "i",
+      "count": 13
+    },
+    {
+      "word": "to",
+      "count": 12
+    },
+    {
+      "word": "1",
+      "count": 12
+    },
+    {
+      "word": "u",
+      "count": 10
+    },
+    {
+      "word": "wi",
+      "count": 10
+    },
+    {
+      "word": "der",
+      "count": 9
+    },
+    {
+      "word": "prozent",
+      "count": 9
+    },
+    {
+      "word": "da",
+      "count": 8
+    },
+    {
+      "word": "die",
+      "count": 7
+    },
+    {
+      "word": "auslands",
+      "count": 7
+    },
+    {
+      "word": "überbrückungsjahr",
+      "count": 7
+    },
+    {
+      "word": "north",
+      "count": 7
+    },
+    {
+      "word": "jong",
+      "count": 6
+    },
+    {
+      "word": "punkt",
+      "count": 6
+    },
+    {
+      "word": "achtzig",
+      "count": 6
+    },
+    {
+      "word": "so",
+      "count": 6
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "a",
+      "count": 23
+    },
+    {
+      "word": "in",
+      "count": 23
+    },
+    {
+      "word": "der",
+      "count": 20
+    },
+    {
+      "word": "the",
+      "count": 18
+    },
+    {
+      "word": "di",
+      "count": 17
+    },
+    {
+      "word": "ciò",
+      "count": 16
+    },
+    {
+      "word": "e",
+      "count": 15
+    },
+    {
+      "word": "l",
+      "count": 13
+    },
+    {
+      "word": "of",
+      "count": 13
+    },
+    {
+      "word": "die",
+      "count": 12
+    },
+    {
+      "word": "und",
+      "count": 12
+    },
+    {
+      "word": "grazie",
+      "count": 11
+    },
+    {
+      "word": "im",
+      "count": 11
+    },
+    {
+      "word": "per",
+      "count": 10
+    },
+    {
+      "word": "è",
+      "count": 9
+    },
+    {
+      "word": "un",
+      "count": 9
+    },
+    {
+      "word": "ist",
+      "count": 9
+    },
+    {
+      "word": "john",
+      "count": 8
+    },
+    {
+      "word": "la",
+      "count": 8
+    },
+    {
+      "word": "an",
+      "count": 8
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "e10_01061",
+      "errors": 49,
+      "reference_words": 29,
+      "reference": "science now indicates that this massive carbon economy has dislodged the biosphere from one of its stable states that has supported human evolution for the past two million years",
+      "hypothesis": "satellites do consider harassment and it is not uncommon to be followed a satellite phone is not generally a replacement for a mobile phone as you have to realize that the cultural difference in the cycle and what satellites do consider harassment and it is not uncommon to be followed"
+    },
+    {
+      "utterance_id": "e10_02594",
+      "errors": 47,
+      "reference_words": 27,
+      "reference": "seine tausendste briefmarke aus dem jahr 2000 zeigt das prächtige gemälde rühmliche heldentaten schwedischer könige von david klöcker ehrenstrahl und ist im guinness buch der rekorde verzeichnet",
+      "hypothesis": "führung eine kultur der innovations sowie des beteilten wissens seine tausendste briefmarke aus dem jahr 2000 zeigte das rechtige gemände rühmlicher erhaben dass kein muschredischer köln ist muss die führung eine kultur der innovations sowie des beteilten wissens und des organisatorischen lernens bezeichnen auch behaupteten dass bevor dies der schwanz eines köln ist die führung das nicht"
+    },
+    {
+      "utterance_id": "e10_02008",
+      "errors": 45,
+      "reference_words": 33,
+      "reference": "der goldmedaillengewinner bei olympischen spielen sollte bei den commonwealth games in den disziplinen 100 m und 200 m freistil sowie in drei lagenstaffeln schwimmen aber wegen seiner vielen beschwerden wurde seine fitness angezweifelt",
+      "hypothesis": "wurde aber durch ein notfallgericht im wappen gerassen der goldmedaillen gewinne hier bei ursprünglichen schweren in der regel wurde aber nur ein notfallgericht im wappen zu vermeiden um 200 meter freistieg zu vermeiden so wie in drei lagenstabern konnten eine notfallgericht im wappen zu vermeiden er wurde aber durch ein notpaket"
+    },
+    {
+      "utterance_id": "e10_00215",
+      "errors": 44,
+      "reference_words": 29,
+      "reference": "israel demands an ongoing military presence in the valley for ten years once an agreement is signed while the pa agrees to leave such presence only for five years",
+      "hypothesis": "i don't know if you realize but most of the goods have never been in the winter country except three years temperatures rarely go below the dry but the winter i don't know if you realize but most of the goods have never been in the winter country"
+    },
+    {
+      "utterance_id": "e10_02968",
+      "errors": 39,
+      "reference_words": 20,
+      "reference": "robin uthappa made the innings highest score 70 runs in just 41 balls by hitting 11 fours and 2 sixes",
+      "hypothesis": "it's worth half an hour to stroll about the internet yet 80 of our goods were taxed it's worth half an hour to stroll about the internet mammals were unable to reach the church 80 of our goods were taxed"
+    }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "e10_00072",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "e10_00140",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_01059",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_01086",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_01241",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_01257",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "e10_01274",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_01455",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_01487",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "e10_02190",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "e10_02384",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_02387",
+      "phrase": "untertitelung des zdf 2020"
+    },
+    {
+      "utterance_id": "e10_02409",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_02466",
+      "phrase": "untertitelung des zdf 2020"
+    },
+    {
+      "utterance_id": "e10_02676",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_02689",
+      "phrase": "untertitelung des zdf für funk 2017"
+    },
+    {
+      "utterance_id": "e10_02847",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "e10_02864",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "e10_02909",
+      "phrase": "vielen dank"
+    }
+  ]
+}

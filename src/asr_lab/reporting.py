@@ -21,6 +21,8 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
+from asr_lab.analytics.usage import usage_table
+
 
 def scores_table(rows: Sequence[tuple[str, dict[str, Any]]]) -> str:
     """Markdown table of WER and CER with their headline confidence intervals."""
@@ -106,8 +108,8 @@ def build_tables(spec_path: Path) -> dict[str, str]:
     """Build every table described in a TOML spec; returns marker name -> Markdown.
 
     Table kinds: ``scores`` and ``comparisons`` (one JSON file per row),
-    ``closing-phrases`` (one error report per row and column) and ``selection``
-    (a single selection file).
+    ``closing-phrases`` (one error report per row and column), ``selection``
+    (a single selection file) and ``usage`` (one ``section`` of a usage report).
     """
     spec = tomllib.loads(spec_path.read_text(encoding="utf-8"))
     row_builders = {"scores": scores_table, "comparisons": comparisons_table}
@@ -124,6 +126,8 @@ def build_tables(spec_path: Path) -> dict[str, str]:
             tables[table["name"]] = closing_phrases_table(table["columns"], rows)
         elif kind == "selection":
             tables[table["name"]] = selection_table(_read_json(table["file"]))
+        elif kind == "usage":
+            tables[table["name"]] = usage_table(_read_json(table["file"]), table["section"])
         else:
             raise ValueError(f"{spec_path}: unknown table kind {kind!r}")
     return tables

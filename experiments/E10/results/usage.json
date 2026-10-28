@@ -1,0 +1,1229 @@
+{
+  "run": "experiments/runs/e10-turbo-sessions",
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "large-v3-turbo",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 5,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "vad_filter": false,
+    "hallucination_silence_threshold": 2.0,
+    "word_timestamps": true,
+    "condition_on_previous_text": false,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0
+  },
+  "manifest": "experiments/E10/sessions.jsonl",
+  "sessions": 3000,
+  "n_resamples": 1000,
+  "seed": 0,
+  "simulated": [
+    "which sessions exist: languages, channels, environments and SNRs (traffic mix)",
+    "whether a user corrects a transcript (user model)"
+  ],
+  "overall": {
+    "segment": "all sessions",
+    "sessions": 3000,
+    "session_share": 1.0,
+    "words": 65445,
+    "wer": 0.0880739552295821,
+    "ci_low": 0.0776271160245647,
+    "ci_high": 0.09890673194866706,
+    "error_share": 1.0
+  },
+  "by_language": [
+    {
+      "segment": "Italian",
+      "sessions": 1510,
+      "session_share": 0.5033333333333333,
+      "words": 34958,
+      "wer": 0.05326391670004005,
+      "ci_low": 0.04544392088317598,
+      "ci_high": 0.06186781371700946,
+      "error_share": 0.32303955586398336
+    },
+    {
+      "segment": "German",
+      "sessions": 862,
+      "session_share": 0.28733333333333333,
+      "words": 17346,
+      "wer": 0.13271071140320534,
+      "ci_low": 0.11121263712067077,
+      "ci_high": 0.15404041449246195,
+      "error_share": 0.39937543372657874
+    },
+    {
+      "segment": "English",
+      "sessions": 628,
+      "session_share": 0.20933333333333334,
+      "words": 13141,
+      "wer": 0.12175633513431246,
+      "ci_low": 0.1011635943854973,
+      "ci_high": 0.14467613432455267,
+      "error_share": 0.2775850104094379
+    }
+  ],
+  "by_channel": [
+    {
+      "segment": "headset",
+      "sessions": 1916,
+      "session_share": 0.6386666666666667,
+      "words": 42155,
+      "wer": 0.08124777606452378,
+      "ci_low": 0.07047695017059859,
+      "ci_high": 0.09213403166750825,
+      "error_share": 0.594205412907703
+    },
+    {
+      "segment": "phone",
+      "sessions": 1084,
+      "session_share": 0.36133333333333334,
+      "words": 23290,
+      "wer": 0.1004293688278231,
+      "ci_low": 0.08699612490851148,
+      "ci_high": 0.11591784068571875,
+      "error_share": 0.40579458709229704
+    }
+  ],
+  "by_environment": [
+    {
+      "segment": "quiet",
+      "sessions": 1467,
+      "session_share": 0.489,
+      "words": 31617,
+      "wer": 0.03555049498687415,
+      "ci_low": 0.02927031859687188,
+      "ci_high": 0.04210660548799152,
+      "error_share": 0.19500346981263011
+    },
+    {
+      "segment": "stationary",
+      "sessions": 784,
+      "session_share": 0.2613333333333333,
+      "words": 17380,
+      "wer": 0.0981012658227848,
+      "ci_low": 0.08535954790961704,
+      "ci_high": 0.11242735059902555,
+      "error_share": 0.2958015267175573
+    },
+    {
+      "segment": "babble",
+      "sessions": 749,
+      "session_share": 0.24966666666666668,
+      "words": 16448,
+      "wer": 0.17844114785992218,
+      "ci_low": 0.15490634208567503,
+      "ci_high": 0.20319779911234997,
+      "error_share": 0.5091950034698126
+    }
+  ],
+  "by_condition": {
+    "headset": [
+      {
+        "segment": "quiet",
+        "sessions": 911,
+        "session_share": 0.4754697286012526,
+        "words": 19684,
+        "wer": 0.0331233489128226,
+        "ci_low": 0.02701463996049949,
+        "ci_high": 0.03974578377740119,
+        "error_share": 0.19036496350364965
+      },
+      {
+        "segment": "stationary 15 dB",
+        "sessions": 128,
+        "session_share": 0.06680584551148225,
+        "words": 2930,
+        "wer": 0.04880546075085324,
+        "ci_low": 0.03628475095439276,
+        "ci_high": 0.06368151782999035,
+        "error_share": 0.04175182481751825
+      },
+      {
+        "segment": "stationary 10 dB",
+        "sessions": 138,
+        "session_share": 0.0720250521920668,
+        "words": 3112,
+        "wer": 0.055269922879177376,
+        "ci_low": 0.03873586022903964,
+        "ci_high": 0.07182354615864182,
+        "error_share": 0.05021897810218978
+      },
+      {
+        "segment": "stationary 5 dB",
+        "sessions": 114,
+        "session_share": 0.059498956158663886,
+        "words": 2584,
+        "wer": 0.07352941176470588,
+        "ci_low": 0.0568573117579442,
+        "ci_high": 0.09539018614202438,
+        "error_share": 0.05547445255474453
+      },
+      {
+        "segment": "stationary 0 dB",
+        "sessions": 134,
+        "session_share": 0.06993736951983298,
+        "words": 2955,
+        "wer": 0.1485617597292724,
+        "ci_low": 0.12193246332326865,
+        "ci_high": 0.17628033071073818,
+        "error_share": 0.12817518248175183
+      },
+      {
+        "segment": "babble 15 dB",
+        "sessions": 138,
+        "session_share": 0.0720250521920668,
+        "words": 3094,
+        "wer": 0.037815126050420166,
+        "ci_low": 0.028477611833948497,
+        "ci_high": 0.04793659016803592,
+        "error_share": 0.034160583941605836
+      },
+      {
+        "segment": "babble 10 dB",
+        "sessions": 104,
+        "session_share": 0.054279749478079335,
+        "words": 2336,
+        "wer": 0.06292808219178082,
+        "ci_low": 0.04717077721694615,
+        "ci_high": 0.07895914406776487,
+        "error_share": 0.04291970802919708
+      },
+      {
+        "segment": "babble 5 dB",
+        "sessions": 122,
+        "session_share": 0.06367432150313153,
+        "words": 2599,
+        "wer": 0.10157752981916121,
+        "ci_low": 0.07902937918840634,
+        "ci_high": 0.12567282820527964,
+        "error_share": 0.07708029197080292
+      },
+      {
+        "segment": "babble 0 dB",
+        "sessions": 127,
+        "session_share": 0.0662839248434238,
+        "words": 2861,
+        "wer": 0.45473610625655364,
+        "ci_low": 0.38035706767940525,
+        "ci_high": 0.5328941275056784,
+        "error_share": 0.3798540145985401
+      }
+    ],
+    "phone": [
+      {
+        "segment": "quiet",
+        "sessions": 556,
+        "session_share": 0.5129151291512916,
+        "words": 11933,
+        "wer": 0.03955417749099137,
+        "ci_low": 0.03210902984894765,
+        "ci_high": 0.04768698308100161,
+        "error_share": 0.20179563916203505
+      },
+      {
+        "segment": "stationary 15 dB",
+        "sessions": 68,
+        "session_share": 0.06273062730627306,
+        "words": 1400,
+        "wer": 0.07642857142857143,
+        "ci_low": 0.0517414697670726,
+        "ci_high": 0.10550848191102649,
+        "error_share": 0.04574604531851219
+      },
+      {
+        "segment": "stationary 10 dB",
+        "sessions": 61,
+        "session_share": 0.05627306273062731,
+        "words": 1300,
+        "wer": 0.07307692307692308,
+        "ci_low": 0.049112915315485915,
+        "ci_high": 0.09812950684185996,
+        "error_share": 0.04061564771269773
+      },
+      {
+        "segment": "stationary 5 dB",
+        "sessions": 71,
+        "session_share": 0.06549815498154982,
+        "words": 1543,
+        "wer": 0.12637718729747247,
+        "ci_low": 0.08788202980946529,
+        "ci_high": 0.16727804826053289,
+        "error_share": 0.08336896109448483
+      },
+      {
+        "segment": "stationary 0 dB",
+        "sessions": 70,
+        "session_share": 0.06457564575645756,
+        "words": 1556,
+        "wer": 0.23393316195372751,
+        "ci_low": 0.1896861862647618,
+        "ci_high": 0.2814186094314459,
+        "error_share": 0.155622060709705
+      },
+      {
+        "segment": "babble 15 dB",
+        "sessions": 62,
+        "session_share": 0.05719557195571956,
+        "words": 1300,
+        "wer": 0.07,
+        "ci_low": 0.04544083597367781,
+        "ci_high": 0.10008002505751244,
+        "error_share": 0.03890551517742625
+      },
+      {
+        "segment": "babble 10 dB",
+        "sessions": 80,
+        "session_share": 0.07380073800738007,
+        "words": 1708,
+        "wer": 0.07728337236533958,
+        "ci_low": 0.0544470729360759,
+        "ci_high": 0.10364461596947747,
+        "error_share": 0.05643437366395896
+      },
+      {
+        "segment": "babble 5 dB",
+        "sessions": 61,
+        "session_share": 0.05627306273062731,
+        "words": 1301,
+        "wer": 0.16448885472713298,
+        "ci_low": 0.11021052238898768,
+        "ci_high": 0.22259904113960774,
+        "error_share": 0.09149209063702438
+      },
+      {
+        "segment": "babble 0 dB",
+        "sessions": 55,
+        "session_share": 0.0507380073800738,
+        "words": 1249,
+        "wer": 0.5356285028022418,
+        "ci_low": 0.42499954058286765,
+        "ci_high": 0.655636260058392,
+        "error_share": 0.2860196665241556
+      }
+    ]
+  },
+  "by_language_condition": {
+    "it": {
+      "headset": [
+        {
+          "segment": "quiet",
+          "sessions": 446,
+          "session_share": 0.4607438016528926,
+          "words": 10251,
+          "wer": 0.018827431470100478,
+          "ci_low": 0.013485544946152962,
+          "ci_high": 0.024987309685521077,
+          "error_share": 0.17706422018348625
+        },
+        {
+          "segment": "stationary 15 dB",
+          "sessions": 60,
+          "session_share": 0.06198347107438017,
+          "words": 1463,
+          "wer": 0.026657552973342446,
+          "ci_low": 0.012169264134400871,
+          "ci_high": 0.0461420344495427,
+          "error_share": 0.03577981651376147
+        },
+        {
+          "segment": "stationary 10 dB",
+          "sessions": 73,
+          "session_share": 0.07541322314049587,
+          "words": 1774,
+          "wer": 0.02874859075535513,
+          "ci_low": 0.016530067873303172,
+          "ci_high": 0.04532851348206734,
+          "error_share": 0.046788990825688076
+        },
+        {
+          "segment": "stationary 5 dB",
+          "sessions": 67,
+          "session_share": 0.06921487603305786,
+          "words": 1585,
+          "wer": 0.028391167192429023,
+          "ci_low": 0.018451900921658985,
+          "ci_high": 0.03941707349316815,
+          "error_share": 0.04128440366972477
+        },
+        {
+          "segment": "stationary 0 dB",
+          "sessions": 79,
+          "session_share": 0.08161157024793389,
+          "words": 1863,
+          "wer": 0.07729468599033816,
+          "ci_low": 0.054716856575872996,
+          "ci_high": 0.09980441323971916,
+          "error_share": 0.13211009174311927
+        },
+        {
+          "segment": "babble 15 dB",
+          "sessions": 74,
+          "session_share": 0.07644628099173553,
+          "words": 1694,
+          "wer": 0.021841794569067298,
+          "ci_low": 0.014067221873718483,
+          "ci_high": 0.031179967528412636,
+          "error_share": 0.03394495412844037
+        },
+        {
+          "segment": "babble 10 dB",
+          "sessions": 47,
+          "session_share": 0.04855371900826446,
+          "words": 1131,
+          "wer": 0.032714412024756855,
+          "ci_low": 0.020816323072805447,
+          "ci_high": 0.046648450443739484,
+          "error_share": 0.03394495412844037
+        },
+        {
+          "segment": "babble 5 dB",
+          "sessions": 62,
+          "session_share": 0.0640495867768595,
+          "words": 1465,
+          "wer": 0.0552901023890785,
+          "ci_low": 0.042962874569079816,
+          "ci_high": 0.06894425178302689,
+          "error_share": 0.07431192660550459
+        },
+        {
+          "segment": "babble 0 dB",
+          "sessions": 60,
+          "session_share": 0.06198347107438017,
+          "words": 1514,
+          "wer": 0.3058124174372523,
+          "ci_low": 0.24251804797316018,
+          "ci_high": 0.3843763305043853,
+          "error_share": 0.42477064220183486
+        }
+      ],
+      "phone": [
+        {
+          "segment": "quiet",
+          "sessions": 281,
+          "session_share": 0.518450184501845,
+          "words": 6383,
+          "wer": 0.023813253955820148,
+          "ci_low": 0.01596874764582094,
+          "ci_high": 0.033621033266778434,
+          "error_share": 0.19689119170984457
+        },
+        {
+          "segment": "stationary 15 dB",
+          "sessions": 29,
+          "session_share": 0.05350553505535055,
+          "words": 653,
+          "wer": 0.036753445635528334,
+          "ci_low": 0.022886702257580518,
+          "ci_high": 0.0544584960256589,
+          "error_share": 0.031088082901554404
+        },
+        {
+          "segment": "stationary 10 dB",
+          "sessions": 31,
+          "session_share": 0.05719557195571956,
+          "words": 707,
+          "wer": 0.04101838755304102,
+          "ci_low": 0.015583607683141121,
+          "ci_high": 0.07317073170731707,
+          "error_share": 0.03756476683937824
+        },
+        {
+          "segment": "stationary 5 dB",
+          "sessions": 38,
+          "session_share": 0.07011070110701106,
+          "words": 797,
+          "wer": 0.06775407779171895,
+          "ci_low": 0.03850557855992639,
+          "ci_high": 0.10247529406620315,
+          "error_share": 0.06994818652849741
+        },
+        {
+          "segment": "stationary 0 dB",
+          "sessions": 34,
+          "session_share": 0.06273062730627306,
+          "words": 889,
+          "wer": 0.16310461192350956,
+          "ci_low": 0.11454454324466229,
+          "ci_high": 0.20612884827256475,
+          "error_share": 0.1878238341968912
+        },
+        {
+          "segment": "babble 15 dB",
+          "sessions": 28,
+          "session_share": 0.05166051660516605,
+          "words": 577,
+          "wer": 0.029462738301559793,
+          "ci_low": 0.013172894423972833,
+          "ci_high": 0.05185816076597639,
+          "error_share": 0.022020725388601035
+        },
+        {
+          "segment": "babble 10 dB",
+          "sessions": 38,
+          "session_share": 0.07011070110701106,
+          "words": 833,
+          "wer": 0.04801920768307323,
+          "ci_low": 0.026891283696447763,
+          "ci_high": 0.07761067329277592,
+          "error_share": 0.05181347150259067
+        },
+        {
+          "segment": "babble 5 dB",
+          "sessions": 35,
+          "session_share": 0.06457564575645756,
+          "words": 750,
+          "wer": 0.09066666666666667,
+          "ci_low": 0.06621175420703723,
+          "ci_high": 0.11490084670231729,
+          "error_share": 0.08808290155440414
+        },
+        {
+          "segment": "babble 0 dB",
+          "sessions": 28,
+          "session_share": 0.05166051660516605,
+          "words": 629,
+          "wer": 0.3863275039745628,
+          "ci_low": 0.28400565747937295,
+          "ci_high": 0.49085079750554655,
+          "error_share": 0.31476683937823835
+        }
+      ]
+    },
+    "de": {
+      "headset": [
+        {
+          "segment": "quiet",
+          "sessions": 282,
+          "session_share": 0.5062836624775583,
+          "words": 5698,
+          "wer": 0.04914004914004914,
+          "ci_low": 0.03720998395069465,
+          "ci_high": 0.061274695352467975,
+          "error_share": 0.1897018970189702
+        },
+        {
+          "segment": "stationary 15 dB",
+          "sessions": 38,
+          "session_share": 0.06822262118491922,
+          "words": 839,
+          "wer": 0.08224076281287247,
+          "ci_low": 0.061411664735419084,
+          "ci_high": 0.10894005211320461,
+          "error_share": 0.046747967479674794
+        },
+        {
+          "segment": "stationary 10 dB",
+          "sessions": 35,
+          "session_share": 0.06283662477558348,
+          "words": 674,
+          "wer": 0.10979228486646884,
+          "ci_low": 0.06859393147502904,
+          "ci_high": 0.15808846904945728,
+          "error_share": 0.05013550135501355
+        },
+        {
+          "segment": "stationary 5 dB",
+          "sessions": 31,
+          "session_share": 0.05565529622980251,
+          "words": 651,
+          "wer": 0.1781874039938556,
+          "ci_low": 0.13251491307248542,
+          "ci_high": 0.22486039886039885,
+          "error_share": 0.07859078590785908
+        },
+        {
+          "segment": "stationary 0 dB",
+          "sessions": 35,
+          "session_share": 0.06283662477558348,
+          "words": 670,
+          "wer": 0.3611940298507463,
+          "ci_low": 0.30155756193291877,
+          "ci_high": 0.4277688085783429,
+          "error_share": 0.16395663956639567
+        },
+        {
+          "segment": "babble 15 dB",
+          "sessions": 36,
+          "session_share": 0.06463195691202872,
+          "words": 805,
+          "wer": 0.049689440993788817,
+          "ci_low": 0.028166319344639267,
+          "ci_high": 0.07169410494047761,
+          "error_share": 0.02710027100271003
+        },
+        {
+          "segment": "babble 10 dB",
+          "sessions": 38,
+          "session_share": 0.06822262118491922,
+          "words": 785,
+          "wer": 0.08025477707006369,
+          "ci_low": 0.05743814876138318,
+          "ci_high": 0.10606797547459025,
+          "error_share": 0.042682926829268296
+        },
+        {
+          "segment": "babble 5 dB",
+          "sessions": 25,
+          "session_share": 0.04488330341113106,
+          "words": 506,
+          "wer": 0.23517786561264822,
+          "ci_low": 0.15644068686656518,
+          "ci_high": 0.32265190489432694,
+          "error_share": 0.08062330623306233
+        },
+        {
+          "segment": "babble 0 dB",
+          "sessions": 37,
+          "session_share": 0.06642728904847396,
+          "words": 750,
+          "wer": 0.6306666666666667,
+          "ci_low": 0.46674332676604074,
+          "ci_high": 0.8188663786547696,
+          "error_share": 0.32046070460704607
+        }
+      ],
+      "phone": [
+        {
+          "segment": "quiet",
+          "sessions": 157,
+          "session_share": 0.5147540983606558,
+          "words": 2997,
+          "wer": 0.055055055055055056,
+          "ci_low": 0.04162039703902809,
+          "ci_high": 0.06782150759212498,
+          "error_share": 0.19975786924939468
+        },
+        {
+          "segment": "stationary 15 dB",
+          "sessions": 23,
+          "session_share": 0.07540983606557378,
+          "words": 444,
+          "wer": 0.11711711711711711,
+          "ci_low": 0.05989395231870252,
+          "ci_high": 0.17933615417437063,
+          "error_share": 0.06295399515738499
+        },
+        {
+          "segment": "stationary 10 dB",
+          "sessions": 20,
+          "session_share": 0.06557377049180328,
+          "words": 422,
+          "wer": 0.11611374407582939,
+          "ci_low": 0.0749296178185261,
+          "ci_high": 0.15839243498817968,
+          "error_share": 0.059322033898305086
+        },
+        {
+          "segment": "stationary 5 dB",
+          "sessions": 20,
+          "session_share": 0.06557377049180328,
+          "words": 422,
+          "wer": 0.1872037914691943,
+          "ci_low": 0.10560316656318423,
+          "ci_high": 0.2870106014174663,
+          "error_share": 0.09564164648910412
+        },
+        {
+          "segment": "stationary 0 dB",
+          "sessions": 18,
+          "session_share": 0.05901639344262295,
+          "words": 288,
+          "wer": 0.4166666666666667,
+          "ci_low": 0.3073757296028424,
+          "ci_high": 0.5378827825951097,
+          "error_share": 0.14527845036319612
+        },
+        {
+          "segment": "babble 15 dB",
+          "sessions": 17,
+          "session_share": 0.05573770491803279,
+          "words": 358,
+          "wer": 0.06983240223463687,
+          "ci_low": 0.021940155665582675,
+          "ci_high": 0.13433149379154646,
+          "error_share": 0.03026634382566586
+        },
+        {
+          "segment": "babble 10 dB",
+          "sessions": 24,
+          "session_share": 0.07868852459016394,
+          "words": 513,
+          "wer": 0.09161793372319688,
+          "ci_low": 0.05261787280701755,
+          "ci_high": 0.1437187709988111,
+          "error_share": 0.05690072639225181
+        },
+        {
+          "segment": "babble 5 dB",
+          "sessions": 11,
+          "session_share": 0.036065573770491806,
+          "words": 208,
+          "wer": 0.21634615384615385,
+          "ci_low": 0.15027430687757434,
+          "ci_high": 0.28184589800443455,
+          "error_share": 0.05447941888619855
+        },
+        {
+          "segment": "babble 0 dB",
+          "sessions": 15,
+          "session_share": 0.04918032786885246,
+          "words": 316,
+          "wer": 0.7721518987341772,
+          "ci_low": 0.5457131764134919,
+          "ci_high": 1.0,
+          "error_share": 0.29539951573849876
+        }
+      ]
+    },
+    "en": {
+      "headset": [
+        {
+          "segment": "quiet",
+          "sessions": 183,
+          "session_share": 0.4680306905370844,
+          "words": 3735,
+          "wer": 0.047925033467202144,
+          "ci_low": 0.03275845425889655,
+          "ci_high": 0.06530041840850236,
+          "error_share": 0.20838183934807916
+        },
+        {
+          "segment": "stationary 15 dB",
+          "sessions": 30,
+          "session_share": 0.07672634271099744,
+          "words": 628,
+          "wer": 0.05573248407643312,
+          "ci_low": 0.02333236272878536,
+          "ci_high": 0.09659116823136583,
+          "error_share": 0.04074505238649592
+        },
+        {
+          "segment": "stationary 10 dB",
+          "sessions": 30,
+          "session_share": 0.07672634271099744,
+          "words": 664,
+          "wer": 0.07078313253012049,
+          "ci_low": 0.04612477708694815,
+          "ci_high": 0.09803989275268118,
+          "error_share": 0.05471478463329453
+        },
+        {
+          "segment": "stationary 5 dB",
+          "sessions": 16,
+          "session_share": 0.04092071611253197,
+          "words": 348,
+          "wer": 0.08333333333333333,
+          "ci_low": 0.040229885057471264,
+          "ci_high": 0.13375905115120415,
+          "error_share": 0.033760186263096625
+        },
+        {
+          "segment": "stationary 0 dB",
+          "sessions": 20,
+          "session_share": 0.05115089514066496,
+          "words": 422,
+          "wer": 0.12559241706161137,
+          "ci_low": 0.07988087764923925,
+          "ci_high": 0.17849303763556748,
+          "error_share": 0.06169965075669383
+        },
+        {
+          "segment": "babble 15 dB",
+          "sessions": 28,
+          "session_share": 0.07161125319693094,
+          "words": 595,
+          "wer": 0.06722689075630252,
+          "ci_low": 0.043800409582138496,
+          "ci_high": 0.09063273857356052,
+          "error_share": 0.046565774155995346
+        },
+        {
+          "segment": "babble 10 dB",
+          "sessions": 19,
+          "session_share": 0.04859335038363171,
+          "words": 420,
+          "wer": 0.11190476190476191,
+          "ci_low": 0.06467453402842248,
+          "ci_high": 0.16775263575911417,
+          "error_share": 0.05471478463329453
+        },
+        {
+          "segment": "babble 5 dB",
+          "sessions": 35,
+          "session_share": 0.08951406649616368,
+          "words": 628,
+          "wer": 0.10191082802547771,
+          "ci_low": 0.057746135618301074,
+          "ci_high": 0.15559265938539243,
+          "error_share": 0.07450523864959255
+        },
+        {
+          "segment": "babble 0 dB",
+          "sessions": 30,
+          "session_share": 0.07672634271099744,
+          "words": 597,
+          "wer": 0.6113902847571189,
+          "ci_low": 0.4195452833962841,
+          "ci_high": 0.8315001678481863,
+          "error_share": 0.42491268917345754
+        }
+      ],
+      "phone": [
+        {
+          "segment": "quiet",
+          "sessions": 118,
+          "session_share": 0.4978902953586498,
+          "words": 2553,
+          "wer": 0.060712886799843324,
+          "ci_low": 0.04301656598767487,
+          "ci_high": 0.0774219384212122,
+          "error_share": 0.20917678812415655
+        },
+        {
+          "segment": "stationary 15 dB",
+          "sessions": 16,
+          "session_share": 0.06751054852320675,
+          "words": 303,
+          "wer": 0.10231023102310231,
+          "ci_low": 0.0461923620933522,
+          "ci_high": 0.16197425934919865,
+          "error_share": 0.04183535762483131
+        },
+        {
+          "segment": "stationary 10 dB",
+          "sessions": 10,
+          "session_share": 0.04219409282700422,
+          "words": 171,
+          "wer": 0.09941520467836257,
+          "ci_low": 0.034952978056426345,
+          "ci_high": 0.16432519165626672,
+          "error_share": 0.022941970310391364
+        },
+        {
+          "segment": "stationary 5 dB",
+          "sessions": 13,
+          "session_share": 0.05485232067510549,
+          "words": 324,
+          "wer": 0.19135802469135801,
+          "ci_low": 0.09629438717067583,
+          "ci_high": 0.27008684445086845,
+          "error_share": 0.08367071524966262
+        },
+        {
+          "segment": "stationary 0 dB",
+          "sessions": 18,
+          "session_share": 0.0759493670886076,
+          "words": 379,
+          "wer": 0.2612137203166227,
+          "ci_low": 0.14496457489878542,
+          "ci_high": 0.4015027227435986,
+          "error_share": 0.13360323886639677
+        },
+        {
+          "segment": "babble 15 dB",
+          "sessions": 17,
+          "session_share": 0.07172995780590717,
+          "words": 365,
+          "wer": 0.13424657534246576,
+          "ci_low": 0.08840123798965263,
+          "ci_high": 0.18586687317424253,
+          "error_share": 0.06612685560053981
+        },
+        {
+          "segment": "babble 10 dB",
+          "sessions": 18,
+          "session_share": 0.0759493670886076,
+          "words": 362,
+          "wer": 0.12430939226519337,
+          "ci_low": 0.06582855159397338,
+          "ci_high": 0.18156298200514137,
+          "error_share": 0.06072874493927125
+        },
+        {
+          "segment": "babble 5 dB",
+          "sessions": 15,
+          "session_share": 0.06329113924050633,
+          "words": 343,
+          "wer": 0.2944606413994169,
+          "ci_low": 0.138594027671998,
+          "ci_high": 0.4504994894108245,
+          "error_share": 0.13630229419703105
+        },
+        {
+          "segment": "babble 0 dB",
+          "sessions": 12,
+          "session_share": 0.05063291139240506,
+          "words": 304,
+          "wer": 0.5986842105263158,
+          "ci_low": 0.35925665101721443,
+          "ci_high": 0.843769324204947,
+          "error_share": 0.24561403508771928
+        }
+      ]
+    }
+  },
+  "priorities": [
+    {
+      "lang": "de",
+      "channel": "headset",
+      "environment": "babble",
+      "sessions": 136,
+      "session_share": 0.04533333333333334,
+      "wer": 0.24420238931834154,
+      "reference_wer": 0.04914004914004914,
+      "error_share": 0.12057598889659958,
+      "avoidable_share": 0.09631287650024638
+    },
+    {
+      "lang": "it",
+      "channel": "headset",
+      "environment": "babble",
+      "sessions": 243,
+      "session_share": 0.081,
+      "wer": 0.10647829083390765,
+      "reference_wer": 0.018827431470100478,
+      "error_share": 0.10721721027064539,
+      "avoidable_share": 0.08825912348152963
+    },
+    {
+      "lang": "en",
+      "channel": "headset",
+      "environment": "babble",
+      "sessions": 112,
+      "session_share": 0.037333333333333336,
+      "wer": 0.23035714285714284,
+      "reference_wer": 0.047925033467202144,
+      "error_share": 0.08952116585704371,
+      "avoidable_share": 0.07089658657763137
+    },
+    {
+      "lang": "de",
+      "channel": "headset",
+      "environment": "stationary",
+      "sessions": 139,
+      "session_share": 0.04633333333333333,
+      "wer": 0.17678193366266762,
+      "reference_wer": 0.04914004914004914,
+      "error_share": 0.08691880638445523,
+      "avoidable_share": 0.0627579980459925
+    },
+    {
+      "lang": "it",
+      "channel": "phone",
+      "environment": "babble",
+      "sessions": 129,
+      "session_share": 0.043,
+      "wer": 0.13194693438508426,
+      "reference_wer": 0.018827431470100478,
+      "error_share": 0.06384455239417071,
+      "avoidable_share": 0.05473461027583098
+    },
+    {
+      "lang": "en",
+      "channel": "phone",
+      "environment": "babble",
+      "sessions": 62,
+      "session_share": 0.020666666666666667,
+      "wer": 0.27438136826783116,
+      "reference_wer": 0.047925033467202144,
+      "error_share": 0.06540596807772381,
+      "avoidable_share": 0.0539817841804414
+    },
+    {
+      "lang": "de",
+      "channel": "phone",
+      "environment": "babble",
+      "sessions": 67,
+      "session_share": 0.022333333333333334,
+      "wer": 0.25878136200716845,
+      "reference_wer": 0.04914004914004914,
+      "error_share": 0.06263011797362943,
+      "avoidable_share": 0.05073727124386389
+    },
+    {
+      "lang": "de",
+      "channel": "phone",
+      "environment": "stationary",
+      "sessions": 81,
+      "session_share": 0.027,
+      "wer": 0.19035532994923857,
+      "reference_wer": 0.04914004914004914,
+      "error_share": 0.0520471894517696,
+      "avoidable_share": 0.03861125651548969
+    },
+    {
+      "lang": "it",
+      "channel": "phone",
+      "environment": "stationary",
+      "sessions": 132,
+      "session_share": 0.044,
+      "wer": 0.08273145108338804,
+      "reference_wer": 0.018827431470100478,
+      "error_share": 0.04371963913948647,
+      "avoidable_share": 0.033770236596473616
+    },
+    {
+      "lang": "it",
+      "channel": "headset",
+      "environment": "stationary",
+      "sessions": 279,
+      "session_share": 0.093,
+      "wer": 0.04173522812266268,
+      "reference_wer": 0.018827431470100478,
+      "error_share": 0.04840388619014573,
+      "avoidable_share": 0.02656811599971865
+    },
+    {
+      "lang": "en",
+      "channel": "phone",
+      "environment": "stationary",
+      "sessions": 57,
+      "session_share": 0.019,
+      "wer": 0.17757009345794392,
+      "reference_wer": 0.047925033467202144,
+      "error_share": 0.03625954198473282,
+      "avoidable_share": 0.026473323318720175
+    },
+    {
+      "lang": "en",
+      "channel": "headset",
+      "environment": "stationary",
+      "sessions": 96,
+      "session_share": 0.032,
+      "wer": 0.07953443258971872,
+      "reference_wer": 0.047925033467202144,
+      "error_share": 0.028452463566967384,
+      "avoidable_share": 0.01130787317672262
+    },
+    {
+      "lang": "en",
+      "channel": "phone",
+      "environment": "quiet",
+      "sessions": 118,
+      "session_share": 0.03933333333333333,
+      "wer": 0.060712886799843324,
+      "reference_wer": 0.047925033467202144,
+      "error_share": 0.026891047883414294,
+      "avoidable_share": 0.005664016231476914
+    },
+    {
+      "lang": "it",
+      "channel": "phone",
+      "environment": "quiet",
+      "sessions": 281,
+      "session_share": 0.09366666666666666,
+      "wer": 0.023813253955820148,
+      "reference_wer": 0.018827431470100478,
+      "error_share": 0.0263705759888966,
+      "avoidable_share": 0.005521253457034811
+    },
+    {
+      "lang": "de",
+      "channel": "phone",
+      "environment": "quiet",
+      "sessions": 157,
+      "session_share": 0.052333333333333336,
+      "wer": 0.055055055055055056,
+      "reference_wer": 0.04914004914004914,
+      "error_share": 0.02862595419847328,
+      "avoidable_share": 0.003075515740331844
+    },
+    {
+      "lang": "de",
+      "channel": "headset",
+      "environment": "quiet",
+      "sessions": 282,
+      "session_share": 0.094,
+      "wer": 0.04914004914004914,
+      "reference_wer": 0.04914004914004914,
+      "error_share": 0.048577376821651634,
+      "avoidable_share": 0.0
+    },
+    {
+      "lang": "en",
+      "channel": "headset",
+      "environment": "quiet",
+      "sessions": 183,
+      "session_share": 0.061,
+      "wer": 0.047925033467202144,
+      "reference_wer": 0.047925033467202144,
+      "error_share": 0.031054823039555864,
+      "avoidable_share": 0.0
+    },
+    {
+      "lang": "it",
+      "channel": "headset",
+      "environment": "quiet",
+      "sessions": 446,
+      "session_share": 0.14866666666666667,
+      "wer": 0.018827431470100478,
+      "reference_wer": 0.018827431470100478,
+      "error_share": 0.03348369188063845,
+      "avoidable_share": 0.0
+    }
+  ],
+  "confidence": {
+    "sessions": 3000,
+    "captured": 24,
+    "spearman": -0.5321629252175514,
+    "review": [
+      {
+        "budget": 0.05,
+        "sessions": 150,
+        "confidence": 0.3381332408049965,
+        "random": 0.05,
+        "oracle": 0.4082234559333796,
+        "captured": 18
+      },
+      {
+        "budget": 0.1,
+        "sessions": 300,
+        "confidence": 0.48334489937543373,
+        "random": 0.1,
+        "oracle": 0.571998612074948,
+        "captured": 20
+      },
+      {
+        "budget": 0.2,
+        "sessions": 600,
+        "confidence": 0.6412213740458015,
+        "random": 0.2,
+        "oracle": 0.7628383067314365,
+        "captured": 23
+      },
+      {
+        "budget": 0.3,
+        "sessions": 900,
+        "confidence": 0.7244968771686329,
+        "random": 0.3,
+        "oracle": 0.8745662734212353,
+        "captured": 24
+      }
+    ]
+  },
+  "background_capture": [
+    {
+      "segment": "babble 15 dB",
+      "sessions": 200,
+      "captured": 0,
+      "captured_share": 0.0,
+      "error_share": 0.0
+    },
+    {
+      "segment": "babble 10 dB",
+      "sessions": 184,
+      "captured": 0,
+      "captured_share": 0.0,
+      "error_share": 0.0
+    },
+    {
+      "segment": "babble 5 dB",
+      "sessions": 183,
+      "captured": 1,
+      "captured_share": 0.00546448087431694,
+      "error_share": 0.03138075313807531
+    },
+    {
+      "segment": "babble 0 dB",
+      "sessions": 182,
+      "captured": 23,
+      "captured_share": 0.12637362637362637,
+      "error_share": 0.2751269035532995
+    }
+  ],
+  "user_model": {
+    "p_notice": 0.5,
+    "p_edit": 0.02,
+    "seed": 1
+  },
+  "corrections": {
+    "overall": {
+      "segment": "all sessions",
+      "sessions": 3000,
+      "correction_rate": 0.39366666666666666,
+      "sessions_with_errors": 0.5186666666666667,
+      "wer": 0.0880739552295821
+    },
+    "by_condition": [
+      {
+        "segment": "quiet",
+        "sessions": 1467,
+        "correction_rate": 0.2719836400817996,
+        "sessions_with_errors": 0.38173142467620996,
+        "wer": 0.03555049498687415
+      },
+      {
+        "segment": "stationary 15 dB",
+        "sessions": 196,
+        "correction_rate": 0.37244897959183676,
+        "sessions_with_errors": 0.5357142857142857,
+        "wer": 0.057736720554272515
+      },
+      {
+        "segment": "stationary 10 dB",
+        "sessions": 199,
+        "correction_rate": 0.37185929648241206,
+        "sessions_with_errors": 0.507537688442211,
+        "wer": 0.06051677243880326
+      },
+      {
+        "segment": "stationary 5 dB",
+        "sessions": 185,
+        "correction_rate": 0.4594594594594595,
+        "sessions_with_errors": 0.6,
+        "wer": 0.0932881027380664
+      },
+      {
+        "segment": "stationary 0 dB",
+        "sessions": 204,
+        "correction_rate": 0.7107843137254902,
+        "sessions_with_errors": 0.7843137254901961,
+        "wer": 0.17800931057415206
+      },
+      {
+        "segment": "babble 15 dB",
+        "sessions": 200,
+        "correction_rate": 0.345,
+        "sessions_with_errors": 0.5,
+        "wer": 0.047337278106508875
+      },
+      {
+        "segment": "babble 10 dB",
+        "sessions": 184,
+        "correction_rate": 0.40217391304347827,
+        "sessions_with_errors": 0.5869565217391305,
+        "wer": 0.06899109792284866
+      },
+      {
+        "segment": "babble 5 dB",
+        "sessions": 183,
+        "correction_rate": 0.5081967213114754,
+        "sessions_with_errors": 0.726775956284153,
+        "wer": 0.12256410256410256
+      },
+      {
+        "segment": "babble 0 dB",
+        "sessions": 182,
+        "correction_rate": 0.9285714285714286,
+        "sessions_with_errors": 0.978021978021978,
+        "wer": 0.4793187347931874
+      }
+    ]
+  }
+}

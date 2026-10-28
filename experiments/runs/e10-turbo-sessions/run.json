@@ -1,0 +1,46 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "large-v3-turbo",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 5,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "vad_filter": false,
+    "hallucination_silence_threshold": 2.0,
+    "word_timestamps": true,
+    "condition_on_previous_text": false,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0
+  },
+  "manifest_sha256": "08dde1c67849817780d52dc6d8b7959049c40f04eb0b8ee68218888696a32cb8",
+  "limit": null,
+  "manifest": "experiments/E10/sessions.jsonl",
+  "n_utterances": 3000,
+  "audio_seconds": 38065.0,
+  "git_commit": "661d853667eb081a57a9a8c75fb0860d6fcc1701",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux x86_64",
+    "executable_is_venv": false
+  },
+  "started_at": "2026-10-28T10:32:48+00:00",
+  "finished_at": "2026-10-28T10:56:10+00:00",
+  "processing_seconds": 1401.173638662,
+  "rtf": 0.036810025972993564
+}

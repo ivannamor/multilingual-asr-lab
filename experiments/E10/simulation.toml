@@ -21,3 +21,11 @@ phone = 0.35    # narrowband telephone call (8 kHz, G.711 mu-law)
 quiet = 0.5
 stationary = 0.25  # pink noise: fans, engines, traffic, air conditioning
 babble = 0.25      # other people talking: cafés, open offices
+
+# Simulated users (used by the analysis, not by plan-sessions): each word error is noticed with
+# probability p_notice, and a transcript with a noticed error is corrected; a transcript without
+# errors is edited anyway with probability p_edit (rephrasing, style).
+[users]
+p_notice = 0.5
+p_edit = 0.02
+seed = 1
