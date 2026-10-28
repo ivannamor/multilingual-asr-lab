@@ -9,6 +9,9 @@ repos:
       - id: check-toml
       - id: check-added-large-files
         args: ["--maxkb=1000"]
+        # The E10 session manifest is text committed on purpose (about 2 MB): it documents
+        # exactly which simulated sessions were transcribed.
+        exclude: ^experiments/E10/sessions\.jsonl$
       - id: check-merge-conflict
       - id: mixed-line-ending
 

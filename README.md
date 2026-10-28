@@ -234,6 +234,8 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings |
 | | `--output` | none | save the selection as JSON |
 | `asr-lab plot-selection` | `--selection`, `--output` | (required) | JSON saved by `select`, PNG file; WER against processing time, one panel per language (needs `uv sync --extra plots`) |
+| `asr-lab plan-sessions` | `--spec`, `--output` | (required) | TOML simulation spec (e.g. `experiments/E10/simulation.toml`), session manifest to write; draws simulated usage sessions from FLEURS recordings |
+| `asr-lab render-sessions` | `--manifest` | (required) | writes each session's audio next to the manifest: background noise at its SNR, then its channel (headset or telephone); resumable |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |

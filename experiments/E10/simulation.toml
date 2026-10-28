@@ -1,0 +1,23 @@
+# Simulated usage sessions of experiment E10 (asr-lab plan-sessions).
+# Simulated: which sessions exist and under which conditions (the traffic mix below).
+# Real: the recordings, the noise and telephone channel applied to them, and the model's errors.
+seed = 0
+n_sessions = 3000
+source = "data/fleurs_{lang}/dev.jsonl"  # FLEURS dev sets; the test sets are left untouched
+snr_db = [15, 10, 5, 0]                  # for noisy environments, drawn uniformly
+babble_voices = 4                        # other speakers mixed into babble noise
+
+# Share of the traffic per language
+[languages]
+it = 0.5
+de = 0.3
+en = 0.2
+
+[channels]
+headset = 0.65  # wideband (16 kHz)
+phone = 0.35    # narrowband telephone call (8 kHz, G.711 mu-law)
+
+[environments]
+quiet = 0.5
+stationary = 0.25  # pink noise: fans, engines, traffic, air conditioning
+babble = 0.25      # other people talking: cafés, open offices
