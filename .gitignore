@@ -21,6 +21,8 @@ htmlcov/
 /mlruns/
 /mlflow.db
 /runs/
+# Audio of the E10 sessions, rebuilt from the committed session manifest
+/experiments/E10/audio/
 
 # Hydra run directories
 /outputs/

@@ -8,6 +8,8 @@ Usage::
     uv run asr-lab compare --a runs/A --b runs/B
     uv run asr-lab select --spec experiments/E2/sweep.toml --output selection.json
     uv run asr-lab plot-selection --selection selection.json --output pareto.png
+    uv run asr-lab plan-sessions --spec experiments/E10/simulation.toml --output sessions.jsonl
+    uv run asr-lab render-sessions --manifest sessions.jsonl
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -19,6 +21,8 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from asr_lab.analytics.sessions import load_simulation_spec, plan_sessions, render_sessions
+from asr_lab.data.manifest import write_manifest
 from asr_lab.evaluation.comparison import (
     METRICS,
     compare_runs,
@@ -150,6 +154,18 @@ def main(argv: Sequence[str] | None = None) -> None:
     plot.add_argument("--selection", required=True, type=Path, help="JSON saved by select")
     plot.add_argument("--output", required=True, type=Path, help="PNG file")
 
+    plan_cmd = commands.add_parser(
+        "plan-sessions", help="draw simulated usage sessions from a TOML spec (experiment E10)"
+    )
+    plan_cmd.add_argument("--spec", required=True, type=Path, help="TOML simulation spec")
+    plan_cmd.add_argument("--output", required=True, type=Path, help="manifest of the sessions")
+
+    render_cmd = commands.add_parser(
+        "render-sessions",
+        help="write the audio of planned sessions (noise and telephone channel applied)",
+    )
+    render_cmd.add_argument("--manifest", required=True, type=Path, help="written by plan-sessions")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -232,6 +248,12 @@ def main(argv: Sequence[str] | None = None) -> None:
     elif args.command == "plot-selection":
         selection = json.loads(args.selection.read_text(encoding="utf-8"))
         print(f"Figure: {plot_selection(selection, args.output)}")
+    elif args.command == "plan-sessions":
+        count = write_manifest(args.output, plan_sessions(load_simulation_spec(args.spec)))
+        print(f"Sessions: {count} in {args.output}")
+    elif args.command == "render-sessions":
+        written = render_sessions(args.manifest)
+        print(f"Audio: {written} session(s) written next to {args.manifest}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,
