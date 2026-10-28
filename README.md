@@ -249,6 +249,9 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | `asr-lab usage` | `--run`, `--spec`, `--output` | (required) | run directory of transcribed sessions, simulation spec with a `[users]` table, JSON report: WER per segment, priorities, confidence review, background-voice transcripts, simulated corrections |
 | | `--figure` | none | also plot WER against SNR per language (PNG, needs `uv sync --extra plots`) |
 | | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings |
+| `asr-lab ingest-voxpopuli` | `--spec` | (required) | TOML quality spec (e.g. `experiments/E6/quality.toml`); downloads its row groups of VoxPopuli at a pinned revision and writes their manifest |
+| `asr-lab quality` | `--spec`, `--output` | (required) | quality spec, folder for `features.jsonl` and `quality.json`: per-utterance features (duration, speaking rate, estimated SNR, clipping, duplicates) and the spec's filter rules |
+| | `--run` | none | transcription of the spec's manifest by a strong model: adds its WER against each transcript and clusters the utterances |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |

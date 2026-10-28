@@ -1,0 +1,29 @@
+# Data quality and clustering of experiment E6 (asr-lab ingest-voxpopuli, asr-lab quality).
+# The filter thresholds and the clustering settings are fixed here before any feature is computed.
+
+[data]
+repo = "facebook/voxpopuli"
+revision = "42f01879c780b4a2e90ec0b4f616c2ece526e4f1"  # pinned: the download never changes
+lang = "it"
+split = "train"
+# (shard, row group) pairs of the parquet files: about 1,000 utterances (3.3 hours) each
+row_groups = [[0, 0], [2, 0], [4, 0]]
+output = "data/voxpopuli_it"  # the manifest is <output>/<split>.jsonl
+normalizer = "it-v2"          # numbers written in words: digits are not label noise
+
+# An utterance is flagged by every rule it breaks; the rules are independent of each other.
+[filters]
+min_duration = 1.0          # seconds
+max_duration = 30.0         # Whisper's window: longer audio is cut into windows
+min_chars_per_second = 5.0  # far slower than speech: the transcript misses words
+max_chars_per_second = 25.0 # far faster than speech: the transcript has words not in the audio
+min_snr_db = 10.0           # estimated: below it the noise is a large part of the signal
+max_clipping = 0.001        # share of samples at full scale
+max_wer = 0.5               # strong model against the transcript: suspected label noise
+
+[clusters]
+# Standardized features; "log:" takes log(1 + x) first, for skewed features (long tails)
+features = ["log:duration", "chars_per_second", "snr_db", "log:wer", "length_ratio"]
+k = [2, 3, 4, 5, 6, 7, 8]   # the number of clusters is chosen by the silhouette score
+seed = 0
+examples = 3                # utterances shown per cluster, closest to its centre
