@@ -1,0 +1,317 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_de/test.jsonl",
+  "normalizer": [
+    "de-v1"
+  ],
+  "n_utterances": 862,
+  "substitutions": 602,
+  "deletions": 101,
+  "insertions": 92,
+  "distinct_confusion_pairs": 441,
+  "substitutions_with_digits_or_symbols": 41,
+  "top_confusions": [
+    {
+      "reference": "km",
+      "hypothesis": "kilometer",
+      "count": 9
+    },
+    {
+      "reference": "chr",
+      "hypothesis": "christus",
+      "count": 8
+    },
+    {
+      "reference": "dass",
+      "hypothesis": "sodass",
+      "count": 6
+    },
+    {
+      "reference": "n",
+      "hypothesis": "nach",
+      "count": 6
+    },
+    {
+      "reference": "gizeh",
+      "hypothesis": "gize",
+      "count": 6
+    },
+    {
+      "reference": "davey",
+      "hypothesis": "davy",
+      "count": 4
+    },
+    {
+      "reference": "hurrikan",
+      "hypothesis": "hurricane",
+      "count": 4
+    },
+    {
+      "reference": "webseite",
+      "hypothesis": "website",
+      "count": 4
+    },
+    {
+      "reference": "blogerfahrung",
+      "hypothesis": "erfahrung",
+      "count": 3
+    },
+    {
+      "reference": "nextgen",
+      "hypothesis": "gen",
+      "count": 3
+    },
+    {
+      "reference": "eine",
+      "hypothesis": "einer",
+      "count": 3
+    },
+    {
+      "reference": "erfolgte",
+      "hypothesis": "erfolgt",
+      "count": 3
+    },
+    {
+      "reference": "zum",
+      "hypothesis": "zu",
+      "count": 3
+    },
+    {
+      "reference": "zu",
+      "hypothesis": "zur",
+      "count": 3
+    },
+    {
+      "reference": "x",
+      "hypothesis": "24",
+      "count": 3
+    },
+    {
+      "reference": "bieber",
+      "hypothesis": "biber",
+      "count": 3
+    },
+    {
+      "reference": "genutzt",
+      "hypothesis": "genützt",
+      "count": 3
+    },
+    {
+      "reference": "sachin",
+      "hypothesis": "sahin",
+      "count": 3
+    },
+    {
+      "reference": "sankt",
+      "hypothesis": "st",
+      "count": 3
+    },
+    {
+      "reference": "park",
+      "hypothesis": "nationalpark",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "x",
+      "count": 11
+    },
+    {
+      "word": "so",
+      "count": 6
+    },
+    {
+      "word": "sie",
+      "count": 4
+    },
+    {
+      "word": "00",
+      "count": 4
+    },
+    {
+      "word": "prozent",
+      "count": 3
+    },
+    {
+      "word": "man",
+      "count": 3
+    },
+    {
+      "word": "eee",
+      "count": 3
+    },
+    {
+      "word": "south",
+      "count": 3
+    },
+    {
+      "word": "wild",
+      "count": 3
+    },
+    {
+      "word": "dreissig",
+      "count": 3
+    },
+    {
+      "word": "fertig",
+      "count": 3
+    },
+    {
+      "word": "national",
+      "count": 2
+    },
+    {
+      "word": "in",
+      "count": 2
+    },
+    {
+      "word": "ringer",
+      "count": 2
+    },
+    {
+      "word": "riss",
+      "count": 2
+    },
+    {
+      "word": "original",
+      "count": 2
+    },
+    {
+      "word": "pa",
+      "count": 2
+    },
+    {
+      "word": "30",
+      "count": 2
+    },
+    {
+      "word": "mit",
+      "count": 1
+    },
+    {
+      "word": "chhappan",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "zu",
+      "count": 6
+    },
+    {
+      "word": "und",
+      "count": 4
+    },
+    {
+      "word": "in",
+      "count": 4
+    },
+    {
+      "word": "blog",
+      "count": 3
+    },
+    {
+      "word": "next",
+      "count": 3
+    },
+    {
+      "word": "wasserstoff",
+      "count": 3
+    },
+    {
+      "word": "original",
+      "count": 3
+    },
+    {
+      "word": "bis",
+      "count": 3
+    },
+    {
+      "word": "es",
+      "count": 2
+    },
+    {
+      "word": "analogfilm",
+      "count": 2
+    },
+    {
+      "word": "cannabis",
+      "count": 2
+    },
+    {
+      "word": "broad",
+      "count": 2
+    },
+    {
+      "word": "29",
+      "count": 2
+    },
+    {
+      "word": "mal",
+      "count": 2
+    },
+    {
+      "word": "100",
+      "count": 2
+    },
+    {
+      "word": "san",
+      "count": 2
+    },
+    {
+      "word": "hong",
+      "count": 2
+    },
+    {
+      "word": "so",
+      "count": 2
+    },
+    {
+      "word": "uhr",
+      "count": 2
+    },
+    {
+      "word": "wohl",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_de_6598935387951886693",
+      "errors": 9,
+      "reference_words": 37,
+      "reference": "busse fahren den ganzen tag über vom distriktübergreifenden busbahnhof auf der anderen seite des flusses ab wobei die meisten busse vor allem die in richtung osten und jakar bumthang zwischen 06 30 und 07 30 uhr abfahren",
+      "hypothesis": "busse fahren den ganzen tag über vom distrikt übergreifenden busbahnhof auf der anderen seite des flusses ab wobei die meisten busse vor allem die in richtung osten und jackar boomtang zwischen und abfahren"
+    },
+    {
+      "utterance_id": "fleurs_de_13340325550442074798",
+      "errors": 8,
+      "reference_words": 36,
+      "reference": "da die lichtverschmutzung während ihrer hochphase nicht das problem darstellte das es heute ist befinden sie sich in der regel in städten oder auf universitätsgeländen die leichter zu erreichen sind als die in neuerer zeit errichteten",
+      "hypothesis": "da die lichtverschmutzung während ihrer hauchphase nicht das problem darstellt dass es heute ist befinden sie sich in der regel in städten oder auf universitätsgelände die leichter zu erreichen sind als die neueren zeiterrichteten"
+    },
+    {
+      "utterance_id": "fleurs_de_5588377578874001231",
+      "errors": 8,
+      "reference_words": 52,
+      "reference": "forscher der princeton university in den vereinigten staaten und der uppsala university in schweden berichteten die neue art habe sich innerhalb von nur zwei generationen entwickelt obwohl man zuvor angenommen hatte dass dieser vorgang aufgrund der paarung zwischen einem einheimischen darwinfink geospiza fortes und dem eingewanderten kaktusfink geospiza conirostris viel länger dauerte",
+      "hypothesis": "forscher der princeton university in den vereinigten staaten und der uppsala university in schweden berichteten die neue art habe sich innerhalb von nur zwei generationen entwickelt obwohl man zuvor angenommen hatte dass dieser vorgang aufgrund der paarung zwischen einem einheimischen darwin fink geospitzer fortes und dem eingewanderten kaktus fink geospitzer coni rostris viel länger dauerte"
+    },
+    {
+      "utterance_id": "fleurs_de_5085509947417478932",
+      "errors": 7,
+      "reference_words": 14,
+      "reference": "lakkha singh präsentierte den chhappan bhog bhajan ebenfalls der sänger raju khandelwal begleitete ihn",
+      "hypothesis": "laka xing präsentierte es in shapanbogbajan ebenfalls der sänger raju kandelwal begleitete ihn"
+    },
+    {
+      "utterance_id": "fleurs_de_103625751236710165",
+      "errors": 6,
+      "reference_words": 14,
+      "reference": "lakkha singh präsentierte den chhappan bhog bhajan ebenfalls der sänger raju khandelwal begleitete ihn",
+      "hypothesis": "laka singh präsentierte den japanburg bayan ebenfalls der sänger ryu kandelwal begleitete ihn"
+    }
+  ],
+  "invented_closing_phrases": []
+}

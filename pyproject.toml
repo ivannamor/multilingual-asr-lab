@@ -24,6 +24,9 @@ asr-lab = "asr_lab.cli:main"
 tracking = [
     "mlflow>=3.17.2",
 ]
+plots = [
+    "matplotlib>=3.9",
+]
 
 [build-system]
 requires = ["uv_build>=0.13.5,<0.14.0"]

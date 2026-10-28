@@ -9,7 +9,8 @@ data-centric optimization.
 
 > **Status:** early development. The evaluation pipeline (FLEURS ingestion, Whisper inference,
 > WER/CER with versioned normalizers and bootstrap confidence intervals) works end to end and has
-> produced the first results (baseline and text normalization); more experiments are next.
+> produced the first results (baseline, decoding settings and text normalization); more
+> experiments are next.
 
 Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
 
@@ -64,8 +65,17 @@ Key findings so far:
 - **Model rankings are stable, relative gains are not**: Whisper-small beats Whisper-base by
   8.6-9.3 WER points under every normalizer, but its relative error reduction ranges from 40% to
   55% depending on normalization.
+- **Decoding settings matter little for WER, voice activity detection matters for
+  hallucinations**: in a sweep on the dev sets, beam size, temperature fallback and Whisper's
+  hallucination-silence threshold move large-v3-turbo's WER by at most a quarter of a point, while
+  voice activity detection removes the invented "Vielen Dank" endings (12 to 0 on the German test
+  set) for 6% more processing time (experiment E2). The configuration is chosen on dev by a rule
+  written in code before the runs, and the test sets are used once:
 
-To reproduce: `experiments/E1/run.sh` and `experiments/E3/run.sh` (see [Experiments](#experiments)).
+![WER against processing time for each decoding configuration, on the dev sets](reports/e2_pareto.png)
+
+To reproduce: `experiments/E1/run.sh`, `experiments/E2/run.sh` and `experiments/E3/run.sh` (see
+[Experiments](#experiments)).
 
 ## Try it in your browser
 
@@ -133,6 +143,7 @@ its numbers (`run.sh`, and `run.ps1` for Windows) and a TOML spec of the tables 
 
 ```bash
 bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, German, English
+bash experiments/E2/run.sh    # decoding settings: selection on dev, test comparisons, figure
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
 ```
 
@@ -144,8 +155,9 @@ A run directory holds:
   duration, processing time and real-time factor;
 - `scores_<normalizer>.json`: one file per scoring setting, e.g. `scores_it-v1.json`, so scoring
   the same predictions with another normalizer never overwrites a result.
-- `errors_<normalizer>.json`: most frequent substitutions, deletions and insertions, and the
-  utterances with the most errors (written by `asr-lab errors`, which also prints aligned
+- `errors_<normalizer>.json`: most frequent substitutions, deletions and insertions, the
+  utterances ending with an invented closing phrase ("Vielen Dank", "Sottotitoli a cura di QTSS"),
+  and the utterances with the most errors (written by `asr-lab errors`, which also prints aligned
   reference/hypothesis pairs in the style of NIST sclite).
 
 Runs are resumable: running the same `transcribe` command again skips the utterances already
@@ -170,7 +182,7 @@ from them), and logging the same file again replaces its MLflow run instead of d
 MLflow is an optional dependency:
 
 ```bash
-uv sync --all-extras                                        # install the tracking extra
+uv sync --all-extras                                        # install the tracking and plots extras
 uv run asr-lab score --run runs/whisper-small-it --mlflow E1
 uv run asr-lab compare --a runs/A --b runs/B --output cmp.json --mlflow E1
 uv run mlflow ui --backend-store-uri sqlite:///mlflow.db    # http://127.0.0.1:5000
@@ -221,6 +233,7 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--split` | `dev` | split whose runs are compared (never the test set) |
 | | `--n-resamples`, `--seed` | `1000`, `0` | bootstrap settings |
 | | `--output` | none | save the selection as JSON |
+| `asr-lab plot-selection` | `--selection`, `--output` | (required) | JSON saved by `select`, PNG file; WER against processing time, one panel per language (needs `uv sync --extra plots`) |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |

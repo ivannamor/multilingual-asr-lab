@@ -1,0 +1,309 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_de/dev.jsonl",
+  "normalizer": [
+    "de-v1"
+  ],
+  "n_utterances": 363,
+  "substitutions": 285,
+  "deletions": 48,
+  "insertions": 26,
+  "distinct_confusion_pairs": 205,
+  "substitutions_with_digits_or_symbols": 40,
+  "top_confusions": [
+    {
+      "reference": "m",
+      "hypothesis": "meter",
+      "count": 7
+    },
+    {
+      "reference": "dass",
+      "hypothesis": "sodass",
+      "count": 4
+    },
+    {
+      "reference": "aufzuhaltem",
+      "hypothesis": "aufzuhalten",
+      "count": 3
+    },
+    {
+      "reference": "geographischer",
+      "hypothesis": "geografischer",
+      "count": 3
+    },
+    {
+      "reference": "simbabwe",
+      "hypothesis": "zimbabwe",
+      "count": 3
+    },
+    {
+      "reference": "türklingel",
+      "hypothesis": "türklinge",
+      "count": 3
+    },
+    {
+      "reference": "mit",
+      "hypothesis": "damit",
+      "count": 3
+    },
+    {
+      "reference": "konzentrierten",
+      "hypothesis": "konzentrieren",
+      "count": 3
+    },
+    {
+      "reference": "damm",
+      "hypothesis": "darm",
+      "count": 3
+    },
+    {
+      "reference": "michele",
+      "hypothesis": "michelle",
+      "count": 3
+    },
+    {
+      "reference": "achtzehn",
+      "hypothesis": "18",
+      "count": 3
+    },
+    {
+      "reference": "ein",
+      "hypothesis": "eine",
+      "count": 3
+    },
+    {
+      "reference": "000",
+      "hypothesis": "7000",
+      "count": 3
+    },
+    {
+      "reference": "stätte",
+      "hypothesis": "städte",
+      "count": 3
+    },
+    {
+      "reference": "programm",
+      "hypothesis": "auslandsüberbrückungsjahrprogramm",
+      "count": 3
+    },
+    {
+      "reference": "​​und",
+      "hypothesis": "und",
+      "count": 3
+    },
+    {
+      "reference": "prozent",
+      "hypothesis": "80",
+      "count": 3
+    },
+    {
+      "reference": "dreizehnten",
+      "hypothesis": "13",
+      "count": 3
+    },
+    {
+      "reference": "vierundzwanzigsten",
+      "hypothesis": "24",
+      "count": 3
+    },
+    {
+      "reference": "s",
+      "hypothesis": "us",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "so",
+      "count": 4
+    },
+    {
+      "word": "prozent",
+      "count": 3
+    },
+    {
+      "word": "da",
+      "count": 3
+    },
+    {
+      "word": "7",
+      "count": 3
+    },
+    {
+      "word": "auslands",
+      "count": 3
+    },
+    {
+      "word": "überbrückungsjahr",
+      "count": 3
+    },
+    {
+      "word": "achtzig",
+      "count": 3
+    },
+    {
+      "word": "u",
+      "count": 3
+    },
+    {
+      "word": "1",
+      "count": 2
+    },
+    {
+      "word": "x",
+      "count": 2
+    },
+    {
+      "word": "der",
+      "count": 2
+    },
+    {
+      "word": "baba",
+      "count": 2
+    },
+    {
+      "word": "punkt",
+      "count": 2
+    },
+    {
+      "word": "fast",
+      "count": 1
+    },
+    {
+      "word": "verbreitet",
+      "count": 1
+    },
+    {
+      "word": "chhappan",
+      "count": 1
+    },
+    {
+      "word": "casa",
+      "count": 1
+    },
+    {
+      "word": "rund",
+      "count": 1
+    },
+    {
+      "word": "niigata",
+      "count": 1
+    },
+    {
+      "word": "marktfrauen",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "ebola",
+      "count": 3
+    },
+    {
+      "word": "so",
+      "count": 3
+    },
+    {
+      "word": "galapagos",
+      "count": 2
+    },
+    {
+      "word": "national",
+      "count": 2
+    },
+    {
+      "word": "drüber",
+      "count": 2
+    },
+    {
+      "word": "und",
+      "count": 2
+    },
+    {
+      "word": "k",
+      "count": 1
+    },
+    {
+      "word": "jordan",
+      "count": 1
+    },
+    {
+      "word": "den",
+      "count": 1
+    },
+    {
+      "word": "eine",
+      "count": 1
+    },
+    {
+      "word": "blog",
+      "count": 1
+    },
+    {
+      "word": "amand",
+      "count": 1
+    },
+    {
+      "word": "uga",
+      "count": 1
+    },
+    {
+      "word": "schweine",
+      "count": 1
+    },
+    {
+      "word": "heraus",
+      "count": 1
+    },
+    {
+      "word": "salzwasser",
+      "count": 1
+    },
+    {
+      "word": "palästinenser",
+      "count": 1
+    },
+    {
+      "word": "aris",
+      "count": 1
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_de_5633089370904207769",
+      "errors": 10,
+      "reference_words": 52,
+      "reference": "der in panik versetzte könig ludwig der xiv königin marie antoinette ihre beiden kleinen kinder die 11 jahre alte marie therese und der 4 jahre alte louis charles sowie die schwester des königs madame elisabeth wurden am 6 oktober 1789 in versailles von einem mob aus marktfrauen zur rückkehr nach paris gezwungen",
+      "hypothesis": "der in panik versetzte könig ludwig xiv könig marie antoinette ihre beiden kleinen kinder die elf jahre alte marie therese und die vier jahre alte louis charles so wie die schwester des königs madame elisabeth wurden am 6 oktober 1789 in versailles von einem mob aus machtfrauen zurück nach paris gezwungen"
+    },
+    {
+      "utterance_id": "fleurs_de_9484602961322659631",
+      "errors": 8,
+      "reference_words": 32,
+      "reference": "der sehbehinderte polnische skifahrer maciej krezel und die begleitläuferin anna ogarzynska belegten im super g den dreizehnten platz der südkoreaner jong seork park belegte im super g der männer den vierundzwanzigsten platz",
+      "hypothesis": "der sehbehinderte polnische skifahrer maciej kretzel und die begleitläuferin anna ogarzinska belegten im super jee den 13 platz der südkoreane jong seorg park belegte im super jee der männer den 24 platz"
+    },
+    {
+      "utterance_id": "fleurs_de_657002548305708781",
+      "errors": 7,
+      "reference_words": 25,
+      "reference": "baba shyam wurden 108 teller chhappan bhog im hinduismus 56 verschiedene essbare dinge wie süssigkeiten früchte nüsse gerichte usw die der gottheit dargebracht werden serviert",
+      "hypothesis": "babashiam wurden 108 teller chapap bog im hinduismus 56 verschiedene essbare dinge wie süssigkeiten früchte nüsse gerichte und so weiter die der gottheit dargebracht werden serviert"
+    },
+    {
+      "utterance_id": "fleurs_de_17162391812324988079",
+      "errors": 7,
+      "reference_words": 32,
+      "reference": "der sehbehinderte polnische skifahrer maciej krezel und die begleitläuferin anna ogarzynska belegten im super g den dreizehnten platz der südkoreaner jong seork park belegte im super g der männer den vierundzwanzigsten platz",
+      "hypothesis": "der sehbehinderte polnische skifahrer masjik kresil und die begleitläuferin anna uga senska belegten im super g den 13 platz der südkoreaner jong seok park belegte im super g der männer den 24 platz"
+    },
+    {
+      "utterance_id": "fleurs_de_549700329072787155",
+      "errors": 7,
+      "reference_words": 32,
+      "reference": "der sehbehinderte polnische skifahrer maciej krezel und die begleitläuferin anna ogarzynska belegten im super g den dreizehnten platz der südkoreaner jong seork park belegte im super g der männer den vierundzwanzigsten platz",
+      "hypothesis": "der sehbehinderte polnische skifahrer maciej kretschel und die begleitläuferin anna ogarczynska belegten im super ski den 13 platz der südkoreaner jong seok park belegte im super ski der männer den 24 platz"
+    }
+  ],
+  "invented_closing_phrases": []
+}

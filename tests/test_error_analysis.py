@@ -108,6 +108,7 @@ def test_analyze_run_writes_an_errors_file(tmp_path: Path) -> None:
     assert path == run_dir / "errors_it-v1.json"
     assert json.loads(path.read_text(encoding="utf-8")) == report
     assert report["model"] == "fake"
+    assert report["invented_closing_phrases"] == [{"utterance_id": "u3", "phrase": "grazie"}]
     assert "gatto -> cane" in format_errors(utterances, report)
 
 
@@ -118,4 +119,5 @@ def test_cli_errors(tmp_path: Path, capsys) -> None:
     assert "S=3 D=1 I=1" in output
     assert "1 substitutions involve digits or symbols" in output
     assert "u3: 2 errors / 6 words" in output
+    assert "Invented closing phrases: 1 utterance(s), 'grazie' (1)" in output
     assert "Errors:" in output

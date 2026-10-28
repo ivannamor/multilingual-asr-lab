@@ -1,0 +1,44 @@
+{
+  "metric": "wer",
+  "manifest": "data/fleurs_it/dev.jsonl",
+  "n_utterances": 391,
+  "a": {
+    "run": "experiments/runs/e2-turbo-baseline-fleurs-it-dev",
+    "model": "faster-whisper/large-v3-turbo-float16",
+    "normalizer": [
+      "it-v1"
+    ],
+    "rate": 0.023730317143490796
+  },
+  "b": {
+    "run": "experiments/runs/e2-turbo-no-fallback-fleurs-it-dev",
+    "model": "faster-whisper/large-v3-turbo-float16",
+    "normalizer": [
+      "it-v1"
+    ],
+    "rate": 0.023730317143490796
+  },
+  "delta": 0.0,
+  "confidence_intervals": {
+    "utterance": {
+      "low": 0.0,
+      "high": 0.0,
+      "prob_b_better": 0.0,
+      "significant": false,
+      "n_units": 391,
+      "level": 0.95,
+      "n_resamples": 1000
+    },
+    "sentence_id": {
+      "low": 0.0,
+      "high": 0.0,
+      "prob_b_better": 0.0,
+      "significant": false,
+      "n_units": 147,
+      "level": 0.95,
+      "n_resamples": 1000
+    }
+  },
+  "headline_unit": "utterance",
+  "significant": false
+}

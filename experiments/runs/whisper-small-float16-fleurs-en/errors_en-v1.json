@@ -312,5 +312,11 @@
       "reference": "while no one knows for certain who wrote it it is known that early in its life the large parchment document it measures 29¾ inches by 24½ inches was rolled up for storage",
       "hypothesis": "while no one knows for certain who wrote it it is known that early in its life the large parchment document measures 29 3 4 inches by 24 and a half inches was rolled up for storage"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_en_17498257810809617374",
+      "phrase": "thank you"
+    }
   ]
 }

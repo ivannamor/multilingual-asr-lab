@@ -1,0 +1,69 @@
+# Tables of the E2 chapter of RESULTS.md (rendered by: asr-lab render-results)
+
+# The selection on the dev sets (asr-lab select)
+[[table]]
+name = "e2-selection"
+kind = "selection"
+file = "experiments/E2/results/selection_dev.json"
+
+# Effect of each option on the dev sets, against the baseline
+[[table]]
+name = "e2-dev-effects"
+kind = "comparisons"
+rows = [
+  { label = "Italian: beam1", file = "experiments/E2/results/dev_baseline_vs_beam1_it.json" },
+  { label = "Italian: beam2", file = "experiments/E2/results/dev_baseline_vs_beam2_it.json" },
+  { label = "Italian: beam8", file = "experiments/E2/results/dev_baseline_vs_beam8_it.json" },
+  { label = "Italian: no-fallback", file = "experiments/E2/results/dev_baseline_vs_no-fallback_it.json" },
+  { label = "Italian: vad", file = "experiments/E2/results/dev_baseline_vs_vad_it.json" },
+  { label = "Italian: hst2", file = "experiments/E2/results/dev_baseline_vs_hst2_it.json" },
+  { label = "Italian: baseline-repeat", file = "experiments/E2/results/dev_baseline_vs_baseline-repeat_it.json" },
+  { label = "German: beam1", file = "experiments/E2/results/dev_baseline_vs_beam1_de.json" },
+  { label = "German: beam2", file = "experiments/E2/results/dev_baseline_vs_beam2_de.json" },
+  { label = "German: beam8", file = "experiments/E2/results/dev_baseline_vs_beam8_de.json" },
+  { label = "German: no-fallback", file = "experiments/E2/results/dev_baseline_vs_no-fallback_de.json" },
+  { label = "German: vad", file = "experiments/E2/results/dev_baseline_vs_vad_de.json" },
+  { label = "German: hst2", file = "experiments/E2/results/dev_baseline_vs_hst2_de.json" },
+  { label = "German: baseline-repeat", file = "experiments/E2/results/dev_baseline_vs_baseline-repeat_de.json" },
+  { label = "English: beam1", file = "experiments/E2/results/dev_baseline_vs_beam1_en.json" },
+  { label = "English: beam2", file = "experiments/E2/results/dev_baseline_vs_beam2_en.json" },
+  { label = "English: beam8", file = "experiments/E2/results/dev_baseline_vs_beam8_en.json" },
+  { label = "English: no-fallback", file = "experiments/E2/results/dev_baseline_vs_no-fallback_en.json" },
+  { label = "English: vad", file = "experiments/E2/results/dev_baseline_vs_vad_en.json" },
+  { label = "English: hst2", file = "experiments/E2/results/dev_baseline_vs_hst2_en.json" },
+  { label = "English: baseline-repeat", file = "experiments/E2/results/dev_baseline_vs_baseline-repeat_en.json" },
+]
+
+# Test sets: the E1 run of large-v3-turbo (baseline settings) against the selected
+# configuration and against VAD (exploratory, chosen after the dev results)
+[[table]]
+name = "e2-test"
+kind = "comparisons"
+rows = [
+  { label = "Italian: baseline → hst2 (selected)", file = "experiments/E2/results/test_baseline_vs_hst2_it.json" },
+  { label = "Italian: baseline → vad (exploratory)", file = "experiments/E2/results/test_baseline_vs_vad_it.json" },
+  { label = "German: baseline → hst2 (selected)", file = "experiments/E2/results/test_baseline_vs_hst2_de.json" },
+  { label = "German: baseline → vad (exploratory)", file = "experiments/E2/results/test_baseline_vs_vad_de.json" },
+  { label = "English: baseline → hst2 (selected)", file = "experiments/E2/results/test_baseline_vs_hst2_en.json" },
+  { label = "English: baseline → vad (exploratory)", file = "experiments/E2/results/test_baseline_vs_vad_en.json" },
+]
+
+[[table]]
+name = "e2-closing-phrases-dev"
+kind = "closing-phrases"
+columns = ["baseline", "beam1", "beam2", "beam8", "no-fallback", "vad", "hst2", "baseline-repeat"]
+rows = [
+  { label = "Italian (dev)", files = ["experiments/runs/e2-turbo-baseline-fleurs-it-dev/errors_it-v1.json", "experiments/runs/e2-turbo-beam1-fleurs-it-dev/errors_it-v1.json", "experiments/runs/e2-turbo-beam2-fleurs-it-dev/errors_it-v1.json", "experiments/runs/e2-turbo-beam8-fleurs-it-dev/errors_it-v1.json", "experiments/runs/e2-turbo-no-fallback-fleurs-it-dev/errors_it-v1.json", "experiments/runs/e2-turbo-vad-fleurs-it-dev/errors_it-v1.json", "experiments/runs/e2-turbo-hst2-fleurs-it-dev/errors_it-v1.json", "experiments/runs/e2-turbo-baseline-repeat-fleurs-it-dev/errors_it-v1.json"] },
+  { label = "German (dev)", files = ["experiments/runs/e2-turbo-baseline-fleurs-de-dev/errors_de-v1.json", "experiments/runs/e2-turbo-beam1-fleurs-de-dev/errors_de-v1.json", "experiments/runs/e2-turbo-beam2-fleurs-de-dev/errors_de-v1.json", "experiments/runs/e2-turbo-beam8-fleurs-de-dev/errors_de-v1.json", "experiments/runs/e2-turbo-no-fallback-fleurs-de-dev/errors_de-v1.json", "experiments/runs/e2-turbo-vad-fleurs-de-dev/errors_de-v1.json", "experiments/runs/e2-turbo-hst2-fleurs-de-dev/errors_de-v1.json", "experiments/runs/e2-turbo-baseline-repeat-fleurs-de-dev/errors_de-v1.json"] },
+  { label = "English (dev)", files = ["experiments/runs/e2-turbo-baseline-fleurs-en-dev/errors_en-v1.json", "experiments/runs/e2-turbo-beam1-fleurs-en-dev/errors_en-v1.json", "experiments/runs/e2-turbo-beam2-fleurs-en-dev/errors_en-v1.json", "experiments/runs/e2-turbo-beam8-fleurs-en-dev/errors_en-v1.json", "experiments/runs/e2-turbo-no-fallback-fleurs-en-dev/errors_en-v1.json", "experiments/runs/e2-turbo-vad-fleurs-en-dev/errors_en-v1.json", "experiments/runs/e2-turbo-hst2-fleurs-en-dev/errors_en-v1.json", "experiments/runs/e2-turbo-baseline-repeat-fleurs-en-dev/errors_en-v1.json"] },
+]
+
+[[table]]
+name = "e2-closing-phrases-test"
+kind = "closing-phrases"
+columns = ["baseline (E1)", "hst2 (selected)", "vad (exploratory)"]
+rows = [
+  { label = "Italian (test)", files = ["experiments/runs/whisper-large-v3-turbo-float16-fleurs-it/errors_it-v1.json", "experiments/runs/e2-turbo-hst2-fleurs-it-test/errors_it-v1.json", "experiments/runs/e2-turbo-vad-fleurs-it-test/errors_it-v1.json"] },
+  { label = "German (test)", files = ["experiments/runs/whisper-large-v3-turbo-float16-fleurs-de/errors_de-v1.json", "experiments/runs/e2-turbo-hst2-fleurs-de-test/errors_de-v1.json", "experiments/runs/e2-turbo-vad-fleurs-de-test/errors_de-v1.json"] },
+  { label = "English (test)", files = ["experiments/runs/whisper-large-v3-turbo-float16-fleurs-en/errors_en-v1.json", "experiments/runs/e2-turbo-hst2-fleurs-en-test/errors_en-v1.json", "experiments/runs/e2-turbo-vad-fleurs-en-test/errors_en-v1.json"] },
+]

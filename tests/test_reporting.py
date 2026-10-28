@@ -6,7 +6,14 @@ from pathlib import Path
 import pytest
 
 from asr_lab import cli
-from asr_lab.reporting import comparisons_table, render_document, render_results, scores_table
+from asr_lab.reporting import (
+    closing_phrases_table,
+    comparisons_table,
+    render_document,
+    render_results,
+    scores_table,
+    selection_table,
+)
 
 SCORES = {
     "normalizer": ["it-v1"],
@@ -51,6 +58,76 @@ def test_comparisons_table() -> None:
     assert table.splitlines()[2] == (
         "| it-v2 vs it-v1 | 7.46% | 7.15% | -0.31% [-0.48%, -0.15%] | 100.0% | yes |"
     )
+
+
+SELECTION = {
+    "languages": ["it", "de"],
+    "best": {"it": "vad", "de": "baseline"},
+    "selected": "beam1",
+    "configs": {
+        "baseline": {"options": {}, "selectable": True, "eligible": True,
+                     "wer": {"it": 0.0237, "de": 0.0516}, "processing_seconds": 500.0, "rtf": 0.04},
+        "beam1": {"options": {"beam_size": 1}, "selectable": True, "eligible": True,
+                  "wer": {"it": 0.0236, "de": 0.0538}, "processing_seconds": 450.0, "rtf": 0.036},
+        "vad": {"options": {"vad_filter": True}, "selectable": True, "eligible": False,
+                "wer": {"it": 0.0230, "de": 0.0584}, "processing_seconds": 550.0, "rtf": 0.044},
+        "repeat": {"options": {}, "selectable": False,
+                   "wer": {"it": 0.0237, "de": 0.0516}, "processing_seconds": 505.0, "rtf": 0.0404},
+    },
+}  # fmt: skip
+
+
+def test_selection_table() -> None:
+    lines = selection_table(SELECTION).splitlines()
+    assert lines[0].startswith("| Configuration | Change from the baseline | WER it | WER de |")
+    assert lines[2] == "| baseline | none | 2.37% | **5.16%** | 0.040 | +0.0% | yes |"
+    assert lines[3] == (
+        "| **beam1** (selected) | `beam_size = 1` | 2.36% | 5.38% | 0.036 | -10.0% | yes |"
+    )
+    assert lines[4].startswith("| vad | `vad_filter = True` | **2.30%** |")
+    assert lines[5].endswith("| +1.0% | n/a |")
+
+
+def test_closing_phrases_table() -> None:
+    report = {"invented_closing_phrases": [{"utterance_id": "u1", "phrase": "vielen dank"}]}
+    empty = {"invented_closing_phrases": []}
+    table = closing_phrases_table(["small", "large"], [("German", [empty, report])])
+    assert table.splitlines() == [
+        "| Utterances with an invented closing phrase | small | large |",
+        "|---|---|---|",
+        "| German | 0 | 1 |",
+    ]
+
+
+def test_selection_and_closing_phrase_tables_from_a_spec(tmp_path: Path) -> None:
+    (tmp_path / "selection.json").write_text(json.dumps(SELECTION), encoding="utf-8")
+    (tmp_path / "errors.json").write_text(
+        json.dumps({"invented_closing_phrases": []}), encoding="utf-8"
+    )
+    spec = tmp_path / "tables.toml"
+    spec.write_text(
+        f'''[[table]]
+name = "sel"
+kind = "selection"
+file = "{(tmp_path / "selection.json").as_posix()}"
+
+[[table]]
+name = "hall"
+kind = "closing-phrases"
+columns = ["A"]
+rows = [{{ label = "it", files = ["{(tmp_path / "errors.json").as_posix()}"] }}]
+''',
+        encoding="utf-8",
+    )
+    document = tmp_path / "RESULTS.md"
+    document.write_text(
+        "<!-- BEGIN sel -->\n<!-- END sel -->\n<!-- BEGIN hall -->\n<!-- END hall -->\n",
+        encoding="utf-8",
+    )
+    render_results([spec], document)
+    text = document.read_text(encoding="utf-8")
+    assert "**beam1** (selected)" in text
+    assert "| it | 0 |" in text
 
 
 def test_render_document_replaces_only_between_markers() -> None:

@@ -312,5 +312,11 @@
       "reference": "asus eee pc earlier launched world wide for cost saving and functionality factors became a hot topic in 2007 taipei it month",
       "hypothesis": "asus epc early launch worldwide for cost saving and functionality factors became a hot topic in 2007 taipei it month"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_en_2512265253579641885",
+      "phrase": "thank you"
+    }
   ]
 }

@@ -1,0 +1,370 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/fleurs_de/test.jsonl",
+  "normalizer": [
+    "de-v1"
+  ],
+  "n_utterances": 862,
+  "substitutions": 612,
+  "deletions": 89,
+  "insertions": 133,
+  "distinct_confusion_pairs": 435,
+  "substitutions_with_digits_or_symbols": 46,
+  "top_confusions": [
+    {
+      "reference": "km",
+      "hypothesis": "kilometer",
+      "count": 8
+    },
+    {
+      "reference": "chr",
+      "hypothesis": "christus",
+      "count": 7
+    },
+    {
+      "reference": "gizeh",
+      "hypothesis": "gize",
+      "count": 6
+    },
+    {
+      "reference": "n",
+      "hypothesis": "nach",
+      "count": 5
+    },
+    {
+      "reference": "dass",
+      "hypothesis": "sodass",
+      "count": 5
+    },
+    {
+      "reference": "usw",
+      "hypothesis": "weiter",
+      "count": 5
+    },
+    {
+      "reference": "zum",
+      "hypothesis": "zu",
+      "count": 4
+    },
+    {
+      "reference": "davey",
+      "hypothesis": "davy",
+      "count": 4
+    },
+    {
+      "reference": "hurrikan",
+      "hypothesis": "hurricane",
+      "count": 4
+    },
+    {
+      "reference": "webseite",
+      "hypothesis": "website",
+      "count": 4
+    },
+    {
+      "reference": "blogerfahrung",
+      "hypothesis": "erfahrung",
+      "count": 3
+    },
+    {
+      "reference": "eine",
+      "hypothesis": "einer",
+      "count": 3
+    },
+    {
+      "reference": "erfolgte",
+      "hypothesis": "erfolgt",
+      "count": 3
+    },
+    {
+      "reference": "s",
+      "hypothesis": "seite",
+      "count": 3
+    },
+    {
+      "reference": "wohlerzogen",
+      "hypothesis": "erzogen",
+      "count": 3
+    },
+    {
+      "reference": "zu",
+      "hypothesis": "zur",
+      "count": 3
+    },
+    {
+      "reference": "x",
+      "hypothesis": "24",
+      "count": 3
+    },
+    {
+      "reference": "bieber",
+      "hypothesis": "biber",
+      "count": 3
+    },
+    {
+      "reference": "genutzt",
+      "hypothesis": "genützt",
+      "count": 3
+    },
+    {
+      "reference": "sankt",
+      "hypothesis": "st",
+      "count": 3
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "x",
+      "count": 11
+    },
+    {
+      "word": "so",
+      "count": 5
+    },
+    {
+      "word": "sie",
+      "count": 4
+    },
+    {
+      "word": "00",
+      "count": 4
+    },
+    {
+      "word": "prozent",
+      "count": 3
+    },
+    {
+      "word": "man",
+      "count": 3
+    },
+    {
+      "word": "eee",
+      "count": 3
+    },
+    {
+      "word": "south",
+      "count": 3
+    },
+    {
+      "word": "dreissig",
+      "count": 3
+    },
+    {
+      "word": "fertig",
+      "count": 3
+    },
+    {
+      "word": "original",
+      "count": 3
+    },
+    {
+      "word": "national",
+      "count": 2
+    },
+    {
+      "word": "in",
+      "count": 2
+    },
+    {
+      "word": "wild",
+      "count": 2
+    },
+    {
+      "word": "riss",
+      "count": 2
+    },
+    {
+      "word": "tsunami",
+      "count": 2
+    },
+    {
+      "word": "die",
+      "count": 2
+    },
+    {
+      "word": "pa",
+      "count": 2
+    },
+    {
+      "word": "mit",
+      "count": 1
+    },
+    {
+      "word": "chhappan",
+      "count": 1
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "vielen",
+      "count": 9
+    },
+    {
+      "word": "dank",
+      "count": 8
+    },
+    {
+      "word": "und",
+      "count": 7
+    },
+    {
+      "word": "zu",
+      "count": 7
+    },
+    {
+      "word": "so",
+      "count": 5
+    },
+    {
+      "word": "in",
+      "count": 4
+    },
+    {
+      "word": "blog",
+      "count": 3
+    },
+    {
+      "word": "original",
+      "count": 3
+    },
+    {
+      "word": "bis",
+      "count": 3
+    },
+    {
+      "word": "wasserstoff",
+      "count": 3
+    },
+    {
+      "word": "uhr",
+      "count": 3
+    },
+    {
+      "word": "es",
+      "count": 2
+    },
+    {
+      "word": "analogfilm",
+      "count": 2
+    },
+    {
+      "word": "cannabis",
+      "count": 2
+    },
+    {
+      "word": "broad",
+      "count": 2
+    },
+    {
+      "word": "29",
+      "count": 2
+    },
+    {
+      "word": "mal",
+      "count": 2
+    },
+    {
+      "word": "dollar",
+      "count": 2
+    },
+    {
+      "word": "100",
+      "count": 2
+    },
+    {
+      "word": "weit",
+      "count": 2
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "fleurs_de_13340325550442074798",
+      "errors": 8,
+      "reference_words": 36,
+      "reference": "da die lichtverschmutzung während ihrer hochphase nicht das problem darstellte das es heute ist befinden sie sich in der regel in städten oder auf universitätsgeländen die leichter zu erreichen sind als die in neuerer zeit errichteten",
+      "hypothesis": "da die lichtverschmutzung während ihrer hauchphase nicht das problem darstellt dass es heute ist befinden sie sich in der regel in städten oder auf universitätsgelände die leichter zu erreichen sind als die neueren zeiterrichteten"
+    },
+    {
+      "utterance_id": "fleurs_de_5085509947417478932",
+      "errors": 7,
+      "reference_words": 14,
+      "reference": "lakkha singh präsentierte den chhappan bhog bhajan ebenfalls der sänger raju khandelwal begleitete ihn",
+      "hypothesis": "laka xing präsentierte es in shapanbogbajan ebenfalls der sänger raju kandelwal begleitete ihn"
+    },
+    {
+      "utterance_id": "fleurs_de_103625751236710165",
+      "errors": 6,
+      "reference_words": 14,
+      "reference": "lakkha singh präsentierte den chhappan bhog bhajan ebenfalls der sänger raju khandelwal begleitete ihn",
+      "hypothesis": "laka singh präsentierte den chapanburg bayan ebenfalls der sänger ryu kandelwal begleitete ihn"
+    },
+    {
+      "utterance_id": "fleurs_de_6819214157962336157",
+      "errors": 6,
+      "reference_words": 25,
+      "reference": "ein einfaches beliebtes abendessen besonders im sommer ist das pa amb oli brot mit olivenöl tomaten und jeglicher gerade verfügbarer zutat wie käse thunfisch usw",
+      "hypothesis": "ein einfaches beliebtes abendessen besonders im sommer ist das paamp oli bot mit olivenöl tomaten und jeglicher gerade verfügbarer zutat wie käse thunfisch und so weiter"
+    },
+    {
+      "utterance_id": "fleurs_de_11321324965961472908",
+      "errors": 6,
+      "reference_words": 32,
+      "reference": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29¾ zoll x 24½ zoll misst zu beginn seines lebens zur aufbewahrung zusammengerollt wurde",
+      "hypothesis": "zwar weiss niemand mit sicherheit wer es geschrieben hat es ist allerdings bekannt dass das grosse pergamentdokument welches 29 ¾ zoll mal 24 ½ zoll ist zu beginn seines lebens zur aufbewahrung zusammengerollt wurde"
+    }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_de_11932235074173500388",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_13598528500304921206",
+      "phrase": "untertitelung des zdf 2020"
+    },
+    {
+      "utterance_id": "fleurs_de_16302613894874414457",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_17094668703447110905",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_3975961929423531534",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_4174379654895279374",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_4271181096460241283",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_4996376112031788319",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_5067850698728578589",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_5908247922590387766",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_6753945967797226570",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_7532002148152092770",
+      "phrase": "untertitelung des zdf 2020"
+    },
+    {
+      "utterance_id": "fleurs_de_9045243611409192005",
+      "phrase": "vielen dank"
+    }
+  ]
+}

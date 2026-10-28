@@ -312,5 +312,19 @@
       "reference": "die offizielle währung der falklandinseln ist das falkland pound fkp dessen wert in einklang mit dem wert des britischen pfunds gbp festgelegt wird",
       "hypothesis": "die offizielle währung der falkland inseln ist das falkland pound f k p dessen wert in einklang mit dem wert des politischen pfunds g b p festgelegt wird"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_de_11770437002202590425",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_11932235074173500388",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_4832193826057063200",
+      "phrase": "vielen dank"
+    }
   ]
 }

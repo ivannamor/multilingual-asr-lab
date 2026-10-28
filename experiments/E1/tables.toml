@@ -51,3 +51,14 @@ rows = [
   { label = "English: small → large-v3-turbo", file = "experiments/E1/results/model_small_vs_large-v3-turbo_en.json" },
   { label = "English: large-v3-turbo → large-v3", file = "experiments/E1/results/model_large-v3-turbo_vs_large-v3_en.json" },
 ]
+
+# Utterances whose transcript ends with an invented closing phrase (asr-lab errors)
+[[table]]
+name = "e1-closing-phrases"
+kind = "closing-phrases"
+columns = ["small (CPU int8)", "small", "large-v3-turbo", "large-v3"]
+rows = [
+  { label = "Italian", files = ["experiments/runs/whisper-small-int8-fleurs-it/errors_it-v1.json", "experiments/runs/whisper-small-float16-fleurs-it/errors_it-v1.json", "experiments/runs/whisper-large-v3-turbo-float16-fleurs-it/errors_it-v1.json", "experiments/runs/whisper-large-v3-float16-fleurs-it/errors_it-v1.json"] },
+  { label = "German", files = ["experiments/runs/whisper-small-int8-fleurs-de/errors_de-v1.json", "experiments/runs/whisper-small-float16-fleurs-de/errors_de-v1.json", "experiments/runs/whisper-large-v3-turbo-float16-fleurs-de/errors_de-v1.json", "experiments/runs/whisper-large-v3-float16-fleurs-de/errors_de-v1.json"] },
+  { label = "English", files = ["experiments/runs/whisper-small-int8-fleurs-en/errors_en-v1.json", "experiments/runs/whisper-small-float16-fleurs-en/errors_en-v1.json", "experiments/runs/whisper-large-v3-turbo-float16-fleurs-en/errors_en-v1.json", "experiments/runs/whisper-large-v3-float16-fleurs-en/errors_en-v1.json"] },
+]

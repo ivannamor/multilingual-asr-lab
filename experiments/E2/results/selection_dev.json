@@ -1,0 +1,347 @@
+{
+  "rule": "fastest configuration (total processing time) that a paired bootstrap does not find significantly worse than the best configuration of any language; the first one if none",
+  "split": "dev",
+  "model_size": "large-v3-turbo",
+  "metric": "wer",
+  "languages": [
+    "it",
+    "de",
+    "en"
+  ],
+  "normalizers": {
+    "it": "it-v1",
+    "de": "de-v1",
+    "en": "en-v1"
+  },
+  "n_resamples": 1000,
+  "seed": 0,
+  "best": {
+    "it": "vad",
+    "de": "vad",
+    "en": "baseline"
+  },
+  "selected": "hst2",
+  "none_eligible": false,
+  "configs": {
+    "baseline": {
+      "options": {},
+      "selectable": true,
+      "wer": {
+        "it": 0.023730317143490796,
+        "de": 0.05155195681511471,
+        "en": 0.053270234194879265
+      },
+      "processing_seconds": 518.819616514,
+      "audio_seconds": 13880.64,
+      "rtf": 0.037377211462439774,
+      "vs_best": {
+        "it": {
+          "best": "vad",
+          "delta": 0.0007762253271235316,
+          "ci_low": -0.0009766840005680398,
+          "ci_high": 0.0025238259727776735,
+          "prob_better": 0.182,
+          "significant": false,
+          "unit": "utterance"
+        },
+        "de": {
+          "best": "vad",
+          "delta": 0.003103913630229417,
+          "ci_low": 0.0002711004078558248,
+          "ci_high": 0.005916927872865094,
+          "prob_better": 0.017,
+          "significant": true,
+          "unit": "sentence_id"
+        },
+        "en": {
+          "best": "baseline",
+          "delta": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "prob_better": 0.0,
+          "significant": false,
+          "unit": "utterance"
+        }
+      },
+      "eligible": false
+    },
+    "beam1": {
+      "options": {
+        "beam_size": 1
+      },
+      "selectable": true,
+      "wer": {
+        "it": 0.023619427811044577,
+        "de": 0.05384615384615385,
+        "en": 0.05472636815920398
+      },
+      "processing_seconds": 453.6268116439999,
+      "audio_seconds": 13880.64,
+      "rtf": 0.032680540064723235,
+      "vs_best": {
+        "it": {
+          "best": "vad",
+          "delta": 0.0006653359946773123,
+          "ci_low": -0.0007926198396923782,
+          "ci_high": 0.0021741611839447748,
+          "prob_better": 0.173,
+          "significant": false,
+          "unit": "sentence_id"
+        },
+        "de": {
+          "best": "vad",
+          "delta": 0.005398110661268558,
+          "ci_low": 0.0015918268285232521,
+          "ci_high": 0.00919310442524803,
+          "prob_better": 0.003,
+          "significant": true,
+          "unit": "sentence_id"
+        },
+        "en": {
+          "best": "baseline",
+          "delta": 0.0014561339643247156,
+          "ci_low": 0.00011846859966296588,
+          "ci_high": 0.002968884757309038,
+          "prob_better": 0.018,
+          "significant": true,
+          "unit": "sentence_id"
+        }
+      },
+      "eligible": false
+    },
+    "beam2": {
+      "options": {
+        "beam_size": 2
+      },
+      "selectable": true,
+      "wer": {
+        "it": 0.02339764914615214,
+        "de": 0.05303643724696356,
+        "en": 0.05363426768596044
+      },
+      "processing_seconds": 473.05883975699976,
+      "audio_seconds": 13880.64,
+      "rtf": 0.034080477539724374,
+      "vs_best": {
+        "it": {
+          "best": "vad",
+          "delta": 0.0004435573297848737,
+          "ci_low": -0.0011350715204124981,
+          "ci_high": 0.001917069900852369,
+          "prob_better": 0.251,
+          "significant": false,
+          "unit": "sentence_id"
+        },
+        "de": {
+          "best": "vad",
+          "delta": 0.004588394062078269,
+          "ci_low": 0.0015181553147243477,
+          "ci_high": 0.007911539634731839,
+          "prob_better": 0.001,
+          "significant": true,
+          "unit": "utterance"
+        },
+        "en": {
+          "best": "baseline",
+          "delta": 0.00036403349108117544,
+          "ci_low": -0.0009419226821205394,
+          "ci_high": 0.0017260334885580407,
+          "prob_better": 0.266,
+          "significant": false,
+          "unit": "utterance"
+        }
+      },
+      "eligible": false
+    },
+    "beam8": {
+      "options": {
+        "beam_size": 8
+      },
+      "selectable": true,
+      "wer": {
+        "it": 0.023841206475937016,
+        "de": 0.051417004048582994,
+        "en": 0.05351292318893338
+      },
+      "processing_seconds": 586.9577954669994,
+      "audio_seconds": 13880.64,
+      "rtf": 0.04228607581977484,
+      "vs_best": {
+        "it": {
+          "best": "vad",
+          "delta": 0.0008871146595697509,
+          "ci_low": -0.0007746147906225389,
+          "ci_high": 0.0027339800266891643,
+          "prob_better": 0.132,
+          "significant": false,
+          "unit": "sentence_id"
+        },
+        "de": {
+          "best": "vad",
+          "delta": 0.0029689608636977033,
+          "ci_low": 0.00013588065806656758,
+          "ci_high": 0.0058323890681471575,
+          "prob_better": 0.017,
+          "significant": true,
+          "unit": "sentence_id"
+        },
+        "en": {
+          "best": "baseline",
+          "delta": 0.00024268899405411465,
+          "ci_low": -0.0006217832440518148,
+          "ci_high": 0.0011774428143918878,
+          "prob_better": 0.239,
+          "significant": false,
+          "unit": "sentence_id"
+        }
+      },
+      "eligible": false
+    },
+    "no-fallback": {
+      "options": {
+        "temperature": [
+          0.0
+        ]
+      },
+      "selectable": true,
+      "wer": {
+        "it": 0.023730317143490796,
+        "de": 0.05155195681511471,
+        "en": 0.053270234194879265
+      },
+      "processing_seconds": 522.4511517639999,
+      "audio_seconds": 13880.64,
+      "rtf": 0.03763883738530787,
+      "vs_best": {
+        "it": {
+          "best": "vad",
+          "delta": 0.0007762253271235316,
+          "ci_low": -0.0009766840005680398,
+          "ci_high": 0.0025238259727776735,
+          "prob_better": 0.182,
+          "significant": false,
+          "unit": "utterance"
+        },
+        "de": {
+          "best": "vad",
+          "delta": 0.003103913630229417,
+          "ci_low": 0.0002711004078558248,
+          "ci_high": 0.005916927872865094,
+          "prob_better": 0.017,
+          "significant": true,
+          "unit": "sentence_id"
+        },
+        "en": {
+          "best": "baseline",
+          "delta": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "prob_better": 0.0,
+          "significant": false,
+          "unit": "utterance"
+        }
+      },
+      "eligible": false
+    },
+    "vad": {
+      "options": {
+        "vad_filter": true
+      },
+      "selectable": true,
+      "wer": {
+        "it": 0.022954091816367265,
+        "de": 0.04844804318488529,
+        "en": 0.054119645674068684
+      },
+      "processing_seconds": 550.9906100130002,
+      "audio_seconds": 13880.64,
+      "rtf": 0.03969489951565635,
+      "vs_best": {
+        "it": {
+          "best": "vad",
+          "delta": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "prob_better": 0.0,
+          "significant": false,
+          "unit": "utterance"
+        },
+        "de": {
+          "best": "vad",
+          "delta": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "prob_better": 0.0,
+          "significant": false,
+          "unit": "utterance"
+        },
+        "en": {
+          "best": "baseline",
+          "delta": 0.0008494114791894186,
+          "ci_low": -0.0012539567079198463,
+          "ci_high": 0.003039541403854586,
+          "prob_better": 0.212,
+          "significant": false,
+          "unit": "sentence_id"
+        }
+      },
+      "eligible": true
+    },
+    "hst2": {
+      "options": {
+        "hallucination_silence_threshold": 2.0
+      },
+      "selectable": true,
+      "wer": {
+        "it": 0.023730317143490796,
+        "de": 0.05128205128205128,
+        "en": 0.053270234194879265
+      },
+      "processing_seconds": 530.6199431570003,
+      "audio_seconds": 13880.64,
+      "rtf": 0.038227339889010906,
+      "vs_best": {
+        "it": {
+          "best": "vad",
+          "delta": 0.0007762253271235316,
+          "ci_low": -0.0009766840005680398,
+          "ci_high": 0.0025238259727776735,
+          "prob_better": 0.182,
+          "significant": false,
+          "unit": "utterance"
+        },
+        "de": {
+          "best": "vad",
+          "delta": 0.0028340080971659895,
+          "ci_low": -0.00013229725358869298,
+          "ci_high": 0.005601182001657924,
+          "prob_better": 0.026,
+          "significant": false,
+          "unit": "sentence_id"
+        },
+        "en": {
+          "best": "baseline",
+          "delta": 0.0,
+          "ci_low": 0.0,
+          "ci_high": 0.0,
+          "prob_better": 0.0,
+          "significant": false,
+          "unit": "utterance"
+        }
+      },
+      "eligible": true
+    },
+    "baseline-repeat": {
+      "options": {},
+      "selectable": false,
+      "wer": {
+        "it": 0.023730317143490796,
+        "de": 0.05155195681511471,
+        "en": 0.053270234194879265
+      },
+      "processing_seconds": 521.8593427209998,
+      "audio_seconds": 13880.64,
+      "rtf": 0.03759620181209223
+    }
+  }
+}

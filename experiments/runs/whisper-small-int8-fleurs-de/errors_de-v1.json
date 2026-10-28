@@ -312,5 +312,19 @@
       "reference": "auch wenn dies oft nur ein unzutreffendes klischee ist so findet man sich in paris doch am besten zurecht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der bien élevé wohlerzogen ist das wird das zurechtkommen erheblich erleichtern",
       "hypothesis": "auch wenn dies oft nur ein unzutreffendes klischee ist so findet man sich in paris doch am besten zu recht wenn man sich von seiner besten seite zeigt und sich wie jemand benimmt der bjorn elef wohl erzogen ist das wird das zu recht kaum erleblich erleichtern"
     }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "fleurs_de_11770437002202590425",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_11932235074173500388",
+      "phrase": "vielen dank"
+    },
+    {
+      "utterance_id": "fleurs_de_9045243611409192005",
+      "phrase": "vielen dank"
+    }
   ]
 }
