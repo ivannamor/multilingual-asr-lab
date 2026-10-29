@@ -1,0 +1,89 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "large-v3-turbo",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 5,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "vad_filter": false,
+    "hallucination_silence_threshold": 2.0,
+    "word_timestamps": true,
+    "condition_on_previous_text": false,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0
+  },
+  "manifest": "data/voxpopuli_it/train.jsonl",
+  "manifest_sha256": "c39731f3012679b2b90d6aa61450b5edbcf9d182d6dcfe3bcf1fe7ff1c3b2c53",
+  "n_utterances": 3000,
+  "normalizer": [
+    "it-v2"
+  ],
+  "n_empty_hypotheses": 0,
+  "wer": {
+    "estimate": 0.17584808624270595,
+    "n_reference_tokens": 90999,
+    "hits": 78072,
+    "substitutions": 3314,
+    "deletions": 9613,
+    "insertions": 3075,
+    "confidence_intervals": {
+      "utterance": {
+        "low": 0.1654543011605785,
+        "high": 0.1857881623180688,
+        "level": 0.95,
+        "n_units": 3000,
+        "n_resamples": 1000
+      },
+      "speaker": {
+        "low": 0.15949657203221582,
+        "high": 0.19183593203518418,
+        "level": 0.95,
+        "n_units": 128,
+        "n_resamples": 1000
+      }
+    },
+    "headline_unit": "speaker"
+  },
+  "cer": {
+    "estimate": 0.15064992624704815,
+    "n_reference_tokens": 577604,
+    "hits": 508531,
+    "substitutions": 7521,
+    "deletions": 61552,
+    "insertions": 17943,
+    "confidence_intervals": {
+      "utterance": {
+        "low": 0.14020532839782154,
+        "high": 0.1603543676074155,
+        "level": 0.95,
+        "n_units": 3000,
+        "n_resamples": 1000
+      },
+      "speaker": {
+        "low": 0.13466718444609777,
+        "high": 0.1663196988152029,
+        "level": 0.95,
+        "n_units": 128,
+        "n_resamples": 1000
+      }
+    },
+    "headline_unit": "speaker"
+  },
+  "scored_at": "2026-10-29T09:14:37+00:00",
+  "scoring_git_commit": "bfaf0f352e380103ef5db6aa5c80228b91e37ada"
+}

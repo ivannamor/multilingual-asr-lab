@@ -8,7 +8,7 @@ import pytest
 import soundfile as sf
 
 from asr_lab import cli
-from asr_lab.data.manifest import ManifestEntry, write_manifest
+from asr_lab.data.manifest import ManifestEntry, read_manifest, write_manifest
 from asr_lab.data.quality import (
     RULES,
     Filters,
@@ -16,9 +16,12 @@ from asr_lab.data.quality import (
     clipping,
     compute_features,
     estimate_snr,
+    export_collapsed,
     filter_summary,
     flag,
+    high_wer_breakdown,
     quality_table,
+    second_opinion,
     text_features,
 )
 from asr_lab.evaluation.normalize import get_normalizer_by_name
@@ -168,7 +171,9 @@ def test_analysis_report_and_tables(dataset: Path) -> None:
     by_id = {r["utterance_id"]: r["flags"] for r in rows}
     assert by_id["u7"] == ["high_wer"] and "clipped" in by_id["u4"]
     json.dumps(report)  # serializable
-    for section in ("flags", "clusters"):
+    kinds = {row["kind"]: row["utterances"] for row in report["high_wer"]}
+    assert kinds == {"collapsed": 0, "similar_length": 1, "other": 1}  # u7: 4 of 6, u3: 1 of 4
+    for section in ("flags", "clusters", "high_wer"):
         assert quality_table(report, section).startswith("| ")
     with pytest.raises(ValueError, match="unknown quality table"):
         quality_table(report, "nope")
@@ -196,3 +201,64 @@ def test_cli_quality_without_a_run_has_no_clusters(dataset: Path) -> None:
     output = dataset.parent / "results"
     cli.main(["quality", "--spec", str(dataset), "--output", str(output)])
     assert json.loads((output / "quality.json").read_text(encoding="utf-8"))["clusters"] is None
+
+
+def test_high_wer_breakdown_and_table() -> None:
+    rows = [
+        {"flags": ["high_wer"], "length_ratio": 0.1, "duration": 3600.0, "speaker_id": "a",
+         "session": "s1"},
+        {"flags": ["high_wer"], "length_ratio": 1.0, "duration": 1800.0, "speaker_id": "b",
+         "session": "s1"},
+        {"flags": ["high_wer", "clipped"], "length_ratio": 0.15, "duration": 0.0,
+         "speaker_id": "a", "session": "s2"},
+        {"flags": [], "length_ratio": 0.0, "duration": 10.0, "speaker_id": "c", "session": "s3"},
+    ]  # fmt: skip
+    breakdown = {row["kind"]: row for row in high_wer_breakdown(rows)}
+    assert list(breakdown) == ["collapsed", "similar_length", "other"]
+    assert breakdown["collapsed"]["utterances"] == 2  # the unflagged row is not counted
+    assert breakdown["collapsed"]["share"] == pytest.approx(2 / 3)
+    assert breakdown["collapsed"]["speakers"] == 1 and breakdown["collapsed"]["sessions"] == 2
+    assert breakdown["similar_length"]["hours"] == 0.5 and breakdown["other"]["utterances"] == 0
+    table = quality_table({"high_wer": high_wer_breakdown(rows)}, "high_wer")
+    assert "| collapsed (< 20% of the reference) | 2 (67%) | 1.00 | 1 | 2 |" in table
+
+
+def test_second_opinion_on_the_exported_utterances(dataset: Path) -> None:
+    rows = [
+        {"utterance_id": name, "flags": ["high_wer"], "length_ratio": ratio}
+        for name, ratio in (("u3", 0.1), ("u7", 0.67), ("u8", 0.05))
+    ]
+    exported = export_collapsed(rows, dataset)
+    assert exported == dataset.parent / "vp" / "collapsed.jsonl"
+    assert [e.utterance_id for e in read_manifest(exported)] == ["u3", "u8"]  # manifest order
+    second = dataset.parent / "second"
+    append_predictions(second / "predictions.jsonl", [
+        Hypothesis("u3", "domani andiamo al mare"), Hypothesis("u8", "una frase"),
+    ])  # fmt: skip
+    (second / "run.json").write_text(json.dumps({
+        "model": "small", "manifest": exported.as_posix(), "manifest_sha256": file_sha256(exported),
+    }), encoding="utf-8")  # fmt: skip
+    opinion = second_opinion(dataset, dataset.parent / "run", second)
+    assert opinion["utterances"] == 2 and opinion["words"] == 4 + 5 and opinion["speakers"] == 2
+    first, small = opinion["models"]
+    assert first["model"] == "fake" and first["wer"] == pytest.approx(3 / 9)
+    assert first["collapsed"] == 0 and first["within_max_wer"] == 1  # u8 was right the first time
+    assert small["wer"] == pytest.approx(3 / 9) and small["collapsed"] == 0
+    assert small["within_max_wer"] == 1  # u8: 2 words of 5 is 60% WER
+    table = quality_table({"second_opinion": opinion}, "second_opinion")
+    assert "| small | 33.33% [" in table and "| 0 / 2 | 1 / 2 |" in table
+
+
+def test_second_opinion_needs_a_subset_of_the_first_run(dataset: Path) -> None:
+    other = dataset.parent / "other.jsonl"
+    write_manifest(other, [ManifestEntry("x1", "a.wav", 1.0, "ciao", "it", "s", "voxpopuli")])
+    second = dataset.parent / "second"
+    append_predictions(second / "predictions.jsonl", [Hypothesis("x1", "ciao")])
+    (second / "run.json").write_text(json.dumps({"manifest": other.as_posix()}), encoding="utf-8")
+    with pytest.raises(ValueError, match="does not have"):
+        second_opinion(dataset, dataset.parent / "run", second)
+
+
+def test_cli_second_run_needs_a_first_run(dataset: Path) -> None:
+    with pytest.raises(SystemExit):
+        cli.main(["quality", "--spec", str(dataset), "--output", "x", "--export-collapsed"])
