@@ -15,6 +15,10 @@ Usage::
     uv run asr-lab quality --spec experiments/E6/quality.toml --run runs/e6 --output results/
     uv run asr-lab quality --spec experiments/E6/quality.toml --run runs/e6 --output results/ \
         --export-collapsed --second-run runs/e6-small
+    uv run asr-lab select-data --spec experiments/E7/finetune.toml --export-high-wer
+    uv run asr-lab select-data --spec experiments/E7/finetune.toml --output selections.json
+    uv run asr-lab finetune --spec experiments/E7/finetune.toml --selections selections.json \
+        --strategy random --seed 0 --output models/e7/random-s0
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -32,6 +36,7 @@ from asr_lab.data.manifest import write_manifest
 from asr_lab.data.quality import (
     analyze_quality,
     export_collapsed,
+    export_high_wer,
     save_features,
     save_report,
     second_opinion,
@@ -57,6 +62,13 @@ from asr_lab.plots import plot_selection, plot_usage
 from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
 from asr_lab.tracking import log_comparison, log_scores
+from asr_lab.training.lora import fine_tune, load_training_config
+from asr_lab.training.selection import (
+    load_selection_spec,
+    save_selections,
+    select_data,
+    selected_entries,
+)
 
 _MLFLOW_HELP = (
     "also log the result to this MLflow experiment (needs `uv sync --extra tracking`; "
@@ -226,6 +238,34 @@ def main(argv: Sequence[str] | None = None) -> None:
         help="a second model's transcription of the collapsed utterances (needs --run)",
     )
 
+    select_data_cmd = commands.add_parser(
+        "select-data",
+        help="choose training data with each strategy of a fine-tuning spec (experiment E7)",
+    )
+    select_data_cmd.add_argument("--spec", required=True, type=Path, help="TOML fine-tuning spec")
+    select_data_cmd.add_argument("--output", type=Path, default=None, help="selections JSON")
+    select_data_cmd.add_argument(
+        "--export-high-wer",
+        action="store_true",
+        help="only write the manifest of the high-WER utterances, for the second model",
+    )
+
+    finetune = commands.add_parser(
+        "finetune",
+        help="fine-tune Whisper with LoRA on one selection and export it (needs the training "
+        "extra and, in practice, a GPU)",
+    )
+    finetune.add_argument("--spec", required=True, type=Path, help="TOML fine-tuning spec")
+    finetune.add_argument(
+        "--selections", required=True, type=Path, help="the output of select-data"
+    )
+    finetune.add_argument(
+        "--strategy", required=True, help="a strategy of the spec, or 'base' (no training)"
+    )
+    finetune.add_argument("--seed", type=int, default=0)
+    finetune.add_argument("--output", required=True, type=Path, help="model directory")
+    finetune.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -356,6 +396,38 @@ def main(argv: Sequence[str] | None = None) -> None:
                 f"{model['collapsed']} still collapsed"
             )
         print(f"Quality report: {args.output / 'quality.json'}")
+    elif args.command == "select-data":
+        if args.export_high_wer:
+            selection = load_selection_spec(args.spec)
+            rows, _ = analyze_quality(selection.quality_spec, selection.first_run)
+            print(f"High-WER utterances: {export_high_wer(rows, selection.quality_spec)}")
+            return
+        if args.output is None:
+            parser.error("select-data needs --output (or --export-high-wer)")
+        report = select_data(args.spec)
+        save_selections(report, args.output)
+        for selection in report["selections"]:
+            print(
+                f"{selection['strategy']}, seed {selection['seed']}: "
+                f"{selection['utterances']} utterances, {selection['hours']:.2f} h, "
+                f"{selection['speakers']} speakers, {selection['flagged']} flagged"
+            )
+        print(f"Selections: {args.output}")
+    elif args.command == "finetune":
+        if args.strategy == "base":
+            manifest, entries = Path(), []
+        else:
+            manifest, entries = selected_entries(args.selections, args.strategy, args.seed)
+        model_dir = fine_tune(
+            load_training_config(args.spec),
+            entries,
+            manifest,
+            args.output,
+            seed=args.seed,
+            description={"strategy": args.strategy, "selections": args.selections.as_posix()},
+            device=args.device,
+        )
+        print(f"Model: {model_dir}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,

@@ -1,0 +1,201 @@
+{
+  "spec": "experiments/E7/finetune.toml",
+  "manifest": "data/voxpopuli_it/train.jsonl",
+  "manifest_sha256": "c39731f3012679b2b90d6aa61450b5edbcf9d182d6dcfe3bcf1fe7ff1c3b2c53",
+  "first_run": "experiments/runs/e6-turbo-voxpopuli",
+  "second_run": "experiments/runs/e7-small-high-wer",
+  "budget_hours": 5.0,
+  "max_wer": 0.5,
+  "pool": {
+    "utterances": 3000,
+    "hours": 10.212656927083325,
+    "speakers": 128,
+    "sessions": 840,
+    "flagged": 473,
+    "high_wer": 372
+  },
+  "candidates": [
+    {
+      "strategy": "random",
+      "utterances": 2952,
+      "hours": 9.736975920138878,
+      "speakers": 128,
+      "sessions": 834,
+      "flagged": 425,
+      "high_wer": 367
+    },
+    {
+      "strategy": "naive_filter",
+      "utterances": 2527,
+      "hours": 8.653252569444449,
+      "speakers": 126,
+      "sessions": 774,
+      "flagged": 0,
+      "high_wer": 0
+    },
+    {
+      "strategy": "two_source_filter",
+      "utterances": 2660,
+      "hours": 9.123336406249999,
+      "speakers": 127,
+      "sessions": 793,
+      "flagged": 133,
+      "high_wer": 133
+    },
+    {
+      "strategy": "speaker_balanced",
+      "utterances": 2952,
+      "hours": 9.736975920138878,
+      "speakers": 128,
+      "sessions": 834,
+      "flagged": 425,
+      "high_wer": 367
+    }
+  ],
+  "selections": [
+    {
+      "strategy": "random",
+      "seed": 0,
+      "utterances": 1502,
+      "hours": 4.9999426909722295,
+      "speakers": 115,
+      "sessions": 639,
+      "flagged": 221,
+      "high_wer": 190,
+      "ids_file": "experiments/E7/results/selections/random-s0.txt",
+      "ids_sha256": "b9451d5a1c0f302728248bb8d2fdff2b7e0b45381291ebf3e5fccb5bd25f80d5"
+    },
+    {
+      "strategy": "random",
+      "seed": 1,
+      "utterances": 1546,
+      "hours": 4.999963333333341,
+      "speakers": 113,
+      "sessions": 634,
+      "flagged": 223,
+      "high_wer": 191,
+      "ids_file": "experiments/E7/results/selections/random-s1.txt",
+      "ids_sha256": "26d1e8a0cc249569ae4e6d0ca3db5ec8a788d99ceb1185b4fcd4800d9788f0e6"
+    },
+    {
+      "strategy": "random",
+      "seed": 2,
+      "utterances": 1521,
+      "hours": 4.999973923611121,
+      "speakers": 117,
+      "sessions": 630,
+      "flagged": 207,
+      "high_wer": 182,
+      "ids_file": "experiments/E7/results/selections/random-s2.txt",
+      "ids_sha256": "62a2a698ca02bc5ecc39e893f44546604a087171232ace1d4f23b721a8d8e4e6"
+    },
+    {
+      "strategy": "naive_filter",
+      "seed": 0,
+      "utterances": 1451,
+      "hours": 4.999981805555564,
+      "speakers": 111,
+      "sessions": 615,
+      "flagged": 0,
+      "high_wer": 0,
+      "ids_file": "experiments/E7/results/selections/naive-filter-s0.txt",
+      "ids_sha256": "ca21c2cbc1337abc541e4d064fe1bcdb2b9fdcf689cddd977d7123a95ddae9f1"
+    },
+    {
+      "strategy": "naive_filter",
+      "seed": 1,
+      "utterances": 1447,
+      "hours": 4.999898211805564,
+      "speakers": 113,
+      "sessions": 593,
+      "flagged": 0,
+      "high_wer": 0,
+      "ids_file": "experiments/E7/results/selections/naive-filter-s1.txt",
+      "ids_sha256": "ee1a3f5ecc96e45ffaa7e6131bca7668ae579ca7b2e19bb79907f0a7f051ff66"
+    },
+    {
+      "strategy": "naive_filter",
+      "seed": 2,
+      "utterances": 1433,
+      "hours": 4.999971718750005,
+      "speakers": 112,
+      "sessions": 605,
+      "flagged": 0,
+      "high_wer": 0,
+      "ids_file": "experiments/E7/results/selections/naive-filter-s2.txt",
+      "ids_sha256": "42d86659a00148d9cd6f6501c287853bb079b60a598e1984e0186736851f9565"
+    },
+    {
+      "strategy": "two_source_filter",
+      "seed": 0,
+      "utterances": 1439,
+      "hours": 4.999884392361127,
+      "speakers": 115,
+      "sessions": 596,
+      "flagged": 56,
+      "high_wer": 56,
+      "ids_file": "experiments/E7/results/selections/two-source-filter-s0.txt",
+      "ids_sha256": "efd5affc72a7a60aed7f81411852fb6c801f11e67e4d166204c3d45ff9827f40"
+    },
+    {
+      "strategy": "two_source_filter",
+      "seed": 1,
+      "utterances": 1449,
+      "hours": 4.999797309027779,
+      "speakers": 122,
+      "sessions": 598,
+      "flagged": 71,
+      "high_wer": 71,
+      "ids_file": "experiments/E7/results/selections/two-source-filter-s1.txt",
+      "ids_sha256": "7ee463b4e5594dcf36eb4e4b2ebaa60c08c943fcc110efa466e9243ee6a6d819"
+    },
+    {
+      "strategy": "two_source_filter",
+      "seed": 2,
+      "utterances": 1455,
+      "hours": 4.99974815972223,
+      "speakers": 113,
+      "sessions": 618,
+      "flagged": 73,
+      "high_wer": 73,
+      "ids_file": "experiments/E7/results/selections/two-source-filter-s2.txt",
+      "ids_sha256": "a24c49fb77200855ee4965e6345b68f525f7310ccdbcdad7800439c1629852a5"
+    },
+    {
+      "strategy": "speaker_balanced",
+      "seed": 0,
+      "utterances": 1502,
+      "hours": 4.999991788194451,
+      "speakers": 128,
+      "sessions": 595,
+      "flagged": 210,
+      "high_wer": 184,
+      "ids_file": "experiments/E7/results/selections/speaker-balanced-s0.txt",
+      "ids_sha256": "259435fe8a545886da524f87b711115db250a2b346dbc75da97daf3a2f3f3ea1"
+    },
+    {
+      "strategy": "speaker_balanced",
+      "seed": 1,
+      "utterances": 1525,
+      "hours": 4.999864340277784,
+      "speakers": 128,
+      "sessions": 596,
+      "flagged": 216,
+      "high_wer": 189,
+      "ids_file": "experiments/E7/results/selections/speaker-balanced-s1.txt",
+      "ids_sha256": "d41665bc0f15a481e5615d62bfc9dc861a0dbcce0b024e5efb4407e68bd9fbd2"
+    },
+    {
+      "strategy": "speaker_balanced",
+      "seed": 2,
+      "utterances": 1514,
+      "hours": 4.999893697916677,
+      "speakers": 128,
+      "sessions": 577,
+      "flagged": 221,
+      "high_wer": 195,
+      "ids_file": "experiments/E7/results/selections/speaker-balanced-s2.txt",
+      "ids_sha256": "110175d7f1ba87f1e374cf94c5adff45154fe78def2002fe5ce88c6713d1520c"
+    }
+  ]
+}

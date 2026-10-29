@@ -1,0 +1,11 @@
+# In-domain test set of experiment E7 (asr-lab ingest-voxpopuli): the whole Italian VoxPopuli
+# test split, 1,177 utterances in two row groups, at the revision of the E6 pool.
+
+[data]
+repo = "facebook/voxpopuli"
+revision = "42f01879c780b4a2e90ec0b4f616c2ece526e4f1"
+lang = "it"
+split = "test"
+row_groups = [[0, 0], [0, 1]]
+output = "data/voxpopuli_it"  # next to the pool: data/voxpopuli_it/test.jsonl
+normalizer = "it-v2"

@@ -298,15 +298,19 @@ def export_collapsed(rows: Sequence[dict[str, Any]], spec_path: Path) -> Path:
     It is written next to the data manifest (``<output>/collapsed.jsonl``), so that the audio paths
     stay valid, and keeps the manifest order.
     """
-    data = load_data_spec(spec_path)
     collapsed = {
         row["utterance_id"]
         for row in rows
         if "high_wer" in row["flags"] and high_wer_kind(row["length_ratio"]) == "collapsed"
     }
-    path = data.output / "collapsed.jsonl"
-    write_manifest(path, [e for e in read_manifest(data.manifest) if e.utterance_id in collapsed])
-    return path
+    return _export(collapsed, spec_path, "collapsed.jsonl")
+
+
+def export_high_wer(rows: Sequence[dict[str, Any]], spec_path: Path) -> Path:
+    """Write the manifest of every high-WER utterance (``<output>/high_wer.jsonl``), for the
+    second model of the two-source filter of E7, like ``export_collapsed``."""
+    flagged = {row["utterance_id"] for row in rows if "high_wer" in row["flags"]}
+    return _export(flagged, spec_path, "high_wer.jsonl")
 
 
 def second_opinion(
@@ -438,6 +442,13 @@ def _distribution(values: Sequence[float | None]) -> dict[str, float | int]:
         return {"n": 0}
     p5, median, p95 = np.percentile(defined, [5, 50, 95]).tolist()
     return {"n": len(defined), "p5": p5, "median": median, "p95": p95}
+
+
+def _export(ids: set[str], spec_path: Path, filename: str) -> Path:
+    data = load_data_spec(spec_path)
+    path = data.output / filename
+    write_manifest(path, [e for e in read_manifest(data.manifest) if e.utterance_id in ids])
+    return path
 
 
 def _length_ratio(utterance: UtteranceErrors) -> float:

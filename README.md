@@ -163,6 +163,7 @@ bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, G
 bash experiments/E2/run.sh    # decoding settings: selection on dev, test comparisons, figure
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
 bash experiments/E6/run.sh    # training-data quality: features, rules, clusters, second opinion
+bash experiments/E7/run.sh    # data selection for fine-tuning: second model, four strategies
 bash experiments/E10/run.sh   # usage analytics on simulated sessions: segments, priorities, review
 ```
 
@@ -201,7 +202,7 @@ from them), and logging the same file again replaces its MLflow run instead of d
 MLflow is an optional dependency:
 
 ```bash
-uv sync --all-extras                                        # install the tracking and plots extras
+uv sync --extra tracking --extra plots                      # install the tracking and plots extras
 uv run asr-lab score --run runs/whisper-small-it --mlflow E1
 uv run asr-lab compare --a runs/A --b runs/B --output cmp.json --mlflow E1
 uv run mlflow ui --backend-store-uri sqlite:///mlflow.db    # http://127.0.0.1:5000
@@ -263,6 +264,12 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--run` | none | transcription of the spec's manifest by a strong model: adds its WER against each transcript and clusters the utterances |
 | | `--export-collapsed` | off | write the manifest of the high-WER utterances where the model wrote almost nothing (`<data>/collapsed.jsonl`), for a second model |
 | | `--second-run` | none | a second model's transcription of those utterances: compares both models on them |
+| `asr-lab select-data` | `--spec` | (required) | TOML fine-tuning spec (e.g. `experiments/E7/finetune.toml`): its strategies draw the same hours of training data from the E6 pool |
+| | `--output` | none | selections JSON: per strategy and seed, the utterance ids and what they contain |
+| | `--export-high-wer` | off | only write the manifest of the pool's high-WER utterances (`<data>/high_wer.jsonl`), for the second model of the two-source filter |
+| `asr-lab finetune` | `--spec`, `--selections`, `--strategy`, `--output` | (required) | fine-tune Whisper with LoRA on one selection (`base`: no training), merge and convert it to CTranslate2 in `<output>/ct2`, with a training record (needs `uv sync --extra training` and, in practice, a GPU) |
+| | `--seed` | `0` | which selection, and the seed of the training |
+| | `--device` | `cuda` | `cpu` or `cuda` |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |
