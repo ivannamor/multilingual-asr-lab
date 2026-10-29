@@ -23,6 +23,8 @@ htmlcov/
 /runs/
 # Audio of the E10 sessions, rebuilt from the committed session manifest
 /experiments/E10/audio/
+# Per-utterance features of E6, rebuilt by experiments/E6/run.sh (the report quality.json is kept)
+/experiments/E6/results/features.jsonl
 
 # Hydra run directories
 /outputs/

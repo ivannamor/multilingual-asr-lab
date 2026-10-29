@@ -15,6 +15,11 @@ model agrees with the transcript:
 
 Rules (thresholds in the spec) flag the utterances; they are independent, so their counts can
 overlap, and the summary also gives the union.
+
+A high WER only says that the model and the transcript disagree, not which one is wrong. After
+reading the first results, the utterances flagged by ``high_wer`` are split by the length of the
+model's transcript (``high_wer_kind``), and a second model transcribes the collapsed ones
+(``second_opinion``). Both are post hoc: they describe the flagged utterances and change no rule.
 """
 
 from __future__ import annotations
@@ -33,12 +38,13 @@ import numpy as np
 import soundfile as sf
 
 from asr_lab.data.clustering import cluster_rows, load_cluster_spec
-from asr_lab.data.manifest import ManifestEntry, read_manifest
+from asr_lab.data.manifest import ManifestEntry, read_manifest, write_manifest
 from asr_lab.data.voxpopuli import load_data_spec
-from asr_lab.evaluation.error_analysis import analyze
-from asr_lab.evaluation.metrics import error_rate, word_tokens
+from asr_lab.evaluation.error_analysis import UtteranceErrors, analyze
+from asr_lab.evaluation.metrics import ErrorCounts, error_rate, word_tokens
 from asr_lab.evaluation.normalize import Normalizer, get_normalizer_by_name
 from asr_lab.evaluation.scoring import load_run
+from asr_lab.evaluation.stats import bootstrap_ci
 from asr_lab.provenance import file_sha256
 
 FRAME_SECONDS = 0.025  # frames for the energy statistics of estimate_snr
@@ -50,6 +56,11 @@ RULES = (
     "empty_text", "too_short", "too_long", "too_slow", "too_fast", "low_snr", "clipped",
     "high_wer", "duplicate_text", "duplicate_audio",
 )  # fmt: skip
+# Post hoc split of the high_wer utterances by the model transcript's length (words, relative to
+# the reference), set after reading the results
+COLLAPSED_BELOW = 0.2  # a fifth of the reference or less: the model dropped most of the speech
+SIMILAR_LENGTH = (0.5, 1.5)  # about as long: wrong words, or words of a neighbouring segment
+HIGH_WER_KINDS = ("collapsed", "similar_length", "other")
 
 
 @dataclass(frozen=True)
@@ -240,8 +251,110 @@ def analyze_quality(
         "filters": asdict(filters),
         "flags": filter_summary(rows, filters),
         "clusters": clusters,
+        "high_wer": high_wer_breakdown(rows) if run_dir else None,
     }
     return rows, report
+
+
+def high_wer_kind(length_ratio: float) -> str:
+    """How a high-WER transcript compares in length with the reference (post hoc).
+
+    ``collapsed``: the model wrote a few words for a whole utterance (e.g. "Grazie a tutti.");
+    ``similar_length``: about as many words as the reference, so either the model got many words
+    wrong or the transcript does not cover the same speech (shifted segment boundaries);
+    ``other``: in between, or much longer than the reference.
+
+    >>> [high_wer_kind(r) for r in (0.1, 0.35, 1.0, 2.0)]
+    ['collapsed', 'other', 'similar_length', 'other']
+    """
+    if length_ratio < COLLAPSED_BELOW:
+        return "collapsed"
+    low, high = SIMILAR_LENGTH
+    return "similar_length" if low <= length_ratio < high else "other"
+
+
+def high_wer_breakdown(rows: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Per kind of ``high_wer_kind``: utterances (and share of the flagged), hours, speakers."""
+    flagged = [row for row in rows if "high_wer" in row["flags"]]
+    breakdown = []
+    for kind in HIGH_WER_KINDS:
+        members = [row for row in flagged if high_wer_kind(row["length_ratio"]) == kind]
+        breakdown.append(
+            {
+                "kind": kind,
+                "utterances": len(members),
+                "share": len(members) / len(flagged) if flagged else 0.0,
+                "hours": sum(row["duration"] for row in members) / 3600,
+                "speakers": len({row["speaker_id"] for row in members}),
+                "sessions": len({row["session"] for row in members}),
+            }
+        )
+    return breakdown
+
+
+def export_collapsed(rows: Sequence[dict[str, Any]], spec_path: Path) -> Path:
+    """Write the manifest of the collapsed high-WER utterances, for a second model to transcribe.
+
+    It is written next to the data manifest (``<output>/collapsed.jsonl``), so that the audio paths
+    stay valid, and keeps the manifest order.
+    """
+    data = load_data_spec(spec_path)
+    collapsed = {
+        row["utterance_id"]
+        for row in rows
+        if "high_wer" in row["flags"] and high_wer_kind(row["length_ratio"]) == "collapsed"
+    }
+    path = data.output / "collapsed.jsonl"
+    write_manifest(path, [e for e in read_manifest(data.manifest) if e.utterance_id in collapsed])
+    return path
+
+
+def second_opinion(
+    spec_path: Path, first_run: Path, second_run: Path, *, seed: int = 0
+) -> dict[str, Any]:
+    """Both models on the utterances the second one transcribed (the collapsed ones).
+
+    If the second model transcribes the speech where the first collapsed, the first model is at
+    fault, not the transcript. Per model: corpus WER with a 95% CI (bootstrap by speaker),
+    utterances still collapsed and utterances that would pass the ``high_wer`` rule.
+    """
+    normalizer_name = load_data_spec(spec_path).normalizer
+    normalizer = get_normalizer_by_name(normalizer_name)
+    max_wer = load_filters(spec_path).max_wer
+    second = load_run(second_run)
+    first = load_run(first_run)
+    ids = {entry.utterance_id for entry in second.entries}
+    if not ids <= {entry.utterance_id for entry in first.entries}:
+        raise ValueError(f"{second_run} transcribes utterances that {first_run} does not have")
+    first_hypotheses = [h for h in first.hypotheses if h.utterance_id in ids]
+    speakers = [entry.speaker_id for entry in second.entries]
+    models = []
+    for run_dir, run, utterances in (
+        (first_run, first, analyze(second.entries, first_hypotheses, normalizer)),
+        (second_run, second, analyze(second.entries, second.hypotheses, normalizer)),
+    ):
+        ci = bootstrap_ci([u.counts for u in utterances], groups=speakers, seed=seed)
+        models.append(
+            {
+                "run": run_dir.as_posix(),
+                "model": run.info.get("model"),
+                "wer": ci.estimate,
+                "ci_low": ci.low,
+                "ci_high": ci.high,
+                "collapsed": sum(_length_ratio(u) < COLLAPSED_BELOW for u in utterances),
+                "within_max_wer": sum(u.wer <= max_wer for u in utterances),
+            }
+        )
+    words = sum((u.counts for u in utterances), ErrorCounts()).ref_length  # same for both models
+    return {
+        "utterances": len(ids),
+        "words": words,
+        "speakers": len(set(speakers)),
+        "hours": sum(entry.duration for entry in second.entries) / 3600,
+        "normalizer": normalizer_name,
+        "max_wer": max_wer,
+        "models": models,
+    }
 
 
 def save_report(report: dict[str, Any], path: Path) -> None:
@@ -281,7 +394,41 @@ def quality_table(report: dict[str, Any], section: str) -> str:
                 f"| {c['flagged']:.0%} |"
             )
         return "\n".join(lines)
-    raise ValueError(f"unknown quality table {section!r}; expected 'flags' or 'clusters'")
+    if section == "high_wer":
+        lines = [
+            "| Model transcript length (post hoc) | Utterances (share of `high_wer`) | Hours "
+            "| Speakers | Sessions |",
+            "|---|---|---|---|---|",
+        ]
+        names = {
+            "collapsed": f"collapsed (< {COLLAPSED_BELOW:.0%} of the reference)",
+            "similar_length": f"similar ({SIMILAR_LENGTH[0]:.0%} to {SIMILAR_LENGTH[1]:.0%})",
+            "other": "other",
+        }
+        for row in report["high_wer"]:
+            lines.append(
+                f"| {names[row['kind']]} | {row['utterances']:,} ({row['share']:.0%}) "
+                f"| {row['hours']:.2f} | {row['speakers']} | {row['sessions']} |"
+            )
+        return "\n".join(lines)
+    if section == "second_opinion":
+        opinion = report["second_opinion"]
+        lines = [
+            "| Model | WER [95% CI] | Utterances still collapsed "
+            f"| Utterances with WER ≤ {opinion['max_wer']:.0%} |",
+            "|---|---|---|---|",
+        ]
+        n = opinion["utterances"]
+        for m in opinion["models"]:
+            lines.append(
+                f"| {m['model']} | {m['wer']:.2%} [{m['ci_low']:.2%}, {m['ci_high']:.2%}] "
+                f"| {m['collapsed']} / {n} | {m['within_max_wer']} / {n} |"
+            )
+        return "\n".join(lines)
+    raise ValueError(
+        f"unknown quality table {section!r}; "
+        "expected 'flags', 'clusters', 'high_wer' or 'second_opinion'"
+    )
 
 
 def _distribution(values: Sequence[float | None]) -> dict[str, float | int]:
@@ -291,6 +438,10 @@ def _distribution(values: Sequence[float | None]) -> dict[str, float | int]:
         return {"n": 0}
     p5, median, p95 = np.percentile(defined, [5, 50, 95]).tolist()
     return {"n": len(defined), "p5": p5, "median": median, "p95": p95}
+
+
+def _length_ratio(utterance: UtteranceErrors) -> float:
+    return len(word_tokens(utterance.hypothesis)) / len(word_tokens(utterance.reference))
 
 
 def _below(value: float | None, threshold: float) -> bool:

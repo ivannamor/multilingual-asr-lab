@@ -1,0 +1,970 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "manifest": "data/voxpopuli_it/train.jsonl",
+  "normalizer": [
+    "it-v2"
+  ],
+  "n_utterances": 3000,
+  "substitutions": 3314,
+  "deletions": 9613,
+  "insertions": 3075,
+  "distinct_confusion_pairs": 2566,
+  "substitutions_with_digits_or_symbols": 12,
+  "top_confusions": [
+    {
+      "reference": "signor",
+      "hypothesis": "grazie",
+      "count": 96
+    },
+    {
+      "reference": "signora",
+      "hypothesis": "grazie",
+      "count": 54
+    },
+    {
+      "reference": "a",
+      "hypothesis": "ad",
+      "count": 31
+    },
+    {
+      "reference": "è",
+      "hypothesis": "e",
+      "count": 20
+    },
+    {
+      "reference": "ed",
+      "hypothesis": "e",
+      "count": 18
+    },
+    {
+      "reference": "colleghi",
+      "hypothesis": "presidente",
+      "count": 18
+    },
+    {
+      "reference": "e",
+      "hypothesis": "ed",
+      "count": 16
+    },
+    {
+      "reference": "onorevoli",
+      "hypothesis": "grazie",
+      "count": 16
+    },
+    {
+      "reference": "un",
+      "hypothesis": "una",
+      "count": 14
+    },
+    {
+      "reference": "d",
+      "hypothesis": "di",
+      "count": 14
+    },
+    {
+      "reference": "relazione",
+      "hypothesis": "rapporto",
+      "count": 11
+    },
+    {
+      "reference": "al",
+      "hypothesis": "a",
+      "count": 11
+    },
+    {
+      "reference": "alla",
+      "hypothesis": "la",
+      "count": 10
+    },
+    {
+      "reference": "colleghi",
+      "hypothesis": "grazie",
+      "count": 10
+    },
+    {
+      "reference": "dei",
+      "hypothesis": "di",
+      "count": 10
+    },
+    {
+      "reference": "ad",
+      "hypothesis": "a",
+      "count": 9
+    },
+    {
+      "reference": "presidente",
+      "hypothesis": "grazie",
+      "count": 9
+    },
+    {
+      "reference": "di",
+      "hypothesis": "dei",
+      "count": 9
+    },
+    {
+      "reference": "sia",
+      "hypothesis": "è",
+      "count": 7
+    },
+    {
+      "reference": "presidente",
+      "hypothesis": "sì",
+      "count": 7
+    }
+  ],
+  "top_deletions": [
+    {
+      "word": "e",
+      "count": 461
+    },
+    {
+      "word": "di",
+      "count": 326
+    },
+    {
+      "word": "che",
+      "count": 245
+    },
+    {
+      "word": "onorevoli",
+      "count": 216
+    },
+    {
+      "word": "la",
+      "count": 194
+    },
+    {
+      "word": "colleghi",
+      "count": 187
+    },
+    {
+      "word": "in",
+      "count": 176
+    },
+    {
+      "word": "è",
+      "count": 167
+    },
+    {
+      "word": "il",
+      "count": 144
+    },
+    {
+      "word": "per",
+      "count": 134
+    },
+    {
+      "word": "un",
+      "count": 131
+    },
+    {
+      "word": "l",
+      "count": 114
+    },
+    {
+      "word": "a",
+      "count": 108
+    },
+    {
+      "word": "non",
+      "count": 106
+    },
+    {
+      "word": "i",
+      "count": 101
+    },
+    {
+      "word": "le",
+      "count": 89
+    },
+    {
+      "word": "dei",
+      "count": 73
+    },
+    {
+      "word": "anche",
+      "count": 72
+    },
+    {
+      "word": "sono",
+      "count": 70
+    },
+    {
+      "word": "della",
+      "count": 70
+    }
+  ],
+  "top_insertions": [
+    {
+      "word": "e",
+      "count": 174
+    },
+    {
+      "word": "per",
+      "count": 100
+    },
+    {
+      "word": "di",
+      "count": 97
+    },
+    {
+      "word": "che",
+      "count": 78
+    },
+    {
+      "word": "è",
+      "count": 72
+    },
+    {
+      "word": "la",
+      "count": 58
+    },
+    {
+      "word": "il",
+      "count": 55
+    },
+    {
+      "word": "i",
+      "count": 54
+    },
+    {
+      "word": "grazie",
+      "count": 53
+    },
+    {
+      "word": "in",
+      "count": 50
+    },
+    {
+      "word": "a",
+      "count": 48
+    },
+    {
+      "word": "cento",
+      "count": 44
+    },
+    {
+      "word": "un",
+      "count": 34
+    },
+    {
+      "word": "ma",
+      "count": 33
+    },
+    {
+      "word": "questo",
+      "count": 32
+    },
+    {
+      "word": "non",
+      "count": 31
+    },
+    {
+      "word": "si",
+      "count": 26
+    },
+    {
+      "word": "l",
+      "count": 25
+    },
+    {
+      "word": "anche",
+      "count": 23
+    },
+    {
+      "word": "una",
+      "count": 23
+    }
+  ],
+  "worst_utterances": [
+    {
+      "utterance_id": "voxpopuli_it_20170531-0900-PLENARY-10-it_20170531-18-03-38_0",
+      "errors": 78,
+      "reference_words": 80,
+      "reference": "signora presidente onorevoli colleghi in base ai dati ocse un miliardo e mezzo di persone vive in cinquantasei paesi identificati come fragili la situazione di fragilità determinata in gran parte da fattori umani ha ripercussioni sulla vulnerabilità delle popolazioni a causa di conflitti e insicurezza mancanza di accesso all assistenza sanitaria povertà estrema crisi economiche ed ha conseguenze dirette e indirette sull unione europea che deve necessariamente tenerne conto nell implementazione della sua strategia di politica estera e di sicurezza",
+      "hypothesis": "grazie presidente grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191113-0900-PLENARY-it_20191113-20-29-18_0",
+      "errors": 76,
+      "reference_words": 77,
+      "reference": "signora presidente onorevoli colleghi gentile alto rappresentante è probabile che morales abbia commesso errori ma non possiamo non vedere che in bolivia è in corso un violento colpo di stato militare che mette a repentaglio l incolumità e la vita di migliaia di persone e che dobbiamo fermare subito il governo morales ha avuto il merito storico di rompere con un regime di apartheid verso le comunità indios aymara e di far crescere il benessere del paese",
+      "hypothesis": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171130-0900-PLENARY-7-it_20171130-10-51-52_4",
+      "errors": 69,
+      "reference_words": 69,
+      "reference": "questa relazione redatta in stretta cooperazione con le organizzazioni di rappresentanza delle persone con disabilità definisce gli obiettivi e individua linee guida concrete e sostenibili per un europa del futuro accessibile inclusiva e coesa in cui anche le persone con disabilità gli anziani e le persone con temporanee limitazioni funzionali siano messi in condizione di partecipare alla vita sociale economica e politica della comunità in maniera attiva e indipendente",
+      "hypothesis": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20181003-0900-PLENARY-it_20181003-15-53-46_0",
+      "errors": 67,
+      "reference_words": 71,
+      "reference": "signora presidente onorevoli colleghi è fondamentale insistere per strumenti europei per combattere la povertà e l esclusione sociale più forti la povertà e l esclusione sociale sono ancora a livelli allarmanti oggi in europa il partito democratico il gruppo dei socialisti e democratici sono da anni in prima linea su questa battaglia con proposte come l assicurazione europea contro la disoccupazione la direttiva quadro per le misure di sostegno al reddito",
+      "hypothesis": "di sostegno al reddito"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190327-0900-PLENARY-it_20190327-16-52-58_0",
+      "errors": 65,
+      "reference_words": 82,
+      "reference": "signora presidente onorevoli colleghi signor commissario i prodotti fertilizzanti di qualità sono e saranno sempre più importanti per lo sviluppo di modelli agricoli più produttivi e allo stesso tempo sostenibili che nel futuro dovranno rispondere alla pressante sfida dell accesso al cibo producendo di più ma utilizzando meno input e inquinando meno voglio quindi ringraziare il collega marc tarabella per l ottimo lavoro svolto insieme al relatore țurcanu nell armonizzazione a livello europeo delle norme di produzione e di etichettatura dei fertilizzanti",
+      "hypothesis": "grazie a tutti ottimo lavoro svolto insieme al relatore turcano nell armonizzazione a livello europeo delle norme di produzione e di dichiarazione"
+    }
+  ],
+  "invented_closing_phrases": [
+    {
+      "utterance_id": "voxpopuli_it_20130521-0900-PLENARY-15-it_20130521-19-57-04_14",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130522-0900-PLENARY-3-it_20130522-09-22-15_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130522-0900-PLENARY-9-it_20130522-12-34-14_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130611-0900-PLENARY-17-it_20130611-18-26-26_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130702-0900-PLENARY-16-it_20130702-20-07-40_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130703-0900-PLENARY-20-it_20130703-21-46-41_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130703-0900-PLENARY-20-it_20130703-21-46-41_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130910-0900-PLENARY-9-it_20130910-12-38-42_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130910-0900-PLENARY-9-it_20130910-13-23-53_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130911-0900-PLENARY-14-it_20130911-21-58-19_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20130912-0900-PLENARY-11-it_20130912-14-24-19_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131008-0900-PLENARY-3-it_20131008-09-24-55_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131009-0900-PLENARY-17-it_20131009-19-21-53_6",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131009-0900-PLENARY-17-it_20131009-20-16-04_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131009-0900-PLENARY-17-it_20131009-20-16-04_6",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131009-0900-PLENARY-20-it_20131009-22-53-09_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131009-0900-PLENARY-8-it_20131009-13-23-14_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131023-0900-PLENARY-4-it_20131023-10-36-35_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131023-0900-PLENARY-4-it_20131023-10-43-20_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131119-0900-PLENARY-6-it_20131119-14-02-34_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20131119-0900-PLENARY-6-it_20131119-14-02-34_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140114-0900-PLENARY-9-it_20140114-16-22-57_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140115-0900-PLENARY-16-it_20140115-20-03-33_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140116-0900-PLENARY-4-it_20140116-11-18-23_5",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140204-0900-PLENARY-4-it_20140204-10-47-13_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140205-0900-PLENARY-6-it_20140205-10-48-17_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140205-0900-PLENARY-6-it_20140205-11-22-55_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140311-0900-PLENARY-15-it_20140311-18-52-00_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140312-0900-PLENARY-10-it_20140312-13-04-08_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140312-0900-PLENARY-10-it_20140312-13-08-56_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140312-0900-PLENARY-10-it_20140312-13-22-58_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140414-0900-PLENARY-17-it_20140414-20-51-04_14",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140702-0900-PLENARY-12-it_20140702-16-47-49_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140715-0900-PLENARY-12-it_20140715-21-54-01_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140715-0900-PLENARY-12-it_20140715-21-54-01_9",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140715-0900-PLENARY-8-it_20140715-17-39-32_11",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140715-0900-PLENARY-8-it_20140715-18-06-40_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140717-0900-PLENARY-9-it_20140717-12-15-15_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140915-0900-PLENARY-16-it_20140915-20-55-02_5",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140916-0900-PLENARY-15-it_20140916-18-33-02_11",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140916-0900-PLENARY-15-it_20140916-18-33-02_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140917-0900-PLENARY-11-it_20140917-16-51-25_37",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140917-0900-PLENARY-3-it_20140917-09-03-48_12",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20140918-0900-PLENARY-10-it_20140918-12-29-07_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20141020-0900-PLENARY-14-it_20141020-18-24-44_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20141021-0900-PLENARY-14-it_20141021-20-10-51_9",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150112-0900-PLENARY-10-it_20150112-18-08-47_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150128-0900-PLENARY-7-it_20150128-16-22-14_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150209-0900-PLENARY-9-it_20150209-17-41-19_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150210-0900-PLENARY-5-it_20150210-12-46-51_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150210-0900-PLENARY-7-it_20150210-15-40-15_0",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150211-0900-PLENARY-5-it_20150211-13-48-55_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150212-0900-PLENARY-4-it_20150212-09-56-15_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150212-0900-PLENARY-4-it_20150212-10-08-20_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150309-0900-PLENARY-10-it_20150309-18-17-33_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150309-0900-PLENARY-10-it_20150309-18-17-33_7",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150310-0900-PLENARY-12-it_20150310-12-41-24_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150310-0900-PLENARY-12-it_20150310-12-58-14_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150311-0900-PLENARY-10-it_20150311-15-32-19_9",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150311-0900-PLENARY-12-it_20150311-20-02-30_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150311-0900-PLENARY-13-it_20150311-20-52-29_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150312-0900-PLENARY-6-it_20150312-11-26-00_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150430-0900-PLENARY-5-it_20150430-10-59-08_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150430-0900-PLENARY-5-it_20150430-10-59-08_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150520-0900-PLENARY-8-it_20150520-14-13-29_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150608-0900-PLENARY-13-it_20150608-22-15-07_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150706-0900-PLENARY-10-it_20150706-17-40-56_11",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150706-0900-PLENARY-12-it_20150706-21-38-29_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150708-0900-PLENARY-9-it_20150708-16-52-57_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20150709-0900-PLENARY-16-it_20150709-16-34-18_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20151006-0900-PLENARY-16-it_20151006-21-06-42_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20151125-0900-PLENARY-16-it_20151125-18-15-57_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20151125-0900-PLENARY-23-it_20151125-22-54-15_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20151214-0900-PLENARY-14-it_20151214-21-45-53_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20151214-0900-PLENARY-14-it_20151214-21-45-53_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20160608-0900-PLENARY-4-it_20160608-11-56-50_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20160609-0900-PLENARY-6-it_20160609-10-59-34_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20160704-0900-PLENARY-11-it_20160704-17-43-21_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20160704-0900-PLENARY-11-it_20160704-17-43-21_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20160705-0900-PLENARY-17-it_20160705-21-32-44_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20160914-0900-PLENARY-15-it_20160914-21-10-23_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170214-0900-PLENARY-17-it_20170214-19-46-39_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170215-0900-PLENARY-13-it_20170215-15-12-44_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170215-0900-PLENARY-14-it_20170215-17-41-43_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170215-0900-PLENARY-16-it_20170215-19-26-16_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170406-0900-PLENARY-4-it_20170406-10-15-46_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170517-0900-PLENARY-16-it_20170517-15-27-32_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170518-0900-PLENARY-5-it_20170518-10-36-40_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170531-0900-PLENARY-10-it_20170531-18-03-38_0",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170531-0900-PLENARY-11-it_20170531-18-41-48_6",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170531-0900-PLENARY-8-it_20170531-16-12-45_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170601-0900-PLENARY-4-it_20170601-09-40-43_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170613-0900-PLENARY-15-it_20170613-18-58-43_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170703-0900-PLENARY-24-it_20170703-22-02-51_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170704-0900-PLENARY-24-it_20170705-00-04-47_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170704-0900-PLENARY-9-it_20170704-13-12-34_6",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170705-0900-PLENARY-14-it_20170705-16-47-07_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170705-0900-PLENARY-7-it_20170705-11-25-24_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170912-0900-PLENARY-18-it_20170912-19-30-34_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170912-0900-PLENARY-24-it_20170912-22-13-41_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20170913-0900-PLENARY-12-it_20170913-17-24-09_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171003-0900-PLENARY-11-it_20171003-16-31-47_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171004-0900-PLENARY-15-it_20171004-19-56-07_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171004-0900-PLENARY-15-it_20171004-19-56-07_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171005-0900-PLENARY-3-it_20171005-09-28-29_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171024-0900-PLENARY-16-it_20171024-17-42-29_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171025-0900-PLENARY-19-it_20171025-17-39-44_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171025-0900-PLENARY-22-it_20171025-19-58-28_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171114-0900-PLENARY-4-it_20171114-11-35-39_6",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171115-0900-PLENARY-5-it_20171115-11-48-09_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171116-0900-PLENARY-4-it_20171116-10-15-44_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171130-0900-PLENARY-5-it_20171130-10-17-27_7",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171130-0900-PLENARY-7-it_20171130-10-51-52_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171211-0900-PLENARY-14-it_20171211-18-42-33_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171211-0900-PLENARY-14-it_20171211-18-42-33_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171212-0900-PLENARY-20-it_20171212-22-07-34_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171212-0900-PLENARY-5-it_20171212-10-29-58_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171213-0900-PLENARY-19-it_20171213-19-22-10_7",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20171213-0900-PLENARY-19-it_20171213-19-44-28_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180115-0900-PLENARY-14-it_20180115-21-24-32_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180116-0900-PLENARY-4-it_20180116-11-37-00_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180206-0900-PLENARY-19-it_20180206-18-47-54_9",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180313-0900-PLENARY-4-it_20180313-09-22-15_10",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180418-0900-PLENARY-21-it_20180418-21-36-49_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180419-0900-PLENARY-4-it_20180419-10-11-59_0",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180528-0900-PLENARY-22-it_20180528-21-47-36_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180530-0900-PLENARY-26-it_20180530-19-39-35_6",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180611-0900-PLENARY-9-it_20180611-17-10-20_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180612-0900-PLENARY-13-it_20180612-15-44-45_6",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180612-0900-PLENARY-21-it_20180612-23-04-30_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180612-0900-PLENARY-3-it_20180612-09-07-37_3",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180612-0900-PLENARY-3-it_20180612-10-10-23_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180612-0900-PLENARY-4-it_20180612-11-55-45_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20180613-0900-PLENARY-24-it_20180613-22-00-20_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20181003-0900-PLENARY-it_20181003-17-55-04_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20181004-0900-PLENARY-it_20181004-11-35-57_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20181022-0900-PLENARY-it_20181022-20-28-55_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20181114-0900-PLENARY-it_20181114-18-37-04_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190115-0900-PLENARY-it_20190115-22-10-52_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190116-0900-PLENARY-it_20190116-12-44-35_0",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190116-0900-PLENARY-it_20190116-15-37-41_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190130-0900-PLENARY-it_20190130-15-28-37_0",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190212-0900-PLENARY-it_20190212-18-15-26_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190212-0900-PLENARY-it_20190212-21-08-21_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190213-0900-PLENARY-it_20190213-10-16-58_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190213-0900-PLENARY-it_20190213-20-00-53_2",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190214-0900-PLENARY-it_20190214-11-24-38_2",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190312-0900-PLENARY-it_20190312-21-01-45_7",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190314-0900-PLENARY-it_20190314-15-42-04_1",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190416-0900-PLENARY-it_20190416-13-23-40_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190703-0900-PLENARY-it_20190703-13-03-15_4",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190703-0900-PLENARY-it_20190703-13-05-54_0",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190717-0900-PLENARY-it_20190717-17-18-02_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190918-0900-PLENARY-it_20190918-19-06-15_6",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20190918-0900-PLENARY-it_20190918-19-09-27_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191010-0900-PLENARY-it_20191010-11-34-29_7",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191022-0900-PLENARY-it_20191022-16-14-49_5",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191023-0900-PLENARY-it_20191023-21-54-05_3",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191024-0900-PLENARY-it_20191024-10-57-56_5",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191113-0900-PLENARY-it_20191113-20-29-18_0",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191126-0900-PLENARY-it_20191126-18-21-30_4",
+      "phrase": "grazie a tutti"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191127-0900-PLENARY-it_20191127-11-18-55_1",
+      "phrase": "grazie"
+    },
+    {
+      "utterance_id": "voxpopuli_it_20191127-0900-PLENARY-it_20191127-12-05-25_0",
+      "phrase": "grazie"
+    }
+  ]
+}

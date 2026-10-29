@@ -13,6 +13,8 @@ Usage::
     uv run asr-lab usage --run runs/e10 --spec experiments/E10/simulation.toml --output usage.json
     uv run asr-lab ingest-voxpopuli --spec experiments/E6/quality.toml
     uv run asr-lab quality --spec experiments/E6/quality.toml --run runs/e6 --output results/
+    uv run asr-lab quality --spec experiments/E6/quality.toml --run runs/e6 --output results/ \
+        --export-collapsed --second-run runs/e6-small
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -27,7 +29,13 @@ from pathlib import Path
 from asr_lab.analytics.sessions import load_simulation_spec, plan_sessions, render_sessions
 from asr_lab.analytics.usage import analyze_usage, load_user_model, save_usage
 from asr_lab.data.manifest import write_manifest
-from asr_lab.data.quality import analyze_quality, save_features, save_report
+from asr_lab.data.quality import (
+    analyze_quality,
+    export_collapsed,
+    save_features,
+    save_report,
+    second_opinion,
+)
 from asr_lab.data.voxpopuli import ingest_voxpopuli, load_data_spec
 from asr_lab.evaluation.comparison import (
     METRICS,
@@ -206,6 +214,17 @@ def main(argv: Sequence[str] | None = None) -> None:
     quality.add_argument(
         "--output", required=True, type=Path, help="folder for features.jsonl and quality.json"
     )
+    quality.add_argument(
+        "--export-collapsed",
+        action="store_true",
+        help="write the manifest of the collapsed high-WER utterances (needs --run)",
+    )
+    quality.add_argument(
+        "--second-run",
+        type=Path,
+        default=None,
+        help="a second model's transcription of the collapsed utterances (needs --run)",
+    )
 
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
@@ -311,7 +330,13 @@ def main(argv: Sequence[str] | None = None) -> None:
     elif args.command == "ingest-voxpopuli":
         print(f"Manifest: {ingest_voxpopuli(load_data_spec(args.spec))}")
     elif args.command == "quality":
+        if (args.export_collapsed or args.second_run) and args.run is None:
+            parser.error("--export-collapsed and --second-run need --run")
         rows, report = analyze_quality(args.spec, args.run)
+        if args.export_collapsed:  # first: the second run's manifest
+            print(f"Collapsed utterances: {export_collapsed(rows, args.spec)}")
+        if args.second_run:
+            report["second_opinion"] = second_opinion(args.spec, args.run, args.second_run)
         save_features(rows, args.output / "features.jsonl")
         save_report(report, args.output / "quality.json")
         flagged = next(row for row in report["flags"] if row["rule"] == "any")
@@ -325,6 +350,11 @@ def main(argv: Sequence[str] | None = None) -> None:
                     f"cluster {cluster['cluster']}: {cluster['utterances']} utterances, "
                     f"{cluster['description']}"
                 )
+        for model in report.get("second_opinion", {}).get("models", []):
+            print(
+                f"{model['model']} on the collapsed utterances: WER {model['wer']:.2%}, "
+                f"{model['collapsed']} still collapsed"
+            )
         print(f"Quality report: {args.output / 'quality.json'}")
     elif args.command == "render-results":
         changed = render_results(

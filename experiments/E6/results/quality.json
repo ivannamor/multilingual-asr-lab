@@ -1,0 +1,349 @@
+{
+  "spec": "experiments/E6/quality.toml",
+  "repo": "facebook/voxpopuli",
+  "revision": "42f01879c780b4a2e90ec0b4f616c2ece526e4f1",
+  "row_groups": [
+    [
+      0,
+      0
+    ],
+    [
+      2,
+      0
+    ],
+    [
+      4,
+      0
+    ]
+  ],
+  "manifest": "data/voxpopuli_it/train.jsonl",
+  "manifest_sha256": "c39731f3012679b2b90d6aa61450b5edbcf9d182d6dcfe3bcf1fe7ff1c3b2c53",
+  "normalizer": "it-v2",
+  "run": "experiments/runs/e6-turbo-voxpopuli",
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "utterances": 3000,
+  "hours": 10.212656927083325,
+  "speakers": 128,
+  "sessions": 840,
+  "features": {
+    "duration": {
+      "n": 3000,
+      "p5": 2.9185218750000006,
+      "median": 10.799218750000001,
+      "p95": 24.643059374999982
+    },
+    "chars_per_second": {
+      "n": 3000,
+      "p5": 9.729519222424717,
+      "median": 13.741574036873354,
+      "p95": 17.023072840205064
+    },
+    "snr_db": {
+      "n": 3000,
+      "p5": 23.520144635183545,
+      "median": 30.887657331541057,
+      "p95": 41.92271814822673
+    },
+    "clipping": {
+      "n": 3000,
+      "p5": 0.0,
+      "median": 0.0,
+      "p95": 1.266226796250197e-05
+    },
+    "wer": {
+      "n": 2977,
+      "p5": 0.0,
+      "median": 0.07142857142857142,
+      "p95": 1.0
+    },
+    "length_ratio": {
+      "n": 2977,
+      "p5": 0.15,
+      "median": 1.0,
+      "p95": 1.064516129032258
+    }
+  },
+  "filters": {
+    "min_duration": 1.0,
+    "max_duration": 30.0,
+    "min_chars_per_second": 5.0,
+    "max_chars_per_second": 25.0,
+    "min_snr_db": 10.0,
+    "max_clipping": 0.001,
+    "max_wer": 0.5
+  },
+  "flags": [
+    {
+      "rule": "empty_text",
+      "utterances": 23,
+      "share": 0.007666666666666666,
+      "hours": 0.07135576388888888,
+      "hour_share": 0.006986993139822202
+    },
+    {
+      "rule": "too_short",
+      "utterances": 10,
+      "share": 0.0033333333333333335,
+      "hours": 0.0024664930555555555,
+      "hour_share": 0.00024151335672645293
+    },
+    {
+      "rule": "too_long",
+      "utterances": 48,
+      "share": 0.016,
+      "hours": 0.47568100694444443,
+      "hour_share": 0.04657759585392204
+    },
+    {
+      "rule": "too_slow",
+      "utterances": 6,
+      "share": 0.002,
+      "hours": 0.019549479166666665,
+      "hour_share": 0.0019142402712875504
+    },
+    {
+      "rule": "too_fast",
+      "utterances": 4,
+      "share": 0.0013333333333333333,
+      "hours": 0.0019933333333333335,
+      "hour_share": 0.0001951826393038954
+    },
+    {
+      "rule": "low_snr",
+      "utterances": 2,
+      "share": 0.0006666666666666666,
+      "hours": 0.0015777777777777778,
+      "hour_share": 0.0001544923900844657
+    },
+    {
+      "rule": "clipped",
+      "utterances": 38,
+      "share": 0.012666666666666666,
+      "hours": 0.10964328124999999,
+      "hour_share": 0.010736019238953665
+    },
+    {
+      "rule": "high_wer",
+      "utterances": 372,
+      "share": 0.124,
+      "hours": 0.9697618749999989,
+      "hour_share": 0.09495686400942847
+    },
+    {
+      "rule": "duplicate_text",
+      "utterances": 0,
+      "share": 0.0,
+      "hours": 0.0,
+      "hour_share": 0.0
+    },
+    {
+      "rule": "duplicate_audio",
+      "utterances": 0,
+      "share": 0.0,
+      "hours": 0.0,
+      "hour_share": 0.0
+    },
+    {
+      "rule": "any",
+      "utterances": 473,
+      "share": 0.15766666666666668,
+      "hours": 1.5594043576388885,
+      "hour_share": 0.15269330682238488
+    }
+  ],
+  "clusters": {
+    "features": [
+      "log:duration",
+      "chars_per_second",
+      "snr_db",
+      "log:wer",
+      "length_ratio"
+    ],
+    "utterances": 2977,
+    "left_out": 23,
+    "silhouette": {
+      "2": 0.3949156671624991,
+      "3": 0.2295176881720654,
+      "4": 0.23260299000279602,
+      "5": 0.22514394028028387,
+      "6": 0.22348297935199915,
+      "7": 0.1994754852634918,
+      "8": 0.19608733278676177
+    },
+    "k": 2,
+    "overall_median": {
+      "duration": 10.8185625,
+      "chars_per_second": 13.761440105633591,
+      "snr_db": 30.87795808436188,
+      "clipping": 0.0,
+      "wer": 0.07142857142857142,
+      "length_ratio": 1.0
+    },
+    "clusters": [
+      {
+        "cluster": 1,
+        "utterances": 2538,
+        "share": 0.8525361101780315,
+        "hours": 9.137035017361095,
+        "speakers": 125,
+        "median": {
+          "duration": 11.69825,
+          "chars_per_second": 13.621015009439287,
+          "snr_db": 30.804996649936996,
+          "clipping": 0.0,
+          "wer": 0.05517503805175038,
+          "length_ratio": 1.0
+        },
+        "z": {
+          "log:duration": 0.119,
+          "chars_per_second": -0.065,
+          "snr_db": -0.016,
+          "log:wer": -0.344,
+          "length_ratio": 0.111
+        },
+        "description": "typical",
+        "examples": [
+          {
+            "utterance_id": "voxpopuli_it_20180530-0900-PLENARY-23-it_20180530-18-00-49_5",
+            "duration": 11.279125,
+            "wer": 0.07142857142857142,
+            "reference": "sendai bene l abbiamo anche citata perché dobbiamo creare dei territori sempre più resilienti e quindi la prevenzione è un capitolo fondamentale che anche qui è molto sottolineato",
+            "hypothesis": "zendai bene l abbiamo anche citata perché dobbiamo creare dei territori sempre più resilienti e quindi la prevenzione è capitolo fondamentale che anche qui è molto sottolineato"
+          },
+          {
+            "utterance_id": "voxpopuli_it_20160706-0900-PLENARY-18-it_20160706-20-06-40_7",
+            "duration": 11.1875,
+            "wer": 0.10344827586206896,
+            "reference": "per questo le chiedo di continuare il lavoro che ha intrapreso perché i rapporti di questa dimensione del nostro mondo abbiano carattere diverso nel prossimo futuro con l egitto",
+            "hypothesis": "le chiedo di continuare nel lavoro che ha intrapreso perché i rapporti di questa dimensione del nostro mondo abbiano carattere diverso nel prossimo futuro con l egitto"
+          },
+          {
+            "utterance_id": "voxpopuli_it_20140114-0900-PLENARY-6-it_20140114-13-54-44_6",
+            "duration": 11.62,
+            "wer": 0.06896551724137931,
+            "reference": "è importante quindi che la commissione faccia il possibile per promuovere le forme di partecipazione dei dipendenti e per far sì che ogni stato membro avvii questo importante percorso",
+            "hypothesis": "quindi che la commissione faccia il possibile per promuovere le forme di partecipazione dei dipendenti e per far sì che ogni stato membro avvii questo importante percorso"
+          }
+        ],
+        "flagged": 0.03467297084318361,
+        "rules": {
+          "too_long": 0.017336485421591805,
+          "clipped": 0.01103230890464933,
+          "high_wer": 0.00591016548463357,
+          "too_short": 0.001182033096926714,
+          "too_slow": 0.0007880220646178094
+        }
+      },
+      {
+        "cluster": 2,
+        "utterances": 439,
+        "share": 0.14746388982196842,
+        "hours": 1.004266145833332,
+        "speakers": 85,
+        "median": {
+          "duration": 6.658,
+          "chars_per_second": 14.513775063430407,
+          "snr_db": 31.070820667591367,
+          "clipping": 0.0,
+          "wer": 0.9791666666666666,
+          "length_ratio": 0.5714285714285714
+        },
+        "z": {
+          "log:duration": -0.688,
+          "chars_per_second": 0.377,
+          "snr_db": 0.093,
+          "log:wer": 1.991,
+          "length_ratio": -0.639
+        },
+        "description": "high WER, low duration, low model transcript length",
+        "examples": [
+          {
+            "utterance_id": "voxpopuli_it_20190325-0900-PLENARY-it_20190325-21-38-16_3",
+            "duration": 6.6191875,
+            "wer": 0.8181818181818182,
+            "reference": "quindi la discussione si sposta su un tema che è completamente diverso e che non è quello del mercato unico dell energia",
+            "hypothesis": "diverso e che non è quello del mercato unico dell energia mi fa piacere poter ringraziare in conclusione"
+          },
+          {
+            "utterance_id": "voxpopuli_it_20171004-0900-PLENARY-13-it_20171004-16-39-29_6",
+            "duration": 7.51925,
+            "wer": 0.9545454545454546,
+            "reference": "il debito pubblico è stato una conseguenza delle azioni scellerate dell asimmetria che l euro ha portato all interno dell unione europea",
+            "hypothesis": "no non è il debito pubblico il debito pubblico è stata una conseguenza delle aziende"
+          },
+          {
+            "utterance_id": "voxpopuli_it_20150310-0900-PLENARY-17-it_20150310-18-19-44_6",
+            "duration": 5.14,
+            "wer": 1.0,
+            "reference": "serve la fiducia degli investitori privati fuggiti di fronte allo stigma dell epidemia",
+            "hypothesis": "come è stato già ripetuto più volte"
+          }
+        ],
+        "flagged": 0.8246013667425968,
+        "rules": {
+          "high_wer": 0.8132118451025057,
+          "clipped": 0.022779043280182234,
+          "too_short": 0.015945330296127564,
+          "too_fast": 0.009111617312072893,
+          "too_slow": 0.009111617312072893,
+          "too_long": 0.009111617312072893,
+          "low_snr": 0.004555808656036446
+        }
+      }
+    ]
+  },
+  "high_wer": [
+    {
+      "kind": "collapsed",
+      "utterances": 163,
+      "share": 0.4381720430107527,
+      "hours": 0.5582808506944443,
+      "speakers": 62,
+      "sessions": 135
+    },
+    {
+      "kind": "similar_length",
+      "utterances": 159,
+      "share": 0.4274193548387097,
+      "hours": 0.33376586805555564,
+      "speakers": 59,
+      "sessions": 127
+    },
+    {
+      "kind": "other",
+      "utterances": 50,
+      "share": 0.13440860215053763,
+      "hours": 0.07771515625,
+      "speakers": 32,
+      "sessions": 44
+    }
+  ],
+  "second_opinion": {
+    "utterances": 163,
+    "words": 5117,
+    "speakers": 62,
+    "hours": 0.5582808506944443,
+    "normalizer": "it-v2",
+    "max_wer": 0.5,
+    "models": [
+      {
+        "run": "experiments/runs/e6-turbo-voxpopuli",
+        "model": "faster-whisper/large-v3-turbo-float16",
+        "wer": 0.9927692007035372,
+        "ci_low": 0.9903068754111778,
+        "ci_high": 0.9953172934685023,
+        "collapsed": 163,
+        "within_max_wer": 0
+      },
+      {
+        "run": "experiments/runs/e6-small-collapsed",
+        "model": "faster-whisper/small-int8",
+        "wer": 0.3844049247606019,
+        "ci_low": 0.33800780501940647,
+        "ci_high": 0.4446935907585037,
+        "collapsed": 4,
+        "within_max_wer": 114
+      }
+    ]
+  }
+}
