@@ -657,3 +657,15 @@ are prompts read aloud, so there is little label noise to find).
 it also follows hard audio and, in VoxPopuli, the parliament's edited transcripts, which drop
 hesitations and repair sentences. The clusters are there to separate these cases by listening to
 their examples; the rules are what a pipeline would apply.
+
+**After E6.** The WER rule flagged 12.4% of the sample, and reading its transcripts showed two
+mechanisms with the same symptom: large-v3-turbo collapsing ("Grazie a tutti." for a whole
+speech) and segment boundaries shifted into the neighbouring speech. Two post hoc steps were
+added, kept apart from the pre-registered spec: the flagged utterances are split by the length of
+the model's transcript (`high_wer_kind`, thresholds as constants in the code, not in
+`quality.toml`), and a second model (Whisper-small on the CPU) transcribes the collapsed ones
+(`asr-lab quality --export-collapsed --second-run`). The exported manifest keeps the order of the
+data manifest, so its SHA-256 is stable and the committed second run is checked against it. The
+per-utterance features (`features.jsonl`, 1.4 MB) are rebuilt by the script and not committed;
+the report `quality.json` holds every number of the chapter. For the fine-tuning experiment, a
+transcript should be suspect only when two sources disagree with it.

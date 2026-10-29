@@ -1,0 +1,34 @@
+# Tables of the E6 chapter of RESULTS.md (rendered by: asr-lab render-results), from the quality
+# report of asr-lab quality and the scores of the strong model
+
+[[table]]
+name = "e6-wer"
+kind = "scores"
+rows = [
+  { label = "Italian VoxPopuli sample · Whisper-large-v3-turbo", file = "experiments/runs/e6-turbo-voxpopuli/scores_it-v2.json" },
+]
+
+[[table]]
+name = "e6-flags"
+kind = "quality"
+file = "experiments/E6/results/quality.json"
+section = "flags"
+
+[[table]]
+name = "e6-clusters"
+kind = "quality"
+file = "experiments/E6/results/quality.json"
+section = "clusters"
+
+# Post hoc: added after reading the high-WER transcripts
+[[table]]
+name = "e6-high-wer"
+kind = "quality"
+file = "experiments/E6/results/quality.json"
+section = "high_wer"
+
+[[table]]
+name = "e6-second-opinion"
+kind = "quality"
+file = "experiments/E6/results/quality.json"
+section = "second_opinion"

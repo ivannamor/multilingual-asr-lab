@@ -12,9 +12,10 @@ that regenerates it.
 3. [E1. Baseline](#e1-baseline)
 4. [E2. Which decoding settings?](#e2-which-decoding-settings)
 5. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
-6. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
+6. [E6. Which training transcripts can be trusted?](#e6-which-training-transcripts-can-be-trusted)
+7. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
    (simulated traffic, real audio and errors)
-7. [Limitations and next steps](#limitations-and-next-steps)
+8. [Limitations and next steps](#limitations-and-next-steps)
 
 ## Executive summary
 
@@ -60,6 +61,13 @@ that regenerates it.
   segments hold 41.5% of all errors as avoidable, the telephone channel alone under 2%. Reviewing
   the least confident 5% of sessions catches 34% of all word errors, while a simulated correction
   rate understates how bad the worst conditions are.
+- **A high WER against a transcript is not proof of a wrong transcript.** On 10 hours of Italian
+  VoxPopuli training data, a pre-registered rule (WER of large-v3-turbo above 50%) flags 12.4% of
+  the utterances. Read after the fact, about half of them (163) are not label noise but the model
+  collapsing: it writes "Grazie a tutti." for a whole speech, and Whisper-small transcribes 159 of
+  these 163 utterances. Most of the rest are real label noise, shifted segment boundaries that no
+  acoustic or length rule detects. Filtering training data on one model's WER would have discarded
+  0.56 hours of probably valid, and hard, speech.
 
 ## Setup
 
@@ -661,6 +669,178 @@ normalizer designed for one dataset can silently penalize another.
 committed transcripts it only rescores; without them it first transcribes the test set
 (about 40 minutes on a laptop CPU).
 
+## E6. Which training transcripts can be trusted?
+
+**Question.** Before a sample of training data is used for fine-tuning, which utterances are
+broken: transcripts that do not match the audio, empty transcripts, distorted audio, duplicates?
+And can cheap, interpretable features find them without listening to everything?
+
+**Method** ([decision 26](docs/design.md#26-training-data-quality-cheap-features-pre-registered-rules-clusters-to-read)).
+- **Data.** Italian VoxPopuli: European Parliament speeches with the parliament's own
+  transcripts (CC0), the planned domain of the fine-tuning experiment (E7). The sample is the
+  first row group of three training shards, read from the Hub's parquet files at a pinned revision
+  ([`experiments/E6/quality.toml`](experiments/E6/quality.toml)): 3,000 utterances, 10.21 hours,
+  128 speakers, 840 plenary sessions. Nothing is filtered at ingestion.
+- **Features** (`asr_lab.data.quality`): duration; speaking rate (letters of the normalized
+  transcript per second); a blind SNR estimate (energy of the loudest against the quietest 25 ms
+  frames); clipping; repeated transcripts or audio; and the WER of a strong model against each
+  transcript, with the length of the model's transcript relative to it. The normalizer is
+  `it-v2`, so that "2" against "due" is not counted as label noise.
+- **Model.** Whisper-large-v3-turbo with the decoding settings selected in E2 (`hst2`), float16
+  on a Colab T4 GPU (27 minutes, real-time factor 0.045).
+- **Rules.** Thresholds written in the spec before any feature was computed: duration 1 to 30
+  seconds, speaking rate 5 to 25 letters per second, estimated SNR at least 10 dB, at most 0.1%
+  clipped samples, and WER of the strong model at most 50%. Each rule is counted on its own and as
+  a union.
+- **Clusters** (`asr_lab.data.clustering`). k-means on five standardized features (duration and
+  WER on a log scale, speaking rate, SNR, length ratio), the number of clusters chosen by the
+  silhouette score among 2 to 8, each cluster described by the features it stands out on.
+- **Post hoc** (added after reading the high-WER transcripts, see below): the utterances flagged
+  by the WER rule are split by the length of the model's transcript, ten of them were listened to,
+  and Whisper-small transcribed the collapsed ones on a CPU as a second opinion. These steps
+  describe the flagged utterances; they change no rule and no threshold.
+
+<!-- BEGIN e6-wer -->
+| System | Normalizer | Utterances / words | WER [95% CI] | S / D / I | CER [95% CI] |
+|---|---|---|---|---|---|
+| Italian VoxPopuli sample · Whisper-large-v3-turbo | `it-v2` | 3,000 / 90,999 | 17.58% [15.95%, 19.18%] | 3,314 / 9,613 / 3,075 | 15.06% [13.47%, 16.63%] |
+<!-- END e6-wer -->
+
+The corpus WER is high for a model that reaches 2.64% on FLEURS Italian read speech (E1, with
+`it-v1`), and it is driven by
+deletions: 9,613 of 16,002 errors. The median utterance has 7.1% WER; a minority of utterances
+with almost every word missing carries the total.
+
+### What the rules flag
+
+<!-- BEGIN e6-flags -->
+| Rule | Utterances flagged | Hours flagged |
+|---|---|---|
+| `empty_text` | 23 (0.8%) | 0.07 (0.7%) |
+| `too_short` | 10 (0.3%) | 0.00 (0.0%) |
+| `too_long` | 48 (1.6%) | 0.48 (4.7%) |
+| `too_slow` | 6 (0.2%) | 0.02 (0.2%) |
+| `too_fast` | 4 (0.1%) | 0.00 (0.0%) |
+| `low_snr` | 2 (0.1%) | 0.00 (0.0%) |
+| `clipped` | 38 (1.3%) | 0.11 (1.1%) |
+| `high_wer` | 372 (12.4%) | 0.97 (9.5%) |
+| `duplicate_text` | 0 (0.0%) | 0.00 (0.0%) |
+| `duplicate_audio` | 0 (0.0%) | 0.00 (0.0%) |
+| **any rule** | 473 (15.8%) | 1.56 (15.3%) |
+<!-- END e6-flags -->
+
+The audio itself is clean: the median estimated SNR is 30.9 dB, two utterances fall below 10 dB,
+and none is repeated. The acoustic and length rules flag 4.2% of the utterances. Two of them deserve
+a note: 23 transcripts are empty although the audio contains speech, and 48 utterances are longer
+than Whisper's 30-second window, only 1.6% of the utterances but 4.7% of the hours, which matters
+for a fine-tuning budget counted in hours. The WER rule dominates: 372 utterances (12.4%), most of
+them flagged by no other rule (346).
+
+### What the clusters show
+
+<!-- BEGIN e6-clusters -->
+| Cluster | Utterances (share) | Hours | Speakers | Stands out for | Median WER | Median SNR | Median rate (chars/s) | Flagged by a rule |
+|---|---|---|---|---|---|---|---|---|
+| 1 | 2,538 (85%) | 9.14 | 125 | typical | 5.5% | 30.8 dB | 13.6 | 3% |
+| 2 | 439 (15%) | 1.00 | 85 | high WER, low duration, low model transcript length | 97.9% | 31.1 dB | 14.5 | 82% |
+<!-- END e6-clusters -->
+
+The silhouette score clearly prefers two clusters (0.39, against at most 0.23 for 3 to 8): a large
+typical cluster and a cluster of 439 short utterances whose model transcript is much shorter than
+the reference. The second cluster holds 357 of the 372 high-WER utterances, and its examples are
+transcripts such as "Grazie a tutti." for a whole speech. The clusters therefore do not reveal a
+new kind of problem: on these features the data has one clean mass and one group of
+disagreements between model and transcript. What they did show, by putting the examples side by
+side, is that the disagreements are of two different kinds.
+
+### Is the transcript wrong, or the model? (post hoc)
+
+A high WER says only that the model and the transcript disagree. The high-WER utterances fall
+into two groups of about the same size, by the length of the model's transcript:
+
+<!-- BEGIN e6-high-wer -->
+| Model transcript length (post hoc) | Utterances (share of `high_wer`) | Hours | Speakers | Sessions |
+|---|---|---|---|---|
+| collapsed (< 20% of the reference) | 163 (44%) | 0.56 | 62 | 135 |
+| similar (50% to 150%) | 159 (43%) | 0.33 | 59 | 127 |
+| other | 50 (13%) | 0.08 | 32 | 44 |
+<!-- END e6-high-wer -->
+
+**Listening.** Five collapsed and five similar-length utterances, drawn at random with a fixed
+seed, were listened to:
+
+| Group | Utterances listened to | What the audio contains |
+|---|---|---|
+| Collapsed (model wrote "Grazie.", "Grazie a tutti.", "Grazie Presidente.") | 5 | Whole sentences that match the reference and that the model did not transcribe; no "grazie" in four of them. In the fifth the speaker does say "Grazie Presidente" where the reference has "Signor Presidente", but the model dropped the rest of the 22-second speech. |
+| Similar length (model and reference shifted against each other) | 5 | The words at the start of the audio are those of the **model's** transcript, not of the reference: the segment boundaries are wrong, and the reference belongs partly to a neighbouring segment. |
+
+**A second model.** If the transcripts of the collapsed utterances were wrong, a second model
+should fail on them too. Whisper-small (int8, CPU, same decoding settings) transcribed the 163
+collapsed utterances (0.56 hours, 62 speakers, 5,117 reference words):
+
+<!-- BEGIN e6-second-opinion -->
+| Model | WER [95% CI] | Utterances still collapsed | Utterances with WER ≤ 50% |
+|---|---|---|---|
+| faster-whisper/large-v3-turbo-float16 | 99.28% [99.03%, 99.53%] | 163 / 163 | 0 / 163 |
+| faster-whisper/small-int8 | 38.44% [33.80%, 44.47%] | 4 / 163 | 114 / 163 |
+<!-- END e6-second-opinion -->
+
+Whisper-small transcribes the speech in 159 of the 163 utterances where large-v3-turbo wrote a
+thank-you. Its remaining 38% WER is not clean either: it is a much weaker model, and some of
+these utterances also have shifted boundaries (its transcripts start with words missing from the
+reference). The collapse is not tied to long audio: it affects 3% to 7% of the utterances in
+every duration range.
+
+### Findings
+
+1. **About half of the "label noise" found by the WER rule is the model's fault.** The 163
+   collapsed utterances (44% of the flagged ones) are speech that large-v3-turbo replaced with a
+   closing formula, the parliamentary version of the invented "Vielen Dank" of E1. They hold 32%
+   of all its word errors on the sample; without them the corpus WER would be 12.7% instead of
+   17.6% (a post hoc figure, without an interval). Filtering on this model's WER would discard
+   0.56 hours of probably valid data, and would discard it selectively: exactly the utterances
+   that the model finds hard, which a fine-tuned model most needs to learn.
+2. **The other half is real label noise, of a kind the other rules cannot see.** Shifted segment
+   boundaries leave the speaking rate and the duration normal, so only the comparison with a
+   model finds them. VoxPopuli segments its sessions automatically, and the boundary errors seem to
+   come from there.
+3. **The official transcripts are edited text, not verbatim speech.** A speaker's "Grazie
+   Presidente" becomes "Signor Presidente" in the reference; elsewhere hesitations and repairs
+   are removed. Part of any WER measured on this data is editing, not recognition error.
+4. **The cheap acoustic rules find little in parliamentary audio** (4.2% together), but two of
+   their results matter for fine-tuning: 23 empty transcripts, which would teach a model to stay
+   silent on speech, and 48 utterances longer than 30 seconds, which hold 4.7% of the hours.
+5. **For E7, the filter needs two models or a model that does not collapse.** A transcript
+   should count as suspect when a model with a stable output (for example with voice activity
+   detection, which removed the invented endings in E2) still disagrees with it, or when two
+   models agree with each other and not with the transcript.
+
+### Limitations
+
+- **The split of the high-WER utterances, the listening and the second model are post hoc.**
+  They were chosen after reading the worst transcripts. The length thresholds (20% and 50% to 150%)
+  are round numbers, not tuned, and change no rule; the pre-registered result is the table of
+  rules.
+- **Ten utterances were listened to**, five per group: enough to tell the two mechanisms apart, not
+  to estimate how often each occurs. The 50 "other" high-WER utterances were not examined.
+- **The second model is of the same family.** Whisper-small shares Whisper's training data and
+  failure modes; it collapses less here (4 of 163), but a model of another family (CTC,
+  Transducer) would be a stronger check.
+- **One sample, one domain.** 10 hours of Italian parliamentary speech, three row groups of the
+  training set; the shares may differ in other row groups, languages or datasets.
+- The SNR estimate is blind and becomes a lower bound for speech without pauses; with audio this
+  clean it plays little part.
+- The clusters use five hand-picked features and k-means, which prefers round clusters of similar
+  spread; learned embeddings (planned in the original design) were not tried.
+
+**Reproduce:** `bash experiments/E6/run.sh` (or `experiments/E6/run.ps1` on Windows). It downloads
+the sample if missing (about 1.2 GB of audio in `data/`), scores the committed large-v3-turbo
+transcripts, computes the features, rules and clusters, writes the manifest of the collapsed
+utterances and, if their Whisper-small transcripts are missing, makes them on the CPU (about 17
+minutes). The large-v3-turbo transcripts come from
+[`notebooks/e6_quality_colab.ipynb`](notebooks/e6_quality_colab.ipynb) (about 30 minutes on a
+Colab T4).
+
 ## E10. Usage analytics: where should a product team invest?
 
 > **Simulated usage.** No real usage logs are available. In this chapter the **traffic** (which
@@ -901,9 +1081,9 @@ degraded audio and transcribes it on a Colab GPU (about 25 minutes on a T4).
 
 ## Limitations and next steps
 
-- All results so far are on FLEURS read speech, where language is confounded with speaker gender;
-  E10 adds synthetic noise and a telephone channel, but real noisy recordings and spontaneous
-  speech are still missing. The normalization study (E3) covers Italian only.
+- The model comparisons are on FLEURS read speech, where language is confounded with speaker
+  gender; E10 adds synthetic noise and a telephone channel, and E6 parliamentary speech, but real
+  noisy recordings and spontaneous conversation are still missing. The normalization study (E3) covers Italian only.
 - Only Whisper models have been evaluated; other model families (CTC with an n-gram language
   model, Transducers) are planned.
 - Decoding settings were tuned for large-v3-turbo only, one option at a time and on read speech
@@ -912,3 +1092,8 @@ degraded audio and transcribes it on a Colab GPU (about 25 minutes on a T4).
 - The usage analysis (E10) runs on simulated traffic; with real sessions, the same code would give
   real priorities. Speech enhancement or target-speaker methods for babble are the natural next
   experiment.
+- The data-quality analysis (E6) covers 10 hours of one dataset, and its split of the high-WER
+  utterances into model failures and label noise was made after the fact, on ten listened
+  examples and a second Whisper model. The fine-tuning experiment it prepares (E7) should
+  pre-register a filter that needs two disagreeing sources, and test whether training on the
+  filtered data beats training on random data of the same size.

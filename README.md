@@ -83,8 +83,16 @@ Key findings so far:
 
 ![WER against the signal-to-noise ratio, per language, noise type and channel](reports/e10_wer_vs_snr.png)
 
-To reproduce: `experiments/E1/run.sh`, `experiments/E2/run.sh`, `experiments/E3/run.sh` and
-`experiments/E10/run.sh` (see [Experiments](#experiments)).
+- **A high WER against a training transcript is not proof that the transcript is wrong**
+  (experiment E6, 10 hours of Italian VoxPopuli). A pre-registered rule, WER of large-v3-turbo
+  above 50%, flags 12.4% of the utterances. Examined after the fact, about half of them (163) are the
+  model collapsing, writing "Grazie a tutti." for a whole speech: Whisper-small transcribes 159 of
+  them, and listening confirms the speech is there. Most of the rest are real label noise, segment
+  boundaries shifted into the neighbouring speech. Filtering on one model's WER would discard hard
+  but valid training data together with the broken transcripts.
+
+To reproduce: `experiments/E1/run.sh`, `experiments/E2/run.sh`, `experiments/E3/run.sh`,
+`experiments/E6/run.sh` and `experiments/E10/run.sh` (see [Experiments](#experiments)).
 
 ## Try it in your browser
 
@@ -154,6 +162,7 @@ its numbers (`run.sh`, and `run.ps1` for Windows) and a TOML spec of the tables 
 bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, German, English
 bash experiments/E2/run.sh    # decoding settings: selection on dev, test comparisons, figure
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
+bash experiments/E6/run.sh    # training-data quality: features, rules, clusters, second opinion
 bash experiments/E10/run.sh   # usage analytics on simulated sessions: segments, priorities, review
 ```
 
@@ -252,6 +261,8 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | `asr-lab ingest-voxpopuli` | `--spec` | (required) | TOML quality spec (e.g. `experiments/E6/quality.toml`); downloads its row groups of VoxPopuli at a pinned revision and writes their manifest |
 | `asr-lab quality` | `--spec`, `--output` | (required) | quality spec, folder for `features.jsonl` and `quality.json`: per-utterance features (duration, speaking rate, estimated SNR, clipping, duplicates) and the spec's filter rules |
 | | `--run` | none | transcription of the spec's manifest by a strong model: adds its WER against each transcript and clusters the utterances |
+| | `--export-collapsed` | off | write the manifest of the high-WER utterances where the model wrote almost nothing (`<data>/collapsed.jsonl`), for a second model |
+| | `--second-run` | none | a second model's transcription of those utterances: compares both models on them |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |
