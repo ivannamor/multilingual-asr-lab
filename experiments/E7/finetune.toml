@@ -1,0 +1,52 @@
+# Data selection and LoRA fine-tuning of experiment E7 (asr-lab select-data, asr-lab finetune).
+# Everything here is fixed before any model is trained: strategies, budget, hyperparameters and the
+# comparisons that will be tested. Nothing is tuned afterwards (there is no dev set to tune on).
+
+[selection]
+quality_spec = "experiments/E6/quality.toml"            # the pool: the E6 sample, its rules
+first_run = "experiments/runs/e6-turbo-voxpopuli"       # strong model on the whole pool
+second_run = "experiments/runs/e7-small-high-wer"       # second model on the high-WER utterances
+budget_hours = 5.0      # the same amount of audio for every strategy, half of the pool
+seeds = [0, 1, 2]       # one draw of the data and one training run per seed
+# random:            any utterance
+# naive_filter:      no utterance flagged by any E6 rule
+# two_source_filter: as naive_filter, but a high-WER utterance is kept when the second model
+#                    agrees with its transcript (WER <= max_wer): the first model was wrong
+# speaker_balanced:  any utterance, the speakers taking turns (the same hours for each speaker,
+#                    up to what each one has)
+strategies = ["random", "naive_filter", "two_source_filter", "speaker_balanced"]
+
+[training]
+base_model = "openai/whisper-small"
+language = "italian"
+lora_r = 32
+lora_alpha = 64
+lora_dropout = 0.05
+target_modules = ["q_proj", "v_proj"]  # attention queries and values, encoder and decoder
+learning_rate = 1e-3
+warmup_ratio = 0.1      # linear warm-up, then linear decay to zero
+epochs = 3
+batch_size = 16
+max_grad_norm = 1.0
+
+[evaluation]
+# In-domain: the whole VoxPopuli Italian test split (its own data spec). Out-of-domain: FLEURS,
+# where a drop below the base model means forgetting.
+test_sets = { voxpopuli = "data/voxpopuli_it/test.jsonl", fleurs = "data/fleurs_it/test.jsonl" }
+test_spec = "experiments/E7/test.toml"
+normalizer = "it-v2"
+# Decoding of every model, base included: the E2 selection (beam 5, hallucination silence 2 s)
+beam_size = 5
+hallucination_silence_threshold = 2.0
+
+[analysis]
+# The VoxPopuli test split shares 56 of its 81 speakers with the pool (no shared speeches), so
+# the in-domain results are also given on the test speakers absent from the pool.
+# Per strategy, the errors of its three seeds are summed per utterance; the contrasts below are
+# paired bootstraps by speaker on those sums, with Holm's correction for the four of them.
+contrasts = [
+  ["naive_filter", "random"],
+  ["two_source_filter", "random"],
+  ["speaker_balanced", "random"],
+  ["two_source_filter", "naive_filter"],
+]

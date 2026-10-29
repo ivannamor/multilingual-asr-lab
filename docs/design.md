@@ -669,3 +669,47 @@ data manifest, so its SHA-256 is stable and the committed second run is checked 
 per-utterance features (`features.jsonl`, 1.4 MB) are rebuilt by the script and not committed;
 the report `quality.json` holds every number of the chapter. For the fine-tuning experiment, a
 transcript should be suspect only when two sources disagree with it.
+
+## 27. Data selection under a fixed budget, LoRA in a plain loop, evaluation through CTranslate2
+
+**Context.** E7 asks whether *which* training data matters when *how much* does not. The pool
+is the E6 sample (10.2 hours of Italian VoxPopuli, 128 speakers), already described by its
+features and rules.
+
+**Decision.**
+- **Strategies** (`asr_lab.training.selection`), each drawing 5 hours, with three seeds:
+  random; a naive filter (no E6 rule broken); a two-source filter, which keeps an utterance
+  broken only by `high_wer` when Whisper-small also transcribes it with a WER of at most 50%
+  (E6 found that half of the high-WER utterances were model collapses); and a speaker-balanced
+  draw, where the speaker with the fewest hours so far goes next. Utterances over 30 seconds are
+  never drawn: the model sees 30-second windows. One seed gives every strategy the same random
+  order of the pool (common random numbers), so the strategies differ only by their rules.
+- **Fine-tuning** (`asr_lab.training.lora`): LoRA on the attention queries and values of
+  Whisper-small (rank 32), three epochs, AdamW with warm-up and linear decay, float16 autocast.
+  The loop is written out in plain PyTorch rather than with a `Trainer`, so every choice is
+  visible in a hundred lines and versions of Transformers matter less. The hyperparameters are a
+  common LoRA recipe for Whisper, written in `experiments/E7/finetune.toml` before training and
+  not tuned: with no dev-set search, the test sets are read once.
+- **Evaluation**: the merged model is converted to CTranslate2 and transcribed by the same
+  adapter and decoding as every other run (beam 5, hallucination silence 2 s). The base model
+  goes through the same conversion, so the comparison is not affected by two inference stacks.
+  In-domain: the whole VoxPopuli Italian test split; out-of-domain: FLEURS Italian, where a drop
+  below the base model is forgetting.
+- **Contrasts** written in the spec before training: each strategy against random, and the two
+  filters against each other; the three seeds of a strategy are pooled per utterance, compared
+  with paired bootstraps by speaker, with Holm's correction.
+
+**Alternatives rejected.** Balancing by the E6 clusters (two clusters, one of them the high-WER
+utterances: balancing them would add the suspect data); a larger pool (another GPU run before
+any training); one seed (no way to tell a strategy from the noise of training); a full
+fine-tuning (memory on a T4 and more forgetting); a dev set for early stopping or the learning
+rate (another split to keep apart, for a choice the comparison does not need).
+
+**Consequences.** The VoxPopuli test split is not speaker-disjoint from the training split: 56 of
+its 81 speakers are in the pool (no speech is shared). Gains in-domain mix domain and speaker
+adaptation, and the speaker-balanced draw sees more of the test speakers, so the in-domain
+results are also given on the 427 test utterances of the 25 speakers absent from the pool. The
+second model of the two-source filter is the model being fine-tuned; it only decides among the
+utterances the strong model already disputes. PyTorch, Transformers and PEFT are an optional
+extra (`training`), left out of the CI; the steps that need them are tested by a slow test with
+Whisper-tiny on the CPU.

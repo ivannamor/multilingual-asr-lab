@@ -17,6 +17,7 @@ from asr_lab.data.quality import (
     compute_features,
     estimate_snr,
     export_collapsed,
+    export_high_wer,
     filter_summary,
     flag,
     high_wer_breakdown,
@@ -257,6 +258,21 @@ def test_second_opinion_needs_a_subset_of_the_first_run(dataset: Path) -> None:
     (second / "run.json").write_text(json.dumps({"manifest": other.as_posix()}), encoding="utf-8")
     with pytest.raises(ValueError, match="does not have"):
         second_opinion(dataset, dataset.parent / "run", second)
+
+
+def test_export_high_wer_keeps_every_kind(dataset: Path) -> None:
+    rows = [
+        {"utterance_id": name, "flags": flags, "length_ratio": 1.0}
+        for name, flags in (("u3", ["high_wer"]), ("u7", ["clipped", "high_wer"]), ("u8", []))
+    ]
+    exported = export_high_wer(rows, dataset)
+    assert exported == dataset.parent / "vp" / "high_wer.jsonl"
+    assert [e.utterance_id for e in read_manifest(exported)] == ["u3", "u7"]
+
+
+def test_cli_select_data_needs_an_output(dataset: Path) -> None:
+    with pytest.raises(SystemExit):
+        cli.main(["select-data", "--spec", "experiments/E7/finetune.toml"])
 
 
 def test_cli_second_run_needs_a_first_run(dataset: Path) -> None:

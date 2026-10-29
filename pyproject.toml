@@ -29,6 +29,12 @@ tracking = [
 plots = [
     "matplotlib>=3.9",
 ]
+# Fine-tuning (experiment E7), on a GPU; not installed by the CI
+training = [
+    "peft>=0.13",
+    "torch>=2.4",
+    "transformers>=4.46",
+]
 
 [build-system]
 requires = ["uv_build>=0.13.5,<0.14.0"]
