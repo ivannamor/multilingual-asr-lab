@@ -728,3 +728,35 @@ leakage. A single-utterance last batch in one run gave loss spikes on the GPU; d
 batches is left to the next training code, so that the committed runs stay reproducible from it.
 The Colab notebook now uninstalls the preinstalled `torchao` (rejected by PEFT) and restarts the
 session after installing, since pip can upgrade numpy under a kernel that has already imported it.
+
+## 28. Other model families through Transformers, with the training data of each model on record
+
+**Context.** Every model so far is a Whisper. E1b adds a CTC and a Transducer model, to compare the
+three end-to-end families on the same test sets, normalizers and statistics.
+
+**Decision.**
+- **Models** (`experiments/E1b/models.toml`, written before any transcription): wav2vec2 XLS-R
+  fine-tuned per language (CTC, greedy decoding) and Parakeet TDT 0.6B v3 (Transducer, one model
+  for 25 languages), at pinned revisions.
+- **Both run through Transformers** (`asr_lab.inference.transformers_models`), which now has
+  `ParakeetForTDT`. NeMo, the original plan, would add a large dependency without wheels for the
+  ARM64 development machine, for a model that the same library as wav2vec2 can run. They are an
+  optional extra (`hf`), left out of the CI; `training` now builds on it.
+- **One utterance at a time**, as in the Whisper adapter: padding cannot change the output, and the
+  real-time factors compare the same way of working. All on a T4, the GPU of the Whisper runs of E1.
+- **Test sets**: FLEURS in three languages is the primary result. VoxPopuli Italian is a second
+  domain, with Whisper-small and large-v3-turbo transcribed there too.
+
+**Alternatives rejected.** NeMo (above); `facebook/mms-1b-all`, one CTC model for all languages
+(language adapters to load, while the XLS-R repositories also ship a language model, a useful
+reference for the next experiment); peak GPU memory
+as a metric (CTranslate2 allocates outside PyTorch, so the numbers would not compare: the number of
+parameters is reported instead); batching (faster, but it mixes padding effects into the comparison).
+
+**Consequences.** Training data differ, and are part of the result. Parakeet was trained on
+Europarl-ASR and on MOSEL, the unlabelled VoxPopuli audio with Whisper's transcripts: it has
+probably heard the sessions of the VoxPopuli test split, so its results there are reported as
+probably contaminated. The CTC vocabularies have no digits, while about 19% of the FLEURS references
+do, and only the Italian normalizer writes numbers in words: every comparison is repeated on the
+utterances whose reference has no digit. Parakeet has no language option, so it can pick the wrong
+language; Whisper and the CTC checkpoints cannot.

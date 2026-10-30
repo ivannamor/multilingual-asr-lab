@@ -29,11 +29,17 @@ tracking = [
 plots = [
     "matplotlib>=3.9",
 ]
+# Models run with Hugging Face Transformers: wav2vec2 CTC and Parakeet TDT (experiment E1b);
+# a GPU in practice, not installed by the CI. Parakeet needs Transformers 5.6 and librosa.
+hf = [
+    "librosa>=0.10",
+    "torch>=2.4",
+    "transformers>=5.6",
+]
 # Fine-tuning (experiment E7), on a GPU; not installed by the CI
 training = [
+    "asr-lab[hf]",
     "peft>=0.13",
-    "torch>=2.4",
-    "transformers>=4.46",
 ]
 
 [build-system]

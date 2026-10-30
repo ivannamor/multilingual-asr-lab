@@ -28,6 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v10.3.2
-      # Optional extras too, so their tests run; not training (PyTorch is large and needs a GPU)
-      - run: uv sync --locked --all-extras --no-extra training
+      # Optional extras too, so their tests run; not hf and training (PyTorch is large and needs
+      # a GPU)
+      - run: uv sync --locked --all-extras --no-extra hf --no-extra training
       - run: uv run pytest

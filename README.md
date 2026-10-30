@@ -233,9 +233,11 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | | `--output` | (required) | dataset folder (manifest + audio) |
 | | `--max-utterances`, `--seed` | all, `0` | seeded random subset |
 | `asr-lab transcribe` | `--manifest`, `--output` | (required) | input manifest, run directory |
-| | `--model-size` | `small` | any faster-whisper model, e.g. `large-v3-turbo` |
+| | `--family` | `whisper` | `whisper` (faster-whisper), `ctc` (wav2vec2) or `tdt` (Parakeet); the last two need `uv sync --extra hf` |
+| | `--model-size` | `small` | Whisper: any faster-whisper model, e.g. `large-v3-turbo` |
+| | `--model-id`, `--revision` | (required for `ctc`, `tdt`) | repository on the Hugging Face Hub and its commit |
 | | `--device` | `cpu` | `cpu` or `cuda` (NVIDIA GPU) |
-| | `--compute-type` | `int8` on CPU, `float16` on GPU | weight precision, e.g. `float32` |
+| | `--compute-type` | `int8` on CPU, `float16` on GPU | weight precision, e.g. `float32` (`ctc`, `tdt`: `float32` on CPU, `float16` on GPU) |
 | | `--beam-size` | `5` | `1` = greedy decoding |
 | | `--cpu-threads` | `4` | more threads were slower on the development machine |
 | | `--temperature` | `0 0.2 0.4 0.6 0.8 1` | fallback temperatures, tried in order when an output looks broken; `0` alone disables the fallback |
