@@ -713,3 +713,18 @@ second model of the two-source filter is the model being fine-tuned; it only dec
 utterances the strong model already disputes. PyTorch, Transformers and PEFT are an optional
 extra (`training`), left out of the CI; the steps that need them are tested by a slow test with
 Whisper-tiny on the CPU.
+
+**After E7.** The 13 models ran on one Colab A100 from one commit. The analysis
+(`asr_lab.training.results`, `asr-lab finetune-results`) follows the spec: seeds pooled per
+utterance, paired bootstraps, Holm. Holm needs p-values, so the paired bootstrap now also returns
+the share of replicates where B is worse, and `PairedComparison.p_value` is twice the smaller tail,
+ties counting on both sides (with only "B better" recorded, two identical systems got p = 0). The
+comparisons with the base model were planned but their test was not written down: they use the
+same method, corrected per test set. Two post hoc counts were added after reading the errors,
+kept out of the spec: errors outside the span the hypothesis gets right (segment boundaries) and
+invented parliamentary forms of address (a constant pattern in the code). Fine-tuning did not beat
+the base model, and the recipe was not changed afterwards: choosing it on the test splits would be
+leakage. A single-utterance last batch in one run gave loss spikes on the GPU; dropping incomplete
+batches is left to the next training code, so that the committed runs stay reproducible from it.
+The Colab notebook now uninstalls the preinstalled `torchao` (rejected by PEFT) and restarts the
+session after installing, since pip can upgrade numpy under a kernel that has already imported it.

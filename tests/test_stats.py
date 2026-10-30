@@ -5,7 +5,7 @@ import math
 import pytest
 
 from asr_lab.evaluation.metrics import ErrorCounts, error_rate
-from asr_lab.evaluation.stats import bootstrap_ci, paired_bootstrap
+from asr_lab.evaluation.stats import bootstrap_ci, holm, paired_bootstrap
 
 PERFECT = ErrorCounts(hits=10)
 ONE_ERROR = ErrorCounts(hits=9, substitutions=1)
@@ -131,3 +131,27 @@ def test_improvement_on_a_single_utterance_is_not_significant() -> None:
 def test_paired_bootstrap_rejects_different_lengths() -> None:
     with pytest.raises(ValueError, match="same utterances"):
         paired_bootstrap([PERFECT], [PERFECT, PERFECT])
+
+
+def test_p_value_is_small_for_a_consistent_difference_and_one_without_any() -> None:
+    better = paired_bootstrap(_corpus(50, 50), _corpus(90, 10))
+    assert better.p_value == 0.0  # no replicate crossed zero
+    same = paired_bootstrap(_corpus(50, 50), _corpus(50, 50))
+    assert same.p_value == 1.0
+    worse = paired_bootstrap(_corpus(90, 10), _corpus(50, 50))
+    assert worse.p_value == 0.0
+
+
+# --- holm -----------------------------------------------------------------------------
+
+
+def test_holm_multiplies_by_the_number_of_remaining_tests_and_keeps_the_order() -> None:
+    adjusted = holm([0.01, 0.04, 0.03, 0.2])
+    assert adjusted == pytest.approx([0.04, 0.09, 0.09, 0.2])
+    # Never smaller than the raw p-value, never above 1
+    assert holm([0.5, 0.6]) == pytest.approx([1.0, 1.0])
+
+
+def test_holm_of_one_test_changes_nothing_and_of_none_returns_nothing() -> None:
+    assert holm([0.03]) == [0.03]
+    assert holm([]) == []

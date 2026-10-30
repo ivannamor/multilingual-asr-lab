@@ -13,9 +13,10 @@ that regenerates it.
 4. [E2. Which decoding settings?](#e2-which-decoding-settings)
 5. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
 6. [E6. Which training transcripts can be trusted?](#e6-which-training-transcripts-can-be-trusted)
-7. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
+7. [E7. Does the choice of training data matter when the amount does not?](#e7-does-the-choice-of-training-data-matter-when-the-amount-does-not)
+8. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
    (simulated traffic, real audio and errors)
-8. [Limitations and next steps](#limitations-and-next-steps)
+9. [Limitations and next steps](#limitations-and-next-steps)
 
 ## Executive summary
 
@@ -68,6 +69,14 @@ that regenerates it.
   these 163 utterances. Most of the rest are real label noise, shifted segment boundaries that no
   acoustic or length rule detects. Filtering training data on one model's WER would have discarded
   0.56 hours of probably valid, and hard, speech.
+- **Fine-tuning did not help, but the choice of data decided how much it hurt.** Whisper-small was
+  fine-tuned with LoRA on 5 hours of that data chosen four ways, three seeds each. No strategy beat
+  the base model in-domain (20.69% WER), and all of them forgot: FLEURS WER rose from 7.05% to
+  8.47%-9.14%, and the models started to open encyclopedic sentences with "Signor Presidente,
+  onorevoli colleghi". Filtering the flagged data or balancing the speakers was significantly
+  better than random sampling (0.55 to 0.80 points in-domain, 0.43 to 0.67 on FLEURS, after
+  Holm's correction), and the two filters did not differ. Between seeds, one strategy's WER moved
+  by up to 0.87 points: one training run per strategy would have been misleading.
 
 ## Setup
 
@@ -841,6 +850,233 @@ minutes). The large-v3-turbo transcripts come from
 [`notebooks/e6_quality_colab.ipynb`](notebooks/e6_quality_colab.ipynb) (about 30 minutes on a
 Colab T4).
 
+## E7. Does the choice of training data matter when the amount does not?
+
+**Question.** Four ways of choosing 5 hours of Italian parliamentary speech for fine-tuning
+Whisper-small: does the choice change the fine-tuned model, in-domain and out-of-domain? And does
+fine-tuning help at all?
+
+**Method** ([decision 27](docs/design.md#27-data-selection-under-a-fixed-budget-lora-in-a-plain-loop-evaluation-through-ctranslate2)).
+Everything below the results tables was fixed in
+[`experiments/E7/finetune.toml`](experiments/E7/finetune.toml) before any model was trained.
+- **Pool.** The E6 sample of Italian VoxPopuli (3,000 utterances, 10.2 hours, 128 speakers) with
+  its features and rules. Utterances longer than Whisper's 30-second window are never drawn.
+- **Strategies**, each drawing 5.0 hours, with three seeds (a new draw and a new training run per
+  seed; one seed gives every strategy the same random order of the pool):
+  - `random`: any utterance (2,952 candidates). Its selections hold 207 to 223 utterances flagged
+    by an E6 rule;
+  - `naive_filter`: no E6 rule broken (2,527 candidates);
+  - `two_source_filter`: as `naive_filter`, but an utterance broken only by the WER rule is kept
+    when a second model, Whisper-small on the CPU, transcribes it with a WER of at most 50%
+    (133 of the 367 high-WER candidates kept; 56 to 73 per selection);
+  - `speaker_balanced`: any utterance, the speaker with the fewest hours so far going next. Its
+    selections cover all 128 speakers (113 to 117 for `random`) and hold as many flagged
+    utterances as `random` (210 to 221).
+- **Fine-tuning.** LoRA (rank 32, α 64) on the attention queries and values of Whisper-small, three
+  epochs, AdamW with learning rate 10⁻³, 10% warm-up and linear decay, batch 16, float16. A common
+  recipe, not tuned: there is no dev set, and the test sets were read once.
+- **Evaluation.** Each merged model is converted to CTranslate2 (float16) and transcribes with the
+  decoding selected in E2 (beam 5, hallucination silence 2 s). The base model goes through the
+  same conversion. In-domain: the whole VoxPopuli Italian test split (1,177 utterances, 81
+  speakers). It is not speaker-disjoint from the training split: 56 of its speakers are in the
+  pool (no speech is shared), so the in-domain results are also given on the 25 speakers absent
+  from the pool. Out-of-domain: the FLEURS Italian test split, where a WER above the base model's
+  means forgetting. Normalizer `it-v2`.
+- **Statistics.** The errors of a strategy's three seeds are summed per utterance, so a strategy is
+  judged on all its training runs. Four pre-registered contrasts (each filter and the balanced draw
+  against `random`, and the two filters against each other) are paired bootstraps by speaker
+  (FLEURS: by sentence, the widest unit there), with Holm's correction for the four tests of each
+  test set; the VoxPopuli test split with all its speakers is the primary family. The
+  comparisons with the base model were planned in the design (forgetting) but their test was not
+  written down; they are corrected the same way, four per test set.
+- **Hardware.** All 13 models on one NVIDIA A100 (40 GB) on Google Colab, from the same commit:
+  about 100 seconds of training per model, and 12 minutes to transcribe both test sets.
+
+<!-- BEGIN e7-training -->
+| Model | Utterances | Hours | Steps | Training time | Loss per 10 steps: first / last / highest |
+|---|---|---|---|---|---|
+| `random-s0` | 1,502 | 5.00 | 282 | 104 s | 0.71 / 0.25 / 0.71 |
+| `random-s1` | 1,546 | 5.00 | 291 | 100 s | 0.66 / 0.20 / 0.69 |
+| `random-s2` | 1,521 | 5.00 | 288 | 105 s | 0.77 / 1.42 / 1.55 |
+| `naive-filter-s0` | 1,451 | 5.00 | 273 | 99 s | 0.63 / 0.20 / 0.63 |
+| `naive-filter-s1` | 1,447 | 5.00 | 273 | 100 s | 0.64 / 0.19 / 0.64 |
+| `naive-filter-s2` | 1,433 | 5.00 | 270 | 97 s | 0.59 / 0.21 / 0.59 |
+| `two-source-filter-s0` | 1,439 | 5.00 | 270 | 96 s | 0.63 / 0.17 / 0.63 |
+| `two-source-filter-s1` | 1,449 | 5.00 | 273 | 100 s | 0.67 / 0.15 / 0.67 |
+| `two-source-filter-s2` | 1,455 | 5.00 | 273 | 100 s | 0.67 / 0.29 / 0.67 |
+| `speaker-balanced-s0` | 1,502 | 5.00 | 282 | 103 s | 0.75 / 0.28 / 0.75 |
+| `speaker-balanced-s1` | 1,525 | 5.00 | 288 | 105 s | 0.74 / 0.28 / 0.74 |
+| `speaker-balanced-s2` | 1,514 | 5.00 | 285 | 104 s | 0.76 / 0.27 / 0.76 |
+<!-- END e7-training -->
+
+The training loss falls from 0.59-0.77 to 0.15-0.29 in every run but one. In `random-s2` the
+loss jumps to 1.2-1.6 once per epoch: its 1,521 utterances leave a last batch of a single
+utterance, whose loss on the GPU was about 10 (estimated from the averages over 10 steps), while
+the same utterances score 0.2 to 2.3 with the base model in float32 on the CPU. The loop does not
+drop incomplete batches; the anomaly is reported, not corrected, and `random-s2` is the best of the
+three `random` runs on both test sets.
+
+### Results
+
+<!-- BEGIN e7-wer -->
+| Model | voxpopuli, all speakers (81) | voxpopuli, speakers not in the pool (25) | fleurs |
+|---|---|---|---|
+| base model | 20.69% [18.40%, 23.32%] | 24.60% [21.15%, 28.51%] | 7.05% [6.40%, 7.68%] |
+| `random` (3 seeds) | 21.57% [19.23%, 24.32%] | 26.52% [22.71%, 30.85%] | 9.14% [8.43%, 9.90%] |
+| `naive_filter` (3 seeds) | 20.81% [18.57%, 23.39%] | 25.09% [21.65%, 28.91%] | 8.47% [7.81%, 9.17%] |
+| `two_source_filter` (3 seeds) | 21.02% [18.78%, 23.65%] | 25.49% [21.90%, 29.44%] | 8.72% [8.02%, 9.46%] |
+| `speaker_balanced` (3 seeds) | 20.77% [18.50%, 23.42%] | 25.33% [21.71%, 29.37%] | 8.68% [7.99%, 9.40%] |
+| *utterances / words* | 1,177 / 37,454 | 427 / 13,578 | 865 / 21,262 |
+<!-- END e7-wer -->
+
+**Between strategies** (pre-registered):
+
+<!-- BEGIN e7-contrasts -->
+| Test set | B - A | WER difference [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|
+| voxpopuli, all speakers (81) | `naive_filter` - `random` | -0.77% [-1.20%, -0.33%] | < 0.001 | < 0.004 | yes |
+| voxpopuli, all speakers (81) | `two_source_filter` - `random` | -0.55% [-0.96%, -0.17%] | 0.010 | 0.020 | yes |
+| voxpopuli, all speakers (81) | `speaker_balanced` - `random` | -0.80% [-1.16%, -0.44%] | < 0.001 | < 0.004 | yes |
+| voxpopuli, all speakers (81) | `two_source_filter` - `naive_filter` | +0.21% [-0.14%, +0.56%] | 0.236 | 0.236 | no |
+| voxpopuli, speakers not in the pool (25) | `naive_filter` - `random` | -1.44% [-2.18%, -0.69%] | < 0.001 | < 0.004 | yes |
+| voxpopuli, speakers not in the pool (25) | `two_source_filter` - `random` | -1.03% [-1.75%, -0.37%] | 0.002 | 0.006 | yes |
+| voxpopuli, speakers not in the pool (25) | `speaker_balanced` - `random` | -1.20% [-1.92%, -0.40%] | 0.004 | 0.008 | yes |
+| voxpopuli, speakers not in the pool (25) | `two_source_filter` - `naive_filter` | +0.41% [-0.24%, +1.08%] | 0.208 | 0.208 | no |
+| fleurs | `naive_filter` - `random` | -0.67% [-1.05%, -0.34%] | < 0.001 | < 0.004 | yes |
+| fleurs | `two_source_filter` - `random` | -0.43% [-0.79%, -0.08%] | 0.014 | 0.028 | yes |
+| fleurs | `speaker_balanced` - `random` | -0.47% [-0.84%, -0.12%] | 0.006 | 0.018 | yes |
+| fleurs | `two_source_filter` - `naive_filter` | +0.24% [-0.02%, +0.51%] | 0.072 | 0.072 | no |
+<!-- END e7-contrasts -->
+
+**Against the base model:**
+
+<!-- BEGIN e7-vs-base -->
+| Test set | B - A | WER difference [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|
+| voxpopuli, all speakers (81) | `random` - `base` | +0.89% [+0.16%, +1.63%] | 0.022 | 0.088 | no |
+| voxpopuli, all speakers (81) | `naive_filter` - `base` | +0.12% [-0.43%, +0.64%] | 0.650 | 1.000 | no |
+| voxpopuli, all speakers (81) | `two_source_filter` - `base` | +0.33% [-0.25%, +0.93%] | 0.280 | 0.840 | no |
+| voxpopuli, all speakers (81) | `speaker_balanced` - `base` | +0.08% [-0.57%, +0.73%] | 0.792 | 1.000 | no |
+| voxpopuli, speakers not in the pool (25) | `random` - `base` | +1.92% [+1.07%, +2.75%] | < 0.001 | < 0.004 | yes |
+| voxpopuli, speakers not in the pool (25) | `naive_filter` - `base` | +0.49% [-0.18%, +1.11%] | 0.136 | 0.152 | no |
+| voxpopuli, speakers not in the pool (25) | `two_source_filter` - `base` | +0.89% [+0.19%, +1.57%] | 0.012 | 0.036 | yes |
+| voxpopuli, speakers not in the pool (25) | `speaker_balanced` - `base` | +0.73% [-0.08%, +1.52%] | 0.076 | 0.152 | no |
+| fleurs | `random` - `base` | +2.09% [+1.65%, +2.59%] | < 0.001 | < 0.004 | yes |
+| fleurs | `naive_filter` - `base` | +1.42% [+1.05%, +1.80%] | < 0.001 | < 0.004 | yes |
+| fleurs | `two_source_filter` - `base` | +1.66% [+1.26%, +2.09%] | < 0.001 | < 0.004 | yes |
+| fleurs | `speaker_balanced` - `base` | +1.63% [+1.25%, +2.03%] | < 0.001 | < 0.004 | yes |
+<!-- END e7-vs-base -->
+
+**One training run at a time** (each seed's WER; the tables above pool them):
+
+<!-- BEGIN e7-seeds -->
+| Strategy | voxpopuli, all speakers (81) | voxpopuli, speakers not in the pool (25) | fleurs |
+|---|---|---|---|
+| `random` | 21.89% / 21.71% / 21.13% (range 0.76%) | 26.93% / 26.75% / 25.89% (range 1.03%) | 9.30% / 9.39% / 8.74% (range 0.65%) |
+| `naive_filter` | 20.75% / 20.85% / 20.82% (range 0.10%) | 25.15% / 24.89% / 25.22% (range 0.34%) | 8.48% / 8.24% / 8.69% (range 0.45%) |
+| `two_source_filter` | 20.74% / 21.22% / 21.10% (range 0.48%) | 24.96% / 26.07% / 25.45% (range 1.11%) | 8.90% / 8.69% / 8.56% (range 0.34%) |
+| `speaker_balanced` | 21.15% / 20.88% / 20.29% (range 0.87%) | 26.22% / 25.34% / 24.42% (range 1.80%) | 9.02% / 8.78% / 8.23% (range 0.79%) |
+<!-- END e7-seeds -->
+
+### Where the errors are (post hoc)
+
+The base model's errors on the VoxPopuli test split are unusual: 4,681 of 7,749 are deletions or
+insertions. Counting the errors before the first and after the last word that a hypothesis gets
+right, where a wrong segment boundary puts them, separates the two kinds of error:
+
+<!-- BEGIN e7-edges -->
+| Test set | Model | Errors per run | S / D / I | At the segment edges | Inside the matched span |
+|---|---|---|---|---|---|
+| voxpopuli | base model | 7,749 | 3,068 / 2,754 / 1,927 | 4,456 (58%) | 3,293 |
+| voxpopuli | `random` (3 seeds) | 8,081 | 3,385 / 2,615 / 2,081 | 4,590 (57%) | 3,490 |
+| voxpopuli | `naive_filter` (3 seeds) | 7,793 | 3,317 / 2,462 / 2,014 | 4,269 (55%) | 3,524 |
+| voxpopuli | `two_source_filter` (3 seeds) | 7,873 | 3,333 / 2,571 / 1,968 | 4,419 (56%) | 3,454 |
+| voxpopuli | `speaker_balanced` (3 seeds) | 7,780 | 3,337 / 2,617 / 1,826 | 4,336 (56%) | 3,444 |
+| fleurs | base model | 1,499 | 1,170 / 166 / 163 | 209 (14%) | 1,290 |
+| fleurs | `random` (3 seeds) | 1,944 | 1,406 / 200 / 338 | 417 (21%) | 1,527 |
+| fleurs | `naive_filter` (3 seeds) | 1,801 | 1,334 / 202 / 265 | 299 (17%) | 1,502 |
+| fleurs | `two_source_filter` (3 seeds) | 1,853 | 1,354 / 219 / 279 | 335 (18%) | 1,518 |
+| fleurs | `speaker_balanced` (3 seeds) | 1,845 | 1,357 / 193 / 295 | 353 (19%) | 1,492 |
+<!-- END e7-edges -->
+
+Reading the FLEURS insertions of the fine-tuned models showed a second effect: they open
+encyclopedic sentences with the address of a parliamentary speech ("Signor Presidente, onorevoli
+colleghi, nella città di Barcellona..."). Utterances with a form of address that the reference does
+not have:
+
+<!-- BEGIN e7-address -->
+| Model | voxpopuli (1,177) | fleurs (865) |
+|---|---|---|
+| base model | 3 | 0 |
+| `random` (seeds 0, 1, 2) | 69 / 58 / 48 | 35 / 37 / 14 |
+| `naive_filter` (seeds 0, 1, 2) | 63 / 64 / 32 | 11 / 15 / 17 |
+| `two_source_filter` (seeds 0, 1, 2) | 88 / 84 / 42 | 27 / 11 / 19 |
+| `speaker_balanced` (seeds 0, 1, 2) | 46 / 78 / 36 | 24 / 24 / 10 |
+<!-- END e7-address -->
+
+### Findings
+
+1. **No strategy improved on the base model.** In-domain, the four strategies are within 0.9
+   points of the base model's 20.69%, and no difference survives the correction; on the test
+   speakers absent from the pool, `random` and `two_source_filter` are significantly worse
+   (+1.92 and +0.89 points). Out of domain, every strategy forgets: FLEURS WER rises from 7.05% to
+   8.47%-9.14%, 20% to 30% more errors. For these data and this recipe, the base model is the one
+   to ship.
+2. **The choice of data still matters: it decides how much fine-tuning costs.** All three
+   alternatives to random sampling are significantly better than it, with similar effects: 0.55
+   to 0.80 points in-domain (all speakers), 1.03 to 1.44 points on the unseen speakers and 0.43 to
+   0.67 points on FLEURS, all significant after Holm's correction. The two filters do not differ
+   (two-source minus naive: +0.21 points, [-0.14, +0.56]).
+3. **Removing flagged data is not the only way to get there.** `speaker_balanced` keeps as many
+   flagged utterances as `random` and does as well as the filters. Two changes that have nothing
+   in common, fewer suspect transcripts and more speakers with fewer hours each, reduce the damage
+   by the same amount; this design cannot say whether they act through the same mechanism (for
+   example, both lower the weight of the few long, talkative and error-prone sessions).
+4. **The VoxPopuli test split measures segmentation as much as recognition.** 58% of the base
+   model's errors there sit at the segment edges, against 14% on FLEURS: the boundary errors that
+   E6 found in the training transcripts are in the test split too. Fine-tuning moves errors
+   between the two kinds: on VoxPopuli, the filtered and balanced models make fewer errors at the
+   edges than the base model (4,269 per run for `naive_filter`, against 4,456; `random`: 4,590)
+   but more inside the matched span (3,524 against 3,293), mostly substitutions. Substitutions
+   rise on FLEURS too (1,170 for the base model, 1,334 to 1,406 per run). The models learned some
+   of the dataset's conventions and recognized words worse.
+5. **Fine-tuning writes the training domain into speech that never had it.** The base model never
+   adds a parliamentary address on FLEURS; the fine-tuned models do so in 10 to 37 of 865
+   utterances, sometimes followed by a repetition of the sentence. As with the "Grazie a tutti."
+   of E6 and the "Vielen Dank" of E1, each case costs a few insertions and is very visible.
+6. **A single training run would have misled.** The WER of one strategy moves by up to 0.87 points
+   in-domain between seeds (1.80 on the unseen speakers), as much as the differences between
+   strategies. With one seed, `speaker_balanced` (20.29% with seed 2) would have looked better than
+   the base model, and `random` with seed 0 (21.89%) was the worst of all twelve runs.
+
+### Limitations
+
+- **One recipe, not tuned.** The learning rate, the number of epochs and the LoRA rank were fixed
+  without a dev set. A lower learning rate or fewer epochs would probably forget less, and could
+  change finding 1; tuning them on the test splits would have been leakage. The next run needs a
+  dev split, speaker-disjoint from the test speakers.
+- **5 hours, one domain, one model.** The pool is 10 hours of parliamentary speech; the effect of
+  selection may differ with more data, other domains or a larger model.
+- **The in-domain test split shares speakers with the training pool.** The unseen-speaker subset
+  (25 speakers, 427 utterances) addresses this but has wide intervals.
+- **The comparisons with the base model and both post hoc analyses were not pre-registered.** The
+  edge errors depend on a simple definition (outside the matched span), which also counts an
+  ordinary error on a first or last word: FLEURS, with clean segments, gives the baseline (14%).
+  The forms of address are counted by a short list of phrases, a lower bound of the domain's
+  intrusions.
+- **One training anomaly:** the single-utterance batches of `random-s2` (see above). Dropping
+  incomplete batches is the fix for future runs.
+- **Same hardware for every model, but not for every experiment:** the A100 speeds are not
+  comparable to the T4 speeds of the other chapters.
+
+**Reproduce:** `bash experiments/E7/run.sh` (or `experiments/E7/run.ps1` on Windows). It downloads
+the pool and the VoxPopuli test split if missing (about 3.3 GB in `data/`), makes the second
+model's transcripts of the high-WER utterances on the CPU if missing (about 30 minutes), writes
+the selections and, from the committed transcripts of the fine-tuned models, computes the results
+and regenerates the tables. The fine-tuning and the transcriptions come from
+[`notebooks/e7_finetune_colab.ipynb`](notebooks/e7_finetune_colab.ipynb) (about 3 hours on a Colab
+A100).
+
 ## E10. Usage analytics: where should a product team invest?
 
 > **Simulated usage.** No real usage logs are available. In this chapter the **traffic** (which
@@ -1094,6 +1330,8 @@ degraded audio and transcribes it on a Colab GPU (about 25 minutes on a T4).
   experiment.
 - The data-quality analysis (E6) covers 10 hours of one dataset, and its split of the high-WER
   utterances into model failures and label noise was made after the fact, on ten listened
-  examples and a second Whisper model. The fine-tuning experiment it prepares (E7) should
-  pre-register a filter that needs two disagreeing sources, and test whether training on the
-  filtered data beats training on random data of the same size.
+  examples and a second Whisper model.
+- The fine-tuning experiment (E7) used one untuned recipe without a dev set, and fine-tuning did
+  not beat the base model. The next run needs a speaker-disjoint dev split to choose the learning
+  rate and the number of epochs, a test set with clean segment boundaries, and a check of
+  forgetting on every run.
