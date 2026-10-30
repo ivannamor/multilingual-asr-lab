@@ -769,3 +769,38 @@ new, declared run. In the notebook, the GPU setup for Whisper now follows the Py
 before them, Parakeet crashed the session on a T4. The cause was not isolated (the CUDA 12 libraries
 are the likely one, though a similar setup ran E7), so the order is a workaround backed by one
 successful run. The runs live on the machine's local disk, so a new machine starts from zero.
+
+## 29. N-gram language models for CTC, with a beam search of our own and text that avoids the test sets
+
+**Context.** The CTC models of E1b write what they hear, with no memory of the text. E4 adds an n-gram
+language model during the search, with weights chosen on dev sets.
+
+**Decision.**
+- **Text sources**: Europarl and OpenSubtitles, in the three languages, pinned in
+  `experiments/E4/lm.toml`. FLEURS sentences come from Wikimedia projects, so a language model built
+  on Wikipedia could contain the test sets or their neighbours. Europarl is the domain of VoxPopuli
+  and out of domain for FLEURS, and its release 7 ends in 2011 while the VoxPopuli test split starts
+  in 2013.
+- **The same size for every source**: 5 million words, close to the smallest source. A budget in
+  sentences would compare sizes as well as domains, because parliamentary sentences are about four
+  times longer than subtitles.
+- **Leakage filter**: sentences identical to any dev or test sentence are removed and counted.
+- **Our own beam search** (`asr_lab.lm.decoder`): pyctcdecode requires `numpy<2`, which the project
+  does not use. The search is short, is tested against brute force on small cases without a language
+  model, and needs KenLM only for scores, so it runs in the CI with a fake language model.
+- **Log probabilities are saved once**, in half precision, so that the grid and the test decoding never
+  repeat the acoustic model, which is the only part that needs a GPU.
+- **Selection**: for each test set and language model, the lowest dev WER on a grid of 42 cells. Each
+  test set has its own dev set; VoxPopuli uses its validation split, which E7 did not have.
+
+**Alternatives rejected.** pyctcdecode (above) and a separate environment for it (a second lock file
+for one step); the language models shipped with the XLS-R checkpoints (no source documented that we
+could find, so leakage could not be excluded); 4-grams (the question is whether order matters, and
+the two ends answer it); a wide beam (on 60 dev utterances, beams up to 1,000 changed the WER by at
+most 0.15 points, at about a hundred times the cost).
+
+**Consequences.** The leakage filter catches only identical sentences; the protection against near
+matches is the choice of sources. Neither source is a domain model for FLEURS, so this experiment
+cannot say how much a truly encyclopedic language model would help. KenLM's tools are compiled
+outside the project from a pinned commit, with one line removed from its build file for Boost 1.90,
+and the Python package is an optional extra left out of the CI.

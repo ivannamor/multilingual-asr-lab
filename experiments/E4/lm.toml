@@ -1,0 +1,93 @@
+# Experiment E4: n-gram language models on top of the CTC models of E1b. Everything here is fixed
+# before any language model decodes a dev or test set: sources, sizes, grid, selection, comparisons.
+
+# The CTC checkpoints, one per language, are those of E1b
+acoustic_models = "experiments/E1b/models.toml"
+
+# Neither source comes from Wikimedia, the origin of the FLEURS sentences. Europarl is the domain of
+# VoxPopuli and out of domain for FLEURS; release 7 ends in 2011, and the VoxPopuli test split
+# starts in 2013. OpenSubtitles is out of domain for both.
+[[corpora]]
+name = "europarl"
+repo = "Helsinki-NLP/europarl"
+revision = "ab45e286aef3fb5780067100cb5a1132b52b7949"
+files.it = { config = "en-it", field = "translation.it" }
+files.de = { config = "de-en", field = "translation.de" }
+files.en = { config = "en-it", field = "translation.en" }
+
+[[corpora]]
+name = "opensubtitles"
+repo = "sentence-transformers/parallel-sentences-opensubtitles"
+revision = "d86a387587ab6f2fd9ec7453b2765cec68111c87"
+files.it = { config = "en-it", field = "non_english" }
+files.de = { config = "en-de", field = "non_english" }
+files.en = { config = "en-it", field = "english" }
+
+[text]
+# The same number of words for every source and language, close to the smallest source
+n_words = 5_000_000
+seed = 0
+orders = [3, 5]
+# KenLM's lmplz and build_binary, compiled from this commit with the "system" component of Boost
+# removed from CMakeLists.txt (it no longer exists as a library in Boost 1.90)
+kenlm_commit = "4cb443e60b7bf2c0ddf3c745378f76cb59e254e5"
+
+[decoding]
+# On 60 dev utterances, wider settings up to a beam of 1,000 change the WER by at most 0.15 points
+beam_width = 100
+token_min_logp = -10.0
+beam_prune_logp = -20.0
+
+[grid]
+alpha = [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0]
+beta = [0.0, 0.5, 1.0, 1.5, 2.0, 3.0]
+
+# Each test set has its own dev set, on which alpha and beta are chosen for each language model: the
+# lowest corpus WER, the smaller alpha and then the smaller beta in a tie. A language model of the
+# same language is shared by all its test sets. Sentences of every dev and test set are removed
+# from the text of the language models of that language.
+[[test_sets]]
+name = "fleurs-it"
+lang = "it"
+normalizer = "it-v2"
+dev = "data/fleurs_it/dev.jsonl"
+test = "data/fleurs_it/test.jsonl"
+greedy_run = "experiments/runs/e1b-ctc-fleurs-it"
+
+[[test_sets]]
+name = "fleurs-de"
+lang = "de"
+normalizer = "de-v1"
+dev = "data/fleurs_de/dev.jsonl"
+test = "data/fleurs_de/test.jsonl"
+greedy_run = "experiments/runs/e1b-ctc-fleurs-de"
+
+[[test_sets]]
+name = "fleurs-en"
+lang = "en"
+normalizer = "en-v1"
+dev = "data/fleurs_en/dev.jsonl"
+test = "data/fleurs_en/test.jsonl"
+greedy_run = "experiments/runs/e1b-ctc-fleurs-en"
+
+[[test_sets]]
+name = "voxpopuli-it"
+lang = "it"
+normalizer = "it-v2"
+dev = "data/voxpopuli_it/validation.jsonl"
+test = "data/voxpopuli_it/test.jsonl"
+greedy_run = "experiments/runs/e1b-ctc-voxpopuli-it"
+
+[analysis]
+# Per test set: paired bootstrap of B - A (the widest resampling unit), Holm's correction for the
+# seven comparisons, repeated on the utterances whose reference has no digit. Reported besides:
+# CER, and the recall of the reference words inside and outside the vocabulary of each model.
+comparisons = [
+  ["europarl-3", "greedy"],
+  ["europarl-5", "greedy"],
+  ["opensubtitles-3", "greedy"],
+  ["opensubtitles-5", "greedy"],
+  ["europarl-5", "opensubtitles-5"],
+  ["europarl-5", "europarl-3"],
+  ["opensubtitles-5", "opensubtitles-3"],
+]
