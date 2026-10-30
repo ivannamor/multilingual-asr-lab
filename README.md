@@ -9,8 +9,9 @@ data-centric optimization.
 
 > **Status:** early development. The evaluation pipeline (FLEURS ingestion, Whisper inference,
 > WER/CER with versioned normalizers and bootstrap confidence intervals) works end to end and has
-> produced the first results (baseline, decoding settings, text normalization and usage
-> analytics on simulated traffic); more experiments are next.
+> produced the first results (baseline, decoding settings, text normalization, training-data
+> quality, data selection for fine-tuning and usage analytics on simulated traffic); more
+> experiments are next.
 
 Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
 
@@ -90,9 +91,17 @@ Key findings so far:
   them, and listening confirms the speech is there. Most of the rest are real label noise, segment
   boundaries shifted into the neighbouring speech. Filtering on one model's WER would discard hard
   but valid training data together with the broken transcripts.
+- **Fine-tuning can cost more than it gives, and the data decide how much** (experiment E7).
+  Whisper-small fine-tuned with LoRA on 5 hours of that parliamentary speech, chosen four ways with
+  three seeds each, never beat the base model in-domain and forgot out of domain: FLEURS WER rose
+  from 7.05% to 8.47%-9.14%, and the models started to open encyclopedic sentences with "Signor
+  Presidente, onorevoli colleghi". Filtering the suspect transcripts or balancing the speakers
+  limited the damage significantly compared with random sampling (0.55 to 0.80 WER points
+  in-domain, after Holm's correction).
 
 To reproduce: `experiments/E1/run.sh`, `experiments/E2/run.sh`, `experiments/E3/run.sh`,
-`experiments/E6/run.sh` and `experiments/E10/run.sh` (see [Experiments](#experiments)).
+`experiments/E6/run.sh`, `experiments/E7/run.sh` and `experiments/E10/run.sh` (see
+[Experiments](#experiments)).
 
 ## Try it in your browser
 
@@ -163,7 +172,7 @@ bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, G
 bash experiments/E2/run.sh    # decoding settings: selection on dev, test comparisons, figure
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
 bash experiments/E6/run.sh    # training-data quality: features, rules, clusters, second opinion
-bash experiments/E7/run.sh    # data selection for fine-tuning: second model, four strategies
+bash experiments/E7/run.sh    # fine-tuning data: second model, four strategies, results
 bash experiments/E10/run.sh   # usage analytics on simulated sessions: segments, priorities, review
 ```
 
@@ -270,6 +279,8 @@ Every command lists its options with `--help`, e.g. `uv run asr-lab transcribe -
 | `asr-lab finetune` | `--spec`, `--selections`, `--strategy`, `--output` | (required) | fine-tune Whisper with LoRA on one selection (`base`: no training), merge and convert it to CTranslate2 in `<output>/ct2`, with a training record (needs `uv sync --extra training` and, in practice, a GPU) |
 | | `--seed` | `0` | which selection, and the seed of the training |
 | | `--device` | `cuda` | `cpu` or `cuda` |
+| `asr-lab finetune-results` | `--spec`, `--records`, `--output` | (required) | fine-tuning spec, folder of the training records, results JSON: WER of the base model and of every strategy (seeds pooled) on each test set and on the test speakers absent from the pool, the spec's contrasts and the comparisons with the base model (paired bootstrap, Holm), errors at the segment edges |
+| | `--runs` | `experiments/runs` | folder of the run directories (`e7-<model>-<test set>`) |
 | `asr-lab render-results` | `--spec` | (required, repeatable) | TOML spec of generated tables, e.g. `experiments/E3/tables.toml` |
 | | `--document` | `RESULTS.md` | document whose tables are regenerated |
 | | `--check` | off | only check that the document is up to date |

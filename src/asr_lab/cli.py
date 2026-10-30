@@ -19,6 +19,8 @@ Usage::
     uv run asr-lab select-data --spec experiments/E7/finetune.toml --output selections.json
     uv run asr-lab finetune --spec experiments/E7/finetune.toml --selections selections.json \
         --strategy random --seed 0 --output models/e7/random-s0
+    uv run asr-lab finetune-results --spec experiments/E7/finetune.toml \
+        --records experiments/E7/results/training --output finetune.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -63,6 +65,7 @@ from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
 from asr_lab.tracking import log_comparison, log_scores
 from asr_lab.training.lora import fine_tune, load_training_config
+from asr_lab.training.results import finetune_results, save_results
 from asr_lab.training.selection import (
     load_selection_spec,
     save_selections,
@@ -266,6 +269,19 @@ def main(argv: Sequence[str] | None = None) -> None:
     finetune.add_argument("--output", required=True, type=Path, help="model directory")
     finetune.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
 
+    finetune_res = commands.add_parser(
+        "finetune-results",
+        help="WER, contrasts between strategies and forgetting of the fine-tuned models (E7)",
+    )
+    finetune_res.add_argument("--spec", required=True, type=Path, help="TOML fine-tuning spec")
+    finetune_res.add_argument(
+        "--runs", type=Path, default=Path("experiments/runs"), help="folder of the run directories"
+    )
+    finetune_res.add_argument(
+        "--records", required=True, type=Path, help="folder of the training records"
+    )
+    finetune_res.add_argument("--output", required=True, type=Path, help="results JSON")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -428,6 +444,15 @@ def main(argv: Sequence[str] | None = None) -> None:
             device=args.device,
         )
         print(f"Model: {model_dir}")
+    elif args.command == "finetune-results":
+        report = finetune_results(args.spec, args.runs, args.records)
+        save_results(report, args.output)
+        for subset in report["subsets"]:
+            systems = ", ".join(
+                f"{name} {result['wer']:.2%}" for name, result in subset["systems"].items()
+            )
+            print(f"{subset['name']} ({subset['n_utterances']} utterances): {systems}")
+        print(f"Fine-tuning results: {args.output}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,

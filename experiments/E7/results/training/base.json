@@ -1,0 +1,40 @@
+{
+  "config": {
+    "base_model": "openai/whisper-small",
+    "language": "italian",
+    "lora_r": 32,
+    "lora_alpha": 64,
+    "lora_dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "v_proj"
+    ],
+    "learning_rate": 0.001,
+    "warmup_ratio": 0.1,
+    "epochs": 3,
+    "batch_size": 16,
+    "max_grad_norm": 1.0
+  },
+  "seed": 0,
+  "utterance_ids": [],
+  "strategy": "base",
+  "selections": "experiments/E7/results/selections.json",
+  "utterances": 0,
+  "hours": 0.0,
+  "steps": 0,
+  "losses": [],
+  "train_seconds": 1.3489998309523799e-06,
+  "gpu": "NVIDIA A100-SXM4-40GB",
+  "versions": {
+    "torch": "2.11.0+cu130",
+    "transformers": "5.20.2",
+    "peft": "0.21.2"
+  },
+  "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux x86_64",
+    "executable_is_venv": false
+  },
+  "created": "2026-10-29T20:36:36+00:00"
+}

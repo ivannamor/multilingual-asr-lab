@@ -44,11 +44,43 @@ class PairedComparison:
     level: float
     n_resamples: int
     n_units: int
+    prob_b_worse: float  # fraction of resamples where B has the higher error rate
 
     @property
     def significant(self) -> bool:
         """True if the interval for the difference does not contain zero."""
         return self.low > 0 or self.high < 0
+
+    @property
+    def p_value(self) -> float:
+        """Two-sided bootstrap p-value of "no difference".
+
+        Twice the share of resamples on the less frequent side of zero, ties (a difference of
+        exactly zero) counting on both sides. With ``n_resamples`` resamples it cannot go below
+        1 / ``n_resamples`` except at 0, which means "below 1 / n_resamples".
+        """
+        at_most_zero, at_least_zero = 1 - self.prob_b_worse, 1 - self.prob_b_better
+        return min(1.0, 2 * min(at_most_zero, at_least_zero))
+
+
+def holm(p_values: Sequence[float]) -> list[float]:
+    """Holm's step-down adjustment of p-values for a family of tests.
+
+    An adjusted p-value below the level means the test is significant with the family-wise
+    error rate controlled at that level. Holm is uniformly more powerful than Bonferroni and
+    makes no assumption on how the tests depend on each other.
+
+    Example:
+        >>> holm([0.01, 0.04, 0.03, 0.2])
+        [0.04, 0.09, 0.09, 0.2]
+    """
+    order = sorted(range(len(p_values)), key=lambda i: p_values[i])
+    adjusted = [0.0] * len(p_values)
+    running = 0.0
+    for rank, i in enumerate(order):
+        running = max(running, min(1.0, (len(p_values) - rank) * p_values[i]))
+        adjusted[i] = running
+    return adjusted
 
 
 def bootstrap_ci(
@@ -116,6 +148,7 @@ def paired_bootstrap(
         low=low,
         high=high,
         prob_b_better=float(np.mean(deltas < 0)),
+        prob_b_worse=float(np.mean(deltas > 0)),
         level=level,
         n_resamples=n_resamples,
         n_units=len(errors_a),

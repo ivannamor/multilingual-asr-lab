@@ -1,0 +1,861 @@
+{
+  "spec": "experiments/E7/finetune.toml",
+  "normalizer": "it-v2",
+  "strategies": [
+    "random",
+    "naive_filter",
+    "two_source_filter",
+    "speaker_balanced"
+  ],
+  "seeds": [
+    0,
+    1,
+    2
+  ],
+  "contrasts": [
+    [
+      "naive_filter",
+      "random"
+    ],
+    [
+      "two_source_filter",
+      "random"
+    ],
+    [
+      "speaker_balanced",
+      "random"
+    ],
+    [
+      "two_source_filter",
+      "naive_filter"
+    ]
+  ],
+  "level": 0.95,
+  "n_resamples": 1000,
+  "seed": 0,
+  "training": [
+    {
+      "model": "base",
+      "utterances": 0,
+      "hours": 0.0,
+      "steps": 0,
+      "train_seconds": 1.3489998309523799e-06,
+      "first_loss": null,
+      "last_loss": null,
+      "max_loss": null,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "random-s0",
+      "utterances": 1502,
+      "hours": 4.999942690972222,
+      "steps": 282,
+      "train_seconds": 104.39097222600003,
+      "first_loss": 0.7068959891796112,
+      "last_loss": 0.25182047486305237,
+      "max_loss": 0.7068959891796112,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "random-s1",
+      "utterances": 1546,
+      "hours": 4.999963333333333,
+      "steps": 291,
+      "train_seconds": 99.981538516,
+      "first_loss": 0.6560191094875336,
+      "last_loss": 0.20121443271636963,
+      "max_loss": 0.6880502223968505,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "random-s2",
+      "utterances": 1521,
+      "hours": 4.999973923611112,
+      "steps": 288,
+      "train_seconds": 105.13585382599922,
+      "first_loss": 0.7675432682037353,
+      "last_loss": 1.4248534832149744,
+      "max_loss": 1.5514950633049012,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "naive-filter-s0",
+      "utterances": 1451,
+      "hours": 4.999981805555556,
+      "steps": 273,
+      "train_seconds": 99.33674727000016,
+      "first_loss": 0.6308071732521057,
+      "last_loss": 0.19963296751181284,
+      "max_loss": 0.6308071732521057,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "naive-filter-s1",
+      "utterances": 1447,
+      "hours": 4.999898211805555,
+      "steps": 273,
+      "train_seconds": 100.22034875099962,
+      "first_loss": 0.6393653631210328,
+      "last_loss": 0.18706480662027994,
+      "max_loss": 0.6393653631210328,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "naive-filter-s2",
+      "utterances": 1433,
+      "hours": 4.9999717187499995,
+      "steps": 270,
+      "train_seconds": 96.69189678300063,
+      "first_loss": 0.5888584643602371,
+      "last_loss": 0.20697151273488998,
+      "max_loss": 0.5888584643602371,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "two-source-filter-s0",
+      "utterances": 1439,
+      "hours": 4.999884392361111,
+      "steps": 270,
+      "train_seconds": 95.81877837600041,
+      "first_loss": 0.6295074373483658,
+      "last_loss": 0.16823846325278283,
+      "max_loss": 0.6295074373483658,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "two-source-filter-s1",
+      "utterances": 1449,
+      "hours": 4.999797309027778,
+      "steps": 273,
+      "train_seconds": 99.84024054399924,
+      "first_loss": 0.665666076540947,
+      "last_loss": 0.14531559745470682,
+      "max_loss": 0.665666076540947,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "two-source-filter-s2",
+      "utterances": 1455,
+      "hours": 4.999748159722222,
+      "steps": 273,
+      "train_seconds": 100.31413523800074,
+      "first_loss": 0.66940358877182,
+      "last_loss": 0.2942385325829188,
+      "max_loss": 0.66940358877182,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "speaker-balanced-s0",
+      "utterances": 1502,
+      "hours": 4.9999917881944445,
+      "steps": 282,
+      "train_seconds": 103.1600613870005,
+      "first_loss": 0.747055071592331,
+      "last_loss": 0.28341224789619446,
+      "max_loss": 0.747055071592331,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "speaker-balanced-s1",
+      "utterances": 1525,
+      "hours": 4.999864340277777,
+      "steps": 288,
+      "train_seconds": 104.5245641190013,
+      "first_loss": 0.7350597500801086,
+      "last_loss": 0.28250448033213615,
+      "max_loss": 0.7350597500801086,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    },
+    {
+      "model": "speaker-balanced-s2",
+      "utterances": 1514,
+      "hours": 4.999893697916666,
+      "steps": 285,
+      "train_seconds": 104.08596848100024,
+      "first_loss": 0.762092673778534,
+      "last_loss": 0.27214637100696565,
+      "max_loss": 0.762092673778534,
+      "gpu": "NVIDIA A100-SXM4-40GB",
+      "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+    }
+  ],
+  "subsets": [
+    {
+      "name": "voxpopuli",
+      "test_set": "voxpopuli",
+      "unseen_only": false,
+      "n_utterances": 1177,
+      "n_words": 37454,
+      "n_speakers": 81,
+      "n_speakers_in_pool": 56,
+      "systems": {
+        "base": {
+          "wer": 0.2068937897153842,
+          "low": 0.18397980687519033,
+          "high": 0.23316447209540703,
+          "unit": "speaker",
+          "n_units": 81,
+          "substitutions": 3068,
+          "deletions": 2754,
+          "insertions": 1927,
+          "errors": 7749,
+          "edge_errors": 4456,
+          "edge_deletions_insertions": 3486
+        },
+        "random": {
+          "wer": 0.2157490966696926,
+          "low": 0.19229233717031916,
+          "high": 0.24315888191600715,
+          "unit": "speaker",
+          "n_units": 81,
+          "substitutions": 10155,
+          "deletions": 7844,
+          "insertions": 6243,
+          "errors": 24242,
+          "edge_errors": 13771,
+          "edge_deletions_insertions": 10038
+        },
+        "naive_filter": {
+          "wer": 0.20807746391128673,
+          "low": 0.18572424369235357,
+          "high": 0.23394508027938782,
+          "unit": "speaker",
+          "n_units": 81,
+          "substitutions": 9950,
+          "deletions": 7387,
+          "insertions": 6043,
+          "errors": 23380,
+          "edge_errors": 12807,
+          "edge_deletions_insertions": 9333
+        },
+        "two_source_filter": {
+          "wer": 0.2102045175415176,
+          "low": 0.18783876797744306,
+          "high": 0.23648378988805313,
+          "unit": "speaker",
+          "n_units": 81,
+          "substitutions": 10000,
+          "deletions": 7714,
+          "insertions": 5905,
+          "errors": 23619,
+          "edge_errors": 13256,
+          "edge_deletions_insertions": 9698
+        },
+        "speaker_balanced": {
+          "wer": 0.20772147167191754,
+          "low": 0.18495153893718827,
+          "high": 0.2341998510578527,
+          "unit": "speaker",
+          "n_units": 81,
+          "substitutions": 10011,
+          "deletions": 7851,
+          "insertions": 5478,
+          "errors": 23340,
+          "edge_errors": 13007,
+          "edge_deletions_insertions": 9393
+        }
+      },
+      "runs": {
+        "random": {
+          "random-s0": 0.2188551289581887,
+          "random-s1": 0.21709296737331127,
+          "random-s2": 0.21129919367757782
+        },
+        "naive_filter": {
+          "naive-filter-s0": 0.20750787632829604,
+          "naive-filter-s1": 0.20849575479254553,
+          "naive-filter-s2": 0.20822876061301865
+        },
+        "two_source_filter": {
+          "two-source-filter-s0": 0.2074010786564853,
+          "two-source-filter-s1": 0.21223367330592194,
+          "two-source-filter-s2": 0.21097880066214555
+        },
+        "speaker_balanced": {
+          "speaker-balanced-s0": 0.21151278902119933,
+          "speaker-balanced-s1": 0.20878944839002508,
+          "speaker-balanced-s2": 0.2028621776045282
+        }
+      },
+      "invented_address": {
+        "base": 3,
+        "random-s0": 69,
+        "random-s1": 58,
+        "random-s2": 48,
+        "naive-filter-s0": 63,
+        "naive-filter-s1": 64,
+        "naive-filter-s2": 32,
+        "two-source-filter-s0": 88,
+        "two-source-filter-s1": 84,
+        "two-source-filter-s2": 42,
+        "speaker-balanced-s0": 46,
+        "speaker-balanced-s1": 78,
+        "speaker-balanced-s2": 36
+      },
+      "contrasts": [
+        {
+          "a": "random",
+          "b": "naive_filter",
+          "delta": -0.0076716327584058774,
+          "low": -0.012033322189814788,
+          "high": -0.003315495380904893,
+          "prob_b_better": 1.0,
+          "p_value": 0.0,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "random",
+          "b": "two_source_filter",
+          "delta": -0.00554457912817502,
+          "low": -0.00955032498421834,
+          "high": -0.0016688474277872741,
+          "prob_b_better": 0.995,
+          "p_value": 0.010000000000000009,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 0.020000000000000018,
+          "significant": true
+        },
+        {
+          "a": "random",
+          "b": "speaker_balanced",
+          "delta": -0.008027624997775068,
+          "low": -0.011615188457756814,
+          "high": -0.0043530266959871675,
+          "prob_b_better": 1.0,
+          "p_value": 0.0,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "naive_filter",
+          "b": "two_source_filter",
+          "delta": 0.0021270536302308574,
+          "low": -0.0013791495187749742,
+          "high": 0.005581557029618905,
+          "prob_b_better": 0.118,
+          "p_value": 0.236,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 0.236,
+          "significant": false
+        }
+      ],
+      "vs_base": [
+        {
+          "a": "base",
+          "b": "random",
+          "delta": 0.008855306954308417,
+          "low": 0.001553774902318214,
+          "high": 0.016274053608164602,
+          "prob_b_better": 0.011,
+          "p_value": 0.02200000000000002,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 0.08800000000000008,
+          "significant": false
+        },
+        {
+          "a": "base",
+          "b": "naive_filter",
+          "delta": 0.0011836741959025399,
+          "low": -0.004338331861811623,
+          "high": 0.006424028502208948,
+          "prob_b_better": 0.324,
+          "p_value": 0.6499999999999999,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 1.0,
+          "significant": false
+        },
+        {
+          "a": "base",
+          "b": "two_source_filter",
+          "delta": 0.0033107278261333972,
+          "low": -0.0025195187965148776,
+          "high": 0.009278175655160852,
+          "prob_b_better": 0.139,
+          "p_value": 0.28,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 0.8400000000000001,
+          "significant": false
+        },
+        {
+          "a": "base",
+          "b": "speaker_balanced",
+          "delta": 0.0008276819565333493,
+          "low": -0.005673845897225976,
+          "high": 0.007311423746555142,
+          "prob_b_better": 0.396,
+          "p_value": 0.792,
+          "unit": "speaker",
+          "n_units": 81,
+          "p_holm": 1.0,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "name": "voxpopuli_unseen",
+      "test_set": "voxpopuli",
+      "unseen_only": true,
+      "n_utterances": 427,
+      "n_words": 13578,
+      "n_speakers": 25,
+      "n_speakers_in_pool": 0,
+      "systems": {
+        "base": {
+          "wer": 0.24598615407276478,
+          "low": 0.21150687814492902,
+          "high": 0.2850758022968767,
+          "unit": "speaker",
+          "n_units": 25,
+          "substitutions": 1232,
+          "deletions": 1203,
+          "insertions": 905,
+          "errors": 3340,
+          "edge_errors": 1968,
+          "edge_deletions_insertions": 1642
+        },
+        "random": {
+          "wer": 0.26523297491039427,
+          "low": 0.22708490670973902,
+          "high": 0.3085086172787786,
+          "unit": "speaker",
+          "n_units": 25,
+          "substitutions": 4201,
+          "deletions": 3482,
+          "insertions": 3121,
+          "errors": 10804,
+          "edge_errors": 6524,
+          "edge_deletions_insertions": 5059
+        },
+        "naive_filter": {
+          "wer": 0.25087150783129575,
+          "low": 0.2165402263227092,
+          "high": 0.2890882248424293,
+          "unit": "speaker",
+          "n_units": 25,
+          "substitutions": 4122,
+          "deletions": 3239,
+          "insertions": 2858,
+          "errors": 10219,
+          "edge_errors": 5788,
+          "edge_deletions_insertions": 4487
+        },
+        "two_source_filter": {
+          "wer": 0.25492217803309275,
+          "low": 0.21895938938035212,
+          "high": 0.2944113347697179,
+          "unit": "speaker",
+          "n_units": 25,
+          "substitutions": 4091,
+          "deletions": 3453,
+          "insertions": 2840,
+          "errors": 10384,
+          "edge_errors": 6104,
+          "edge_deletions_insertions": 4768
+        },
+        "speaker_balanced": {
+          "wer": 0.2532773604359994,
+          "low": 0.21705151351078908,
+          "high": 0.2937228418702925,
+          "unit": "speaker",
+          "n_units": 25,
+          "substitutions": 4029,
+          "deletions": 3684,
+          "insertions": 2604,
+          "errors": 10317,
+          "edge_errors": 6121,
+          "edge_deletions_insertions": 4802
+        }
+      },
+      "runs": {
+        "random": {
+          "random-s0": 0.2692590955958168,
+          "random-s1": 0.2674915304168508,
+          "random-s2": 0.25894829871851527
+        },
+        "naive_filter": {
+          "naive-filter-s0": 0.25150979525703343,
+          "naive-filter-s1": 0.24885844748858446,
+          "naive-filter-s2": 0.25224628074826927
+        },
+        "two_source_filter": {
+          "two-source-filter-s0": 0.2495949329798203,
+          "two-source-filter-s1": 0.2607158638974812,
+          "two-source-filter-s2": 0.25445573722197673
+        },
+        "speaker_balanced": {
+          "speaker-balanced-s0": 0.26218883487995287,
+          "speaker-balanced-s1": 0.2534246575342466,
+          "speaker-balanced-s2": 0.2442185888937988
+        }
+      },
+      "invented_address": {
+        "base": 3,
+        "random-s0": 27,
+        "random-s1": 24,
+        "random-s2": 24,
+        "naive-filter-s0": 26,
+        "naive-filter-s1": 21,
+        "naive-filter-s2": 14,
+        "two-source-filter-s0": 39,
+        "two-source-filter-s1": 35,
+        "two-source-filter-s2": 17,
+        "speaker-balanced-s0": 21,
+        "speaker-balanced-s1": 32,
+        "speaker-balanced-s2": 16
+      },
+      "contrasts": [
+        {
+          "a": "random",
+          "b": "naive_filter",
+          "delta": -0.014361467079098522,
+          "low": -0.021822001541830602,
+          "high": -0.006915861634659441,
+          "prob_b_better": 1.0,
+          "p_value": 0.0,
+          "unit": "speaker",
+          "n_units": 25,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "random",
+          "b": "two_source_filter",
+          "delta": -0.01031079687730152,
+          "low": -0.01754536964981665,
+          "high": -0.003736391476556839,
+          "prob_b_better": 0.999,
+          "p_value": 0.0020000000000000018,
+          "unit": "utterance",
+          "n_units": 427,
+          "p_holm": 0.006000000000000005,
+          "significant": true
+        },
+        {
+          "a": "random",
+          "b": "speaker_balanced",
+          "delta": -0.01195561447439486,
+          "low": -0.019210963373143104,
+          "high": -0.004023469010082603,
+          "prob_b_better": 0.998,
+          "p_value": 0.0040000000000000036,
+          "unit": "speaker",
+          "n_units": 25,
+          "p_holm": 0.008000000000000007,
+          "significant": true
+        },
+        {
+          "a": "naive_filter",
+          "b": "two_source_filter",
+          "delta": 0.004050670201797002,
+          "low": -0.00239929879857018,
+          "high": 0.010753866379643455,
+          "prob_b_better": 0.1,
+          "p_value": 0.20799999999999996,
+          "unit": "speaker",
+          "n_units": 25,
+          "p_holm": 0.20799999999999996,
+          "significant": false
+        }
+      ],
+      "vs_base": [
+        {
+          "a": "base",
+          "b": "random",
+          "delta": 0.01924682083762949,
+          "low": 0.010663323486918262,
+          "high": 0.027542168440613735,
+          "prob_b_better": 0.0,
+          "p_value": 0.0,
+          "unit": "utterance",
+          "n_units": 427,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "base",
+          "b": "naive_filter",
+          "delta": 0.004885353758530969,
+          "low": -0.0017535431540375537,
+          "high": 0.011077475693867671,
+          "prob_b_better": 0.068,
+          "p_value": 0.1359999999999999,
+          "unit": "utterance",
+          "n_units": 427,
+          "p_holm": 0.15200000000000014,
+          "significant": false
+        },
+        {
+          "a": "base",
+          "b": "two_source_filter",
+          "delta": 0.008936023960327971,
+          "low": 0.0019185856844999504,
+          "high": 0.015705893435325254,
+          "prob_b_better": 0.006,
+          "p_value": 0.01200000000000001,
+          "unit": "utterance",
+          "n_units": 427,
+          "p_holm": 0.03600000000000003,
+          "significant": true
+        },
+        {
+          "a": "base",
+          "b": "speaker_balanced",
+          "delta": 0.007291206363234631,
+          "low": -0.0008031850396811833,
+          "high": 0.015173050462735734,
+          "prob_b_better": 0.038,
+          "p_value": 0.07600000000000007,
+          "unit": "utterance",
+          "n_units": 427,
+          "p_holm": 0.15200000000000014,
+          "significant": false
+        }
+      ]
+    },
+    {
+      "name": "fleurs",
+      "test_set": "fleurs",
+      "unseen_only": false,
+      "n_utterances": 865,
+      "n_words": 21262,
+      "n_speakers": 865,
+      "n_speakers_in_pool": 0,
+      "systems": {
+        "base": {
+          "wer": 0.07050136393565987,
+          "low": 0.0639694853302353,
+          "high": 0.07684475809747479,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "substitutions": 1170,
+          "deletions": 166,
+          "insertions": 163,
+          "errors": 1499,
+          "edge_errors": 209,
+          "edge_deletions_insertions": 67
+        },
+        "random": {
+          "wer": 0.09143072147493181,
+          "low": 0.08432101094589207,
+          "high": 0.09895048830619486,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "substitutions": 4217,
+          "deletions": 601,
+          "insertions": 1014,
+          "errors": 5832,
+          "edge_errors": 1252,
+          "edge_deletions_insertions": 598
+        },
+        "naive_filter": {
+          "wer": 0.08470510770388487,
+          "low": 0.07806522995370177,
+          "high": 0.0917018587000647,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "substitutions": 4003,
+          "deletions": 606,
+          "insertions": 794,
+          "errors": 5403,
+          "edge_errors": 896,
+          "edge_deletions_insertions": 361
+        },
+        "two_source_filter": {
+          "wer": 0.08715078543881102,
+          "low": 0.08023677081348897,
+          "high": 0.09462470158397704,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "substitutions": 4063,
+          "deletions": 658,
+          "insertions": 838,
+          "errors": 5559,
+          "edge_errors": 1004,
+          "edge_deletions_insertions": 443
+        },
+        "speaker_balanced": {
+          "wer": 0.08675884990436773,
+          "low": 0.0798988997105447,
+          "high": 0.09400120612977687,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "substitutions": 4070,
+          "deletions": 579,
+          "insertions": 885,
+          "errors": 5534,
+          "edge_errors": 1059,
+          "edge_deletions_insertions": 483
+        }
+      },
+      "runs": {
+        "random": {
+          "random-s0": 0.09302981845546045,
+          "random-s1": 0.09387639920985796,
+          "random-s2": 0.087385946759477
+        },
+        "naive_filter": {
+          "naive-filter-s0": 0.08475213996801806,
+          "naive-filter-s1": 0.08244755902549149,
+          "naive-filter-s2": 0.08691562411814505
+        },
+        "two_source_filter": {
+          "two-source-filter-s0": 0.08898504374000564,
+          "two-source-filter-s1": 0.08691562411814505,
+          "two-source-filter-s2": 0.08555168845828238
+        },
+        "speaker_balanced": {
+          "speaker-balanced-s0": 0.09020788260746872,
+          "speaker-balanced-s1": 0.08776220487254256,
+          "speaker-balanced-s2": 0.0823064622330919
+        }
+      },
+      "invented_address": {
+        "base": 0,
+        "random-s0": 35,
+        "random-s1": 37,
+        "random-s2": 14,
+        "naive-filter-s0": 11,
+        "naive-filter-s1": 15,
+        "naive-filter-s2": 17,
+        "two-source-filter-s0": 27,
+        "two-source-filter-s1": 11,
+        "two-source-filter-s2": 19,
+        "speaker-balanced-s0": 24,
+        "speaker-balanced-s1": 24,
+        "speaker-balanced-s2": 10
+      },
+      "contrasts": [
+        {
+          "a": "random",
+          "b": "naive_filter",
+          "delta": -0.00672561377104694,
+          "low": -0.01049283511601362,
+          "high": -0.0034411529240577156,
+          "prob_b_better": 1.0,
+          "p_value": 0.0,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "random",
+          "b": "two_source_filter",
+          "delta": -0.004279936036120785,
+          "low": -0.007916909809305255,
+          "high": -0.0008284650674782409,
+          "prob_b_better": 0.993,
+          "p_value": 0.014000000000000012,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "p_holm": 0.028000000000000025,
+          "significant": true
+        },
+        {
+          "a": "random",
+          "b": "speaker_balanced",
+          "delta": -0.004671871570564076,
+          "low": -0.008400210458504033,
+          "high": -0.0012188815860047786,
+          "prob_b_better": 0.997,
+          "p_value": 0.006000000000000005,
+          "unit": "utterance",
+          "n_units": 865,
+          "p_holm": 0.018000000000000016,
+          "significant": true
+        },
+        {
+          "a": "naive_filter",
+          "b": "two_source_filter",
+          "delta": 0.002445677734926155,
+          "low": -0.00017183268685512818,
+          "high": 0.005128042512536387,
+          "prob_b_better": 0.036,
+          "p_value": 0.07200000000000006,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "p_holm": 0.07200000000000006,
+          "significant": false
+        }
+      ],
+      "vs_base": [
+        {
+          "a": "base",
+          "b": "random",
+          "delta": 0.020929357539271942,
+          "low": 0.0164671051196973,
+          "high": 0.025873451165902436,
+          "prob_b_better": 0.0,
+          "p_value": 0.0,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "base",
+          "b": "naive_filter",
+          "delta": 0.014203743768225002,
+          "low": 0.0105070716254299,
+          "high": 0.01803858712630798,
+          "prob_b_better": 0.0,
+          "p_value": 0.0,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "base",
+          "b": "two_source_filter",
+          "delta": 0.016649421503151157,
+          "low": 0.012584753423634097,
+          "high": 0.020873149572854525,
+          "prob_b_better": 0.0,
+          "p_value": 0.0,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "p_holm": 0.0,
+          "significant": true
+        },
+        {
+          "a": "base",
+          "b": "speaker_balanced",
+          "delta": 0.016257485968707866,
+          "low": 0.012484468004714828,
+          "high": 0.020261650080681568,
+          "prob_b_better": 0.0,
+          "p_value": 0.0,
+          "unit": "sentence_id",
+          "n_units": 346,
+          "p_holm": 0.0,
+          "significant": true
+        }
+      ]
+    }
+  ],
+  "created": "2026-10-30T08:34:26+00:00",
+  "git_commit": "e4288dcff89e5d62c44affdaa51aa307516a2d04"
+}

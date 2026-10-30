@@ -1,0 +1,46 @@
+# Tables of the E7 chapter of RESULTS.md (rendered by: asr-lab render-results), from the results
+# of asr-lab finetune-results
+
+[[table]]
+name = "e7-training"
+kind = "finetune"
+file = "experiments/E7/results/finetune.json"
+section = "training"
+
+[[table]]
+name = "e7-wer"
+kind = "finetune"
+file = "experiments/E7/results/finetune.json"
+section = "wer"
+
+[[table]]
+name = "e7-seeds"
+kind = "finetune"
+file = "experiments/E7/results/finetune.json"
+section = "seeds"
+
+[[table]]
+name = "e7-contrasts"
+kind = "finetune"
+file = "experiments/E7/results/finetune.json"
+section = "contrasts"
+
+[[table]]
+name = "e7-vs-base"
+kind = "finetune"
+file = "experiments/E7/results/finetune.json"
+section = "vs_base"
+
+# Post hoc: added after reading the errors of the base model on the VoxPopuli test split
+[[table]]
+name = "e7-edges"
+kind = "finetune"
+file = "experiments/E7/results/finetune.json"
+section = "edges"
+
+# Post hoc: added after reading the insertions of the fine-tuned models on FLEURS
+[[table]]
+name = "e7-address"
+kind = "finetune"
+file = "experiments/E7/results/finetune.json"
+section = "address"

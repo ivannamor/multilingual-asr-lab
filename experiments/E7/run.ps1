@@ -4,7 +4,8 @@
 # transcribes the high-WER utterances of the pool with a second model on the CPU (about 30
 # minutes, only if its predictions are missing) and writes the selections of every strategy and
 # seed. The fine-tuning and the transcription of the test sets run on a GPU in
-# notebooks/e7_finetune_colab.ipynb, from the committed selections.
+# notebooks/e7_finetune_colab.ipynb, from the committed selections; once its runs are in
+# experiments/runs, this script also computes the results and regenerates the tables.
 $ErrorActionPreference = "Stop"
 Set-Location (Join-Path $PSScriptRoot "../..")
 
@@ -35,3 +36,16 @@ if (-not (Test-Path "$Second/predictions.jsonl")) {
 
 # 3. The selections: four strategies, three seeds, 5 hours each
 Invoke-Checked asr-lab select-data --spec $Spec --output "$Results/selections.json"
+
+# 4. Results of the fine-tuned models (after the notebook): WER, contrasts, forgetting
+if (Test-Path "experiments/runs/e7-base-voxpopuli/predictions.jsonl") {
+    Invoke-Checked asr-lab finetune-results --spec $Spec --records "$Results/training" `
+        --output "$Results/finetune.json"
+
+    # 5. Regenerate the tables of RESULTS.md and README.md
+    # Every experiment's tables spec, so that no document misses a table
+    $Specs = @(Get-ChildItem experiments/*/tables.toml |
+        ForEach-Object { "--spec", "experiments/$($_.Directory.Name)/tables.toml" })
+    Invoke-Checked asr-lab render-results @Specs --document RESULTS.md
+    Invoke-Checked asr-lab render-results @Specs --document README.md --allow-missing-markers
+}
