@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from asr_lab.data.manifest import ManifestEntry, write_manifest
+from asr_lab.evaluation.comparison import save_results
 from asr_lab.evaluation.metrics import ErrorCounts, align
 from asr_lab.inference.base import Hypothesis
 from asr_lab.inference.predictions import append_predictions
@@ -19,7 +20,6 @@ from asr_lab.training.results import (
     invented_address,
     model_name,
     run_dir,
-    save_results,
     sum_counts,
 )
 

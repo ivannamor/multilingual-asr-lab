@@ -1,0 +1,47 @@
+# Tables of the E1b chapter of RESULTS.md (rendered by: asr-lab render-results), from the results
+# of asr-lab family-results
+
+[[table]]
+name = "e1b-wer"
+kind = "families"
+file = "experiments/E1b/results/families.json"
+section = "wer"
+
+[[table]]
+name = "e1b-comparisons"
+kind = "families"
+file = "experiments/E1b/results/families.json"
+section = "comparisons"
+
+[[table]]
+name = "e1b-no-digit"
+kind = "families"
+file = "experiments/E1b/results/families.json"
+section = "no_digit"
+
+[[table]]
+name = "e1b-speed"
+kind = "families"
+file = "experiments/E1b/results/families.json"
+section = "speed"
+
+# Post hoc: added after reading the transcripts of the four models
+[[table]]
+name = "e1b-errors"
+kind = "families"
+file = "experiments/E1b/results/families.json"
+section = "errors"
+
+# Post hoc: added after finding 38 empty Parakeet transcripts on VoxPopuli
+[[table]]
+name = "e1b-silent"
+kind = "families"
+file = "experiments/E1b/results/families.json"
+section = "silent"
+
+# Post hoc: added after finding that two Parakeet transcripts account for a quarter of its errors
+[[table]]
+name = "e1b-runaway"
+kind = "families"
+file = "experiments/E1b/results/families.json"
+section = "runaway"

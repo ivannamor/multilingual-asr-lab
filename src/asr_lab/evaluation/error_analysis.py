@@ -104,6 +104,23 @@ def involves_digits_or_symbols(pair: tuple[str, str]) -> bool:
     return any(not (char.isalpha() or char == "'") for word in pair for char in word)
 
 
+def edge_errors(alignment: Sequence[AlignedPair]) -> ErrorCounts:
+    """The errors before the first match and after the last one (all of them without a match).
+
+    When a segment's boundaries are wrong, the audio and the transcript disagree at the start or
+    at the end: the model writes words the transcript does not have, or misses words that are not
+    in the audio. Those errors fall outside the span that the hypothesis gets right.
+
+    >>> pairs = align("a b c d".split(), "x a b c".split())
+    >>> edge_errors(pairs)
+    ErrorCounts(hits=0, substitutions=0, deletions=1, insertions=1)
+    """
+    matches = [i for i, pair in enumerate(alignment) if pair.op == EditOp.MATCH]
+    if not matches:
+        return count_errors(alignment)
+    return count_errors([*alignment[: matches[0]], *alignment[matches[-1] + 1 :]])
+
+
 def format_alignment(alignment: Sequence[AlignedPair]) -> str:
     """Three aligned lines (REF, HYP, operations) in the style of NIST sclite.
 

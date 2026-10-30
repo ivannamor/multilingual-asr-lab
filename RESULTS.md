@@ -10,13 +10,14 @@ that regenerates it.
 1. [Executive summary](#executive-summary)
 2. [Setup](#setup): data, models, metrics, statistics, hardware
 3. [E1. Baseline](#e1-baseline)
-4. [E2. Which decoding settings?](#e2-which-decoding-settings)
-5. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
-6. [E6. Which training transcripts can be trusted?](#e6-which-training-transcripts-can-be-trusted)
-7. [E7. Does the choice of training data matter when the amount does not?](#e7-does-the-choice-of-training-data-matter-when-the-amount-does-not)
-8. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
+4. [E1b. Three model families on the same test sets](#e1b-three-model-families-on-the-same-test-sets)
+5. [E2. Which decoding settings?](#e2-which-decoding-settings)
+6. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
+7. [E6. Which training transcripts can be trusted?](#e6-which-training-transcripts-can-be-trusted)
+8. [E7. Does the choice of training data matter when the amount does not?](#e7-does-the-choice-of-training-data-matter-when-the-amount-does-not)
+9. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
    (simulated traffic, real audio and errors)
-9. [Limitations and next steps](#limitations-and-next-steps)
+10. [Limitations and next steps](#limitations-and-next-steps)
 
 ## Executive summary
 
@@ -29,6 +30,16 @@ that regenerates it.
   English, easiest for the small models, is now the hardest, partly because the simple English
   normalizer counts British versus American spellings as errors. large-v3-turbo is about twice as
   fast and 0.4 points worse in every language.
+- **A Transducer nearly matches large-v3-turbo at a third of the time, with one failure that WER
+  alone would misread.** On FLEURS, Parakeet TDT is 0.36 to 0.64 points behind large-v3-turbo
+  (2.76% against 2.40% in Italian, 5.09% against 4.45% in German, 5.45% against 5.00% in English)
+  at about 2.8 times its speed on the same GPU, and wrote none of the invented closing phrases.
+  A wav2vec2 CTC model without a language model is the fastest (5 to 6 times Whisper-small), level
+  with Whisper-small in Italian and far behind in English (14.54%). On parliamentary speech, two
+  runaway Parakeet transcripts (1,588 words for 12.7 seconds of audio) hold a quarter of its errors
+  and widen its interval to [13.96, 30.89]: the decoding path in Transformers has no limit on the
+  tokens written at one audio frame. Without those two utterances its WER is 15.35%, though it was
+  probably trained on the same sessions.
 - **The benefit of a larger model depends on the language.** Whisper-small removes about half of
   Whisper-base's word errors in Italian (54%) and German (48%), but only a third in English (34%),
   where the smaller model is already much better.
@@ -109,7 +120,7 @@ representative of male voices or German result of female voices.
 
 | | |
 |---|---|
-| Models | Whisper-base, Whisper-small, Whisper-large-v3-turbo and Whisper-large-v3 (OpenAI), through faster-whisper 1.2.1 (CTranslate2) |
+| Models | Whisper-base, Whisper-small, Whisper-large-v3-turbo and Whisper-large-v3 (OpenAI), through faster-whisper 1.2.1 (CTranslate2); from [E1b](#e1b-three-model-families-on-the-same-test-sets), wav2vec2 XLS-R (CTC) and Parakeet TDT 0.6B v3 (Transducer), through Transformers |
 | Precision | int8 weights on the CPU, float16 on the GPU |
 | Decoding | beam size 5, language forced to the test set's language, `condition_on_previous_text` disabled, no voice activity detection |
 | Hardware | base and small: 12-core ARM64 laptop CPU (Snapdragon X Elite), WSL2 Ubuntu, 4 threads; large models and a bridge run of small: NVIDIA T4 GPU on Google Colab |
@@ -368,13 +379,282 @@ and 5.01% ([4.15, 6.04]). The intervals overlap in both languages.
 - Hallucinated closing phrases are counted by matching a short list of known phrases, so other
   invented endings are missed.
 
-E1 will be extended to other model families (wav2vec2 with CTC, Transducers).
+The other model families are compared in [E1b](#e1b-three-model-families-on-the-same-test-sets).
 
 **Reproduce:** `bash experiments/E1/run.sh` (or `experiments/E1/run.ps1` on Windows). With the
 committed transcripts it only rescores. Without them it downloads the three test sets and
 transcribes them with Whisper-small and Whisper-base (about two hours on a laptop CPU); the GPU
 runs are transcribed with [`notebooks/e1_large_colab.ipynb`](notebooks/e1_large_colab.ipynb) on a
 Colab GPU (about 75 minutes of transcription on a T4, plus the download).
+
+## E1b. Three model families on the same test sets
+
+**Question.** How do the three families of end-to-end models compare on the same audio, normalizers
+and statistics, in errors, in the kind of errors, and in speed?
+
+**Method.** Models, revisions, test sets, normalizers and comparisons were fixed in
+[`experiments/E1b/models.toml`](experiments/E1b/models.toml) before any model transcribed a test set
+([decision 28](docs/design.md#28-other-model-families-through-transformers-with-the-training-data-of-each-model-on-record)).
+
+| Family | Model | How it writes | Language | Trained on |
+|---|---|---|---|---|
+| Encoder-decoder | Whisper-small, large-v3-turbo (beam 5) | Decoder conditioned on everything written so far | Forced | Not published in detail |
+| CTC | wav2vec2 XLS-R, one checkpoint per language (greedy) | One character distribution per frame, no memory of the text and no language model | Fixed by the checkpoint | Common Voice 6.1 |
+| Transducer | Parakeet TDT 0.6B v3, one model for 25 languages (greedy) | A small predictor remembers the tokens; each step also predicts how many frames to skip | Detected by the model | Includes Europarl-ASR, Common Voice and MOSEL |
+
+- **Test sets.** FLEURS in three languages is the primary result. VoxPopuli Italian is a second
+  domain, and MOSEL is the unlabelled VoxPopuli audio with Whisper's transcripts, so Parakeet has
+  probably heard the sessions of that test split: **its VoxPopuli results are reported as probably
+  contaminated**, and nothing below concludes that it generalizes better there.
+- **Scoring.** `it-v2` writes numbers in words, `de-v1` and `en-v1` do not. The CTC vocabularies have
+  no digits, so every comparison is repeated on the utterances whose reference has no digit (81% of
+  each FLEURS test set, 89% of VoxPopuli).
+- **Statistics.** Corpus WER, the widest of the bootstrap intervals (1,000 resamples), paired
+  bootstrap with Holm's correction over the five comparisons of each test set.
+- **Runs.** One utterance at a time on a Colab T4, float16. Whisper's FLEURS runs come from E1;
+  on VoxPopuli it uses the decoding selected in E2 (hallucination silence 2 s).
+
+### Results
+
+<!-- BEGIN e1b-wer -->
+| Test set | Utterances / words | Model | WER [95% CI] | S / D / I | CER |
+|---|---|---|---|---|---|
+| fleurs-it (`it-v2`) | 865 / 21,262 | Whisper-small | 7.11% [6.46%, 7.75%] | 1,171 / 165 / 176 | 1.84% |
+| fleurs-it (`it-v2`) | 865 / 21,262 | Whisper-large-v3-turbo | 2.40% [2.04%, 2.80%] | 404 / 44 / 62 | 0.65% |
+| fleurs-it (`it-v2`) | 865 / 21,262 | XLS-R (CTC) | 7.36% [6.66%, 8.02%] | 1,133 / 253 / 178 | 1.67% |
+| fleurs-it (`it-v2`) | 865 / 21,262 | Parakeet TDT | 2.76% [2.34%, 3.20%] | 439 / 90 / 58 | 0.83% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | Whisper-small | 9.13% [8.43%, 9.90%] | 1,303 / 168 / 237 | 2.54% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | Whisper-large-v3-turbo | 4.45% [3.91%, 5.01%] | 612 / 89 / 131 | 1.44% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | XLS-R (CTC) | 11.79% [10.84%, 12.85%] | 1,746 / 257 / 202 | 4.90% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | Parakeet TDT | 5.09% [4.52%, 5.72%] | 735 / 134 / 83 | 1.50% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | Whisper-small | 6.59% [5.93%, 7.27%] | 696 / 104 / 154 | 2.70% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | Whisper-large-v3-turbo | 5.00% [4.45%, 5.55%] | 517 / 110 / 97 | 2.13% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | XLS-R (CTC) | 14.54% [13.38%, 15.75%] | 1,611 / 252 / 241 | 6.68% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | Parakeet TDT | 5.45% [4.86%, 6.07%] | 586 / 143 / 59 | 2.32% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | Whisper-small | 20.63% [18.33%, 23.24%] | 3,060 / 2,732 / 1,933 | 13.96% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | Whisper-large-v3-turbo | 19.11% [16.12%, 22.18%] | 1,782 / 3,964 / 1,412 | 15.59% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | XLS-R (CTC) | 26.19% [24.07%, 28.68%] | 4,502 / 3,149 / 2,160 | 14.91% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | Parakeet TDT | 20.51% [13.96%, 30.89%] | 1,958 / 2,579 / 3,144 | 14.61% |
+<!-- END e1b-wer -->
+
+Comparisons, B - A, negative when B has fewer errors:
+
+<!-- BEGIN e1b-comparisons -->
+| Test set | B - A | WER difference [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|
+| fleurs-it | XLS-R (CTC) - Whisper-small | +0.24% [-0.46%, +0.97%] | 0.494 | 0.494 | no |
+| fleurs-it | XLS-R (CTC) - Whisper-large-v3-turbo | +4.96% [+4.43%, +5.49%] | < 0.001 | < 0.005 | yes |
+| fleurs-it | Parakeet TDT - Whisper-small | -4.35% [-4.88%, -3.82%] | < 0.001 | < 0.005 | yes |
+| fleurs-it | Parakeet TDT - Whisper-large-v3-turbo | +0.36% [+0.09%, +0.66%] | 0.016 | 0.032 | yes |
+| fleurs-it | Parakeet TDT - XLS-R (CTC) | -4.60% [-5.12%, -4.08%] | < 0.001 | < 0.005 | yes |
+| fleurs-de | XLS-R (CTC) - Whisper-small | +2.66% [+1.80%, +3.48%] | < 0.001 | < 0.005 | yes |
+| fleurs-de | XLS-R (CTC) - Whisper-large-v3-turbo | +7.34% [+6.52%, +8.18%] | < 0.001 | < 0.005 | yes |
+| fleurs-de | Parakeet TDT - Whisper-small | -4.04% [-4.72%, -3.44%] | < 0.001 | < 0.005 | yes |
+| fleurs-de | Parakeet TDT - Whisper-large-v3-turbo | +0.64% [+0.23%, +1.07%] | 0.002 | 0.002 | yes |
+| fleurs-de | Parakeet TDT - XLS-R (CTC) | -6.70% [-7.49%, -6.00%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | XLS-R (CTC) - Whisper-small | +7.95% [+6.91%, +9.03%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | XLS-R (CTC) - Whisper-large-v3-turbo | +9.54% [+8.50%, +10.64%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | Parakeet TDT - Whisper-small | -1.15% [-1.63%, -0.64%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | Parakeet TDT - Whisper-large-v3-turbo | +0.44% [+0.06%, +0.84%] | 0.032 | 0.032 | yes |
+| fleurs-en | Parakeet TDT - XLS-R (CTC) | -9.10% [-10.12%, -8.07%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | XLS-R (CTC) - Whisper-small | +5.57% [+5.02%, +6.17%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | XLS-R (CTC) - Whisper-large-v3-turbo | +7.08% [+5.54%, +8.71%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | Parakeet TDT - Whisper-small | -0.12% [-5.61%, +9.72%] | 0.832 | 1.000 | no |
+| voxpopuli-it | Parakeet TDT - Whisper-large-v3-turbo | +1.40% [-4.28%, +11.67%] | 0.822 | 1.000 | no |
+| voxpopuli-it | Parakeet TDT - XLS-R (CTC) | -5.69% [-11.08%, +4.22%] | 0.170 | 0.510 | no |
+<!-- END e1b-comparisons -->
+
+Speed. RTF is processing time over audio duration, so lower is faster:
+
+<!-- BEGIN e1b-speed -->
+| Model | Parameters | RTF fleurs-it | RTF fleurs-de | RTF fleurs-en | RTF voxpopuli-it |
+|---|---|---|---|---|---|
+| Whisper-small | 242 M | 0.0229 | 0.0241 | 0.0251 | 0.0339 |
+| Whisper-large-v3-turbo | 809 M | 0.0336 | 0.0369 | 0.0439 | 0.0415 |
+| XLS-R (CTC) | 315 M | 0.0048 | 0.0047 | 0.0042 | 0.0048 |
+| Parakeet TDT | 627 M | 0.0122 | 0.0134 | 0.0150 | 0.0150 |
+<!-- END e1b-speed -->
+
+### Without the references with digits
+
+<!-- BEGIN e1b-no-digit -->
+| Model | fleurs-it | fleurs-de | fleurs-en | voxpopuli-it |
+|---|---|---|---|---|
+| Whisper-small | 7.05% [6.31%, 7.76%] | 8.44% [7.64%, 9.27%] | 5.95% [5.24%, 6.66%] | 21.64% [18.80%, 24.73%] |
+| Whisper-large-v3-turbo | 2.24% [1.84%, 2.66%] | 3.92% [3.34%, 4.55%] | 4.53% [3.95%, 5.13%] | 20.46% [16.99%, 24.25%] |
+| XLS-R (CTC) | 6.33% [5.71%, 6.97%] | 9.52% [8.68%, 10.37%] | 11.43% [10.52%, 12.41%] | 26.95% [24.21%, 29.83%] |
+| Parakeet TDT | 2.64% [2.22%, 3.13%] | 4.20% [3.64%, 4.80%] | 4.95% [4.26%, 5.59%] | 22.43% [15.14%, 35.12%] |
+| *utterances kept* | 703 of 865 | 698 of 862 | 525 of 647 | 1,043 of 1,177 |
+
+| Test set | B - A | WER difference [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|
+| fleurs-it | XLS-R (CTC) - Whisper-small | -0.72% [-1.42%, -0.03%] | 0.040 | 0.040 | yes |
+| fleurs-it | XLS-R (CTC) - Whisper-large-v3-turbo | +4.09% [+3.56%, +4.65%] | < 0.001 | < 0.005 | yes |
+| fleurs-it | Parakeet TDT - Whisper-small | -4.40% [-4.98%, -3.79%] | < 0.001 | < 0.005 | yes |
+| fleurs-it | Parakeet TDT - Whisper-large-v3-turbo | +0.40% [+0.11%, +0.71%] | 0.004 | 0.008 | yes |
+| fleurs-it | Parakeet TDT - XLS-R (CTC) | -3.68% [-4.21%, -3.18%] | < 0.001 | < 0.005 | yes |
+| fleurs-de | XLS-R (CTC) - Whisper-small | +1.08% [+0.35%, +1.81%] | 0.006 | 0.012 | yes |
+| fleurs-de | XLS-R (CTC) - Whisper-large-v3-turbo | +5.60% [+4.92%, +6.27%] | < 0.001 | < 0.005 | yes |
+| fleurs-de | Parakeet TDT - Whisper-small | -4.24% [-4.94%, -3.54%] | < 0.001 | < 0.005 | yes |
+| fleurs-de | Parakeet TDT - Whisper-large-v3-turbo | +0.28% [-0.12%, +0.67%] | 0.142 | 0.142 | no |
+| fleurs-de | Parakeet TDT - XLS-R (CTC) | -5.32% [-5.98%, -4.62%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | XLS-R (CTC) - Whisper-small | +5.48% [+4.61%, +6.30%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | XLS-R (CTC) - Whisper-large-v3-turbo | +6.90% [+6.13%, +7.71%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | Parakeet TDT - Whisper-small | -1.00% [-1.53%, -0.49%] | < 0.001 | < 0.005 | yes |
+| fleurs-en | Parakeet TDT - Whisper-large-v3-turbo | +0.43% [-0.02%, +0.85%] | 0.058 | 0.058 | no |
+| fleurs-en | Parakeet TDT - XLS-R (CTC) | -6.48% [-7.29%, -5.76%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | XLS-R (CTC) - Whisper-small | +5.31% [+4.71%, +5.90%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | XLS-R (CTC) - Whisper-large-v3-turbo | +6.49% [+4.83%, +8.10%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | Parakeet TDT - Whisper-small | +0.79% [-5.50%, +13.05%] | 0.934 | 1.000 | no |
+| voxpopuli-it | Parakeet TDT - Whisper-large-v3-turbo | +1.97% [-4.83%, +14.50%] | 0.740 | 1.000 | no |
+| voxpopuli-it | Parakeet TDT - XLS-R (CTC) | -4.52% [-10.83%, +7.59%] | 0.336 | 1.000 | no |
+<!-- END e1b-no-digit -->
+
+### Two runaway transcripts (post hoc)
+
+Parakeet's interval on VoxPopuli is several times wider than the others', and the reason is in the
+longest transcripts: two utterances received 1,588 words for 12.7 seconds of audio ("È una cosa che
+è una cosa che...") and 355 for 5.7 seconds ("Il n'y a rien d'un colour dix, non, non, non..."). The
+next fastest transcript of any model in any run is at 5.6 words per second; these two are at 125 and
+63. No other model, on any test set, produced anything similar.
+
+They reproduce locally, in float32 on a CPU, so neither half precision nor the GPU causes them. The
+cause is in the decoding loop of Transformers (versions 5.20.2 on Colab and 5.21.1 locally). A TDT
+step moves through the audio by the duration it predicts. The RNN-T path of the same library limits
+the tokens written at one frame to `max_symbols_per_step`, but the TDT path skips that count and
+only forces an advance after a blank. A model that keeps predicting a word with a duration of zero
+therefore stays on the same frame until the length limit, ten tokens per encoder frame.
+
+With that limit put back, in a one-off check on these two utterances only, they become 38 and 21
+words: "È una cosa che è una cosa che è una organizzata e non organizzata, che sfrutta e continua a
+sfruttare i migranti..." and "Il n'y a rien d'un colour dix, non, non, non può che essere la
+posizione espressa in prima lettura dal Parlamento." The model still starts wrongly, in the second
+case in French, but it recovers. The fix was not applied to the runs, which stay as pre-registered.
+
+The table excludes these two utterances for every model, so that the comparisons stay paired. This
+is an analysis chosen after seeing the data, with its own family of comparisons:
+
+<!-- BEGIN e1b-runaway -->
+| Test set | Runaway transcripts: words written / reference words / seconds | Model | WER with them | WER without them [95% CI] |
+|---|---|---|---|---|
+| voxpopuli-it | 355 / 16 / 5.7; 1,588 / 28 / 12.7 | Whisper-small | 20.63% | 20.61% [18.33%, 23.23%] |
+| voxpopuli-it | 355 / 16 / 5.7; 1,588 / 28 / 12.7 | Whisper-large-v3-turbo | 19.11% | 19.10% [16.11%, 22.17%] |
+| voxpopuli-it | 355 / 16 / 5.7; 1,588 / 28 / 12.7 | XLS-R (CTC) | 26.19% | 26.18% [24.05%, 28.67%] |
+| voxpopuli-it | 355 / 16 / 5.7; 1,588 / 28 / 12.7 | Parakeet TDT | 20.51% | 15.35% [13.26%, 17.76%] |
+
+| Test set | B - A | WER difference [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|
+| voxpopuli-it | XLS-R (CTC) - Whisper-small | +5.57% [+5.01%, +6.17%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | XLS-R (CTC) - Whisper-large-v3-turbo | +7.08% [+5.53%, +8.73%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | Parakeet TDT - Whisper-small | -5.26% [-6.07%, -4.53%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | Parakeet TDT - Whisper-large-v3-turbo | -3.75% [-5.10%, -2.36%] | < 0.001 | < 0.005 | yes |
+| voxpopuli-it | Parakeet TDT - XLS-R (CTC) | -10.83% [-11.74%, -10.05%] | < 0.001 | < 0.005 | yes |
+<!-- END e1b-runaway -->
+
+### What the errors look like (post hoc)
+
+<!-- BEGIN e1b-errors -->
+| Test set | Model | Errors | At the segment edges | Invented closing phrases | Empty transcripts |
+|---|---|---|---|---|---|
+| fleurs-it | Whisper-small | 1,512 | 223 (15%) | 4 | 0 |
+| fleurs-it | Whisper-large-v3-turbo | 510 | 68 (13%) | 3 | 0 |
+| fleurs-it | XLS-R (CTC) | 1,564 | 166 (11%) | 0 | 0 |
+| fleurs-it | Parakeet TDT | 587 | 69 (12%) | 0 | 0 |
+| fleurs-de | Whisper-small | 1,708 | 250 (15%) | 3 | 0 |
+| fleurs-de | Whisper-large-v3-turbo | 832 | 132 (16%) | 12 | 0 |
+| fleurs-de | XLS-R (CTC) | 2,205 | 266 (12%) | 0 | 0 |
+| fleurs-de | Parakeet TDT | 952 | 125 (13%) | 0 | 0 |
+| fleurs-en | Whisper-small | 954 | 150 (16%) | 1 | 0 |
+| fleurs-en | Whisper-large-v3-turbo | 724 | 108 (15%) | 0 | 0 |
+| fleurs-en | XLS-R (CTC) | 2,104 | 348 (17%) | 0 | 0 |
+| fleurs-en | Parakeet TDT | 788 | 116 (15%) | 0 | 0 |
+| voxpopuli-it | Whisper-small | 7,725 | 4,408 (57%) | 22 | 3 |
+| voxpopuli-it | Whisper-large-v3-turbo | 7,158 | 5,226 (73%) | 70 | 0 |
+| voxpopuli-it | XLS-R (CTC) | 9,811 | 4,903 (50%) | 11 | 0 |
+| voxpopuli-it | Parakeet TDT | 7,681 | 5,341 (70%) | 2 | 38 |
+<!-- END e1b-errors -->
+
+Parakeet returned an empty transcript for 38 VoxPopuli utterances. The others do not do much better
+on them, which suggests hard audio or wrong segment boundaries rather than speech that only Parakeet
+misses; these utterances were not listened to:
+
+<!-- BEGIN e1b-silent -->
+| Test set | Utterances / words / mean duration | Model | Words right | Errors | Inserted words | Invented closing phrases |
+|---|---|---|---|---|---|---|
+| voxpopuli-it | 38 / 348 / 3.3 s | Whisper-small | 111 | 291 | 54 | 1 |
+| voxpopuli-it | 38 / 348 / 3.3 s | Whisper-large-v3-turbo | 113 | 280 | 45 | 10 |
+| voxpopuli-it | 38 / 348 / 3.3 s | XLS-R (CTC) | 108 | 308 | 68 | 1 |
+| voxpopuli-it | 38 / 348 / 3.3 s | Parakeet TDT | 0 | 348 | 0 | 0 |
+<!-- END e1b-silent -->
+
+### Findings
+
+- **Parakeet is close to large-v3-turbo and much faster.** On FLEURS it is significantly behind in
+  all three languages, by 0.36 points in Italian ([+0.09, +0.66]), 0.64 in German ([+0.23, +1.07])
+  and 0.44 in English ([+0.06, +0.84]), and significantly ahead of Whisper-small by 1.15 to 4.35
+  points. It takes about 2.8 times less time than turbo, with 627 M parameters against 809 M. Two of
+  the three gaps lose significance without the references with digits (German +0.28 [-0.12, +0.67],
+  English +0.43 [-0.02, +0.85]), while Italian, where the normalizer already handles numbers, stays
+  significant (+0.40 [+0.11, +0.71]). These runs compare the implementations as used here, not the
+  architectures: batching and other runtimes would change the speeds.
+- **The CTC model's weakness depends on the language, and only part of it is notation.** It is the
+  fastest by far: 5 to 6 times Whisper-small with a similar number of parameters (315 M against
+  242 M). In Italian it does not differ from Whisper-small (+0.24 [-0.46, +0.97]), and without digits
+  it is slightly better (-0.72 [-1.42, -0.03]). In English it is far behind (+7.95 [+6.91, +9.03]).
+  Removing digits narrows that gap to +5.48, so most of it remains. A model without a memory of the
+  text writes what it hears, as in "cabbige", "hostitle" and "protocal". The next experiment adds a
+  language model, which addresses this directly.
+- **Word error rate hides how near the errors are.** Those misspellings cost a whole word and a few
+  characters. In Italian, XLS-R has a higher WER than Whisper-small (7.36% against 7.11%) and a lower
+  CER (1.67% against 1.84%).
+- **The families fail differently.** In German, large-v3-turbo invents 12 closing phrases on FLEURS
+  and the CTC and Transducer models none. On VoxPopuli, the phrases missing from the references are
+  70 for turbo, 22 for small, 11 for CTC and 2 for Parakeet. Some of these may be real speech outside
+  the transcribed segment, since the CTC count cannot come from a subtitle habit, but the size of the
+  gap fits the collapse seen in E6. Parakeet's failures are different: silence on 38 utterances and
+  repetition on two.
+- **A single WER can be misleading in both directions.** As measured, Parakeet on VoxPopuli is
+  indistinguishable from Whisper (20.51% [13.96, 30.89]). Two utterances out of 1,177 hold 25% of its
+  errors. Without them it is at 15.35% [13.26, 17.76], ahead of turbo by 3.75 points
+  ([-5.10, -2.36]), but that advantage is post hoc and comes on sessions it has probably heard, so it
+  shows what the failure hides rather than how good the model is.
+- **Segment edges matter on VoxPopuli whichever the family.** 50% to 73% of the errors are at the
+  edges of the segments, against 11% to 17% on FLEURS, which extends the finding of E7 to two other
+  families: much of the VoxPopuli error rate belongs to the segmentation of the dataset.
+
+For a product, these results point to the safeguard more than to a model: whichever model is chosen,
+check transcript length against audio duration. A simple words-per-second limit catches both runaway
+transcripts here, with no false alarm on any of the 16 runs.
+
+### Limitations
+
+- The comparison uses each model as distributed. Training data differ between the families, and
+  they are part of what is measured.
+- Parakeet's VoxPopuli results are probably contaminated, and its FLEURS results may not be free of
+  overlap with its training data, which include Wikipedia-derived sentences in some corpora; this
+  was not verified.
+- Speeds come from one utterance at a time on one T4, in different sessions and runtimes (CTranslate2
+  for Whisper, PyTorch for the others). They show orders of magnitude, not what a batched deployment
+  would give.
+- The XLS-R checkpoints use greedy decoding with no language model, by design of this experiment, so
+  this is not the best a CTC system can do.
+- The runaway limit and the analyses of errors were chosen after seeing the data. The threshold of
+  20 words per second has a wide margin in these runs, but it is untested elsewhere. The check with
+  the symbol limit covers the two utterances, not the whole test sets.
+- The 38 empty transcripts were not listened to, and the closing phrases are matched against a short
+  list, so other invented endings are missed.
+- `de-v1` and `en-v1` do not normalize numbers, so the full-set comparisons in those languages include
+  differences of notation; the subset without digits is the fairer reading, on 81% of the FLEURS utterances.
+- **The notebook was not run as committed at the time.** With the GPU setup for Whisper before the
+  PyTorch models, the session crashed during Parakeet on a T4, so the Transducer and CTC runs were
+  done without that setup and Whisper afterwards in the same session, with the same commit and
+  configurations. The committed notebook now has this order. The CUDA 12 libraries are the likely
+  cause, but this was not isolated, and a similar setup ran the fine-tuning of E7 without problems.
+
+**Reproduce:** `bash experiments/E1b/run.sh` (or `experiments/E1b/run.ps1` on Windows). With the
+committed transcripts it only rescores, after downloading the manifests if they are missing. The
+transcriptions run in [`notebooks/e1b_families_colab.ipynb`](notebooks/e1b_families_colab.ipynb)
+(about 35 minutes of transcription on a T4, plus the downloads).
 
 ## E2. Which decoding settings?
 
@@ -1320,8 +1600,10 @@ degraded audio and transcribes it on a Colab GPU (about 25 minutes on a T4).
 - The model comparisons are on FLEURS read speech, where language is confounded with speaker
   gender; E10 adds synthetic noise and a telephone channel, and E6 parliamentary speech, but real
   noisy recordings and spontaneous conversation are still missing. The normalization study (E3) covers Italian only.
-- Only Whisper models have been evaluated; other model families (CTC with an n-gram language
-  model, Transducers) are planned.
+- The model families (E1b) were compared as distributed, with greedy decoding for CTC and
+  Transducer: a CTC model with an n-gram language model is the next experiment. Parakeet's two
+  runaway transcripts come from a missing limit in the decoding path used here, and the runs were
+  not repeated with the limit in place.
 - Decoding settings were tuned for large-v3-turbo only, one option at a time and on read speech
   (E2); the next sweep should fix a non-inferiority margin in advance and include long recordings
   with pauses, where voice activity detection matters most.

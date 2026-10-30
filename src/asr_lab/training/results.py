@@ -32,9 +32,9 @@ from typing import Any
 
 from asr_lab.data.manifest import read_manifest
 from asr_lab.data.voxpopuli import load_data_spec
+from asr_lab.evaluation.comparison import LEVEL, comparison_family, headline_interval
+from asr_lab.evaluation.error_analysis import edge_errors
 from asr_lab.evaluation.metrics import (
-    AlignedPair,
-    EditOp,
     ErrorCounts,
     align,
     count_errors,
@@ -49,12 +49,10 @@ from asr_lab.evaluation.scoring import (
     normalized_pairs,
     resampling_units,
 )
-from asr_lab.evaluation.stats import bootstrap_ci, holm, paired_bootstrap
 from asr_lab.provenance import git_commit, utc_now
 from asr_lab.training.selection import load_selection_spec
 
 BASE = "base"
-LEVEL = 0.95
 # Post hoc: the opening of a speech in the European Parliament, matched in normalized text
 ADDRESS = re.compile(r"\b(signora? presidente|onorevoli colleghi)\b")
 
@@ -71,23 +69,6 @@ def model_name(strategy: str, seed: int) -> str:
 def run_dir(runs_dir: Path, name: str, test_set: str) -> Path:
     """Run directory of a model on a test set, e.g. ``runs/e7-random-s0-voxpopuli``."""
     return runs_dir / f"e7-{name}-{test_set}"
-
-
-def edge_errors(alignment: Sequence[AlignedPair]) -> ErrorCounts:
-    """The errors before the first match and after the last one (all of them without a match).
-
-    When a segment's boundaries are wrong, the audio and the transcript disagree at the start or
-    at the end: the model writes words the transcript does not have, or misses words that are not
-    in the audio. Those errors fall outside the span that the hypothesis gets right.
-
-    >>> pairs = align("a b c d".split(), "x a b c".split())
-    >>> edge_errors(pairs)
-    ErrorCounts(hits=0, substitutions=0, deletions=1, insertions=1)
-    """
-    matches = [i for i, pair in enumerate(alignment) if pair.op == EditOp.MATCH]
-    if not matches:
-        return count_errors(alignment)
-    return count_errors([*alignment[: matches[0]], *alignment[matches[-1] + 1 :]])
 
 
 def invented_address(reference: str, hypothesis: str) -> bool:
@@ -166,25 +147,6 @@ def finetune_results(
     }
 
 
-def save_results(report: dict[str, Any], path: Path) -> None:
-    """Write the results as JSON (UTF-8, LF).
-
-    A file with the same results is left as it is (with its original ``created`` and
-    ``git_commit``), so running the experiment again does not modify committed results.
-    """
-    text = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
-    if path.exists():
-        previous = json.loads(path.read_text(encoding="utf-8"))
-        if _results_only(previous) == _results_only(json.loads(text)):
-            return
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(text, encoding="utf-8", newline="\n")
-
-
-def _results_only(report: dict[str, Any]) -> dict[str, Any]:
-    return {key: value for key, value in report.items() if key not in ("created", "git_commit")}
-
-
 def finetune_table(report: dict[str, Any], section: str) -> str:
     """One Markdown table of the results: ``training``, ``wer``, ``seeds``, ``contrasts``,
     ``vs_base``, ``edges`` or ``address``."""
@@ -261,7 +223,10 @@ def _subset(
         "n_speakers": len(speakers),
         "n_speakers_in_pool": len(speakers & pool_speakers),
         "systems": {
-            name: {**_interval(values, units, options), **_composition(values, system_edges[name])}
+            name: {
+                **headline_interval(values, units, options),
+                **_composition(values, system_edges[name]),
+            }
             for name, values in systems.items()
         },
         "runs": {
@@ -271,28 +236,12 @@ def _subset(
         "invented_address": {
             name: sum(values[i] for i in keep) for name, values in scored["address"].items()
         },
-        "contrasts": _family(
+        "contrasts": comparison_family(
             [(a, b, systems[a], systems[b]) for b, a in contrasts], units, options
         ),
-        "vs_base": _family([(BASE, s, systems[BASE], systems[s]) for s in names], units, options),
-    }
-
-
-def _interval(
-    counts: Sequence[ErrorCounts], units: dict[str, list[str] | None], options: dict[str, int]
-) -> dict[str, Any]:
-    intervals = {
-        unit: bootstrap_ci(counts, groups=groups, level=LEVEL, **options)
-        for unit, groups in units.items()
-    }
-    unit = max(intervals, key=lambda u: intervals[u].high - intervals[u].low)
-    ci = intervals[unit]
-    return {
-        "wer": ci.estimate,
-        "low": ci.low,
-        "high": ci.high,
-        "unit": unit,
-        "n_units": ci.n_units,
+        "vs_base": comparison_family(
+            [(BASE, s, systems[BASE], systems[s]) for s in names], units, options
+        ),
     }
 
 
@@ -306,39 +255,6 @@ def _composition(counts: Sequence[ErrorCounts], edges: Sequence[ErrorCounts]) ->
         "edge_errors": at_edges.errors,
         "edge_deletions_insertions": at_edges.deletions + at_edges.insertions,
     }
-
-
-def _family(
-    pairs: Sequence[tuple[str, str, Sequence[ErrorCounts], Sequence[ErrorCounts]]],
-    units: dict[str, list[str] | None],
-    options: dict[str, int],
-) -> list[dict[str, Any]]:
-    """Paired bootstraps of B against A for a family of comparisons, with Holm's correction."""
-    results = []
-    for a, b, counts_a, counts_b in pairs:
-        by_unit = {
-            unit: paired_bootstrap(counts_a, counts_b, groups=groups, level=LEVEL, **options)
-            for unit, groups in units.items()
-        }
-        unit = max(by_unit, key=lambda u: by_unit[u].high - by_unit[u].low)
-        result = by_unit[unit]
-        results.append(
-            {
-                "a": a,
-                "b": b,
-                "delta": result.delta,
-                "low": result.low,
-                "high": result.high,
-                "prob_b_better": result.prob_b_better,
-                "p_value": result.p_value,
-                "unit": unit,
-                "n_units": result.n_units,
-            }
-        )
-    for result, adjusted in zip(results, holm([r["p_value"] for r in results]), strict=True):
-        result["p_holm"] = adjusted
-        result["significant"] = adjusted < 1 - LEVEL
-    return results
 
 
 def _training(records_dir: Path, name: str) -> dict[str, Any]:

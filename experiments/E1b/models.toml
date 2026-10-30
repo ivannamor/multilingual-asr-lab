@@ -59,3 +59,11 @@ comparisons = [
   ["tdt", "whisper_turbo"],
   ["tdt", "ctc"],
 ]
+
+# Trainable parameters, counted on each architecture (the three XLS-R models differ only in their
+# vocabularies: 315.5 M). Reported as a descriptive measure of size, not compared statistically.
+[analysis.parameters]
+whisper_small = 241734912
+whisper_turbo = 808878080
+ctc = 315483820
+tdt = 627008134

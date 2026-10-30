@@ -760,3 +760,12 @@ probably contaminated. The CTC vocabularies have no digits, while about 19% of t
 do, and only the Italian normalizer writes numbers in words: every comparison is repeated on the
 utterances whose reference has no digit. Parakeet has no language option, so it can pick the wrong
 language; Whisper and the CTC checkpoints cannot.
+
+**After E1b.** Transformers' TDT decoding has no limit on the tokens written at one audio frame, and
+two VoxPopuli transcripts ran away (1,588 and 355 words). The runs were left as pre-registered, the
+effect is reported in a post hoc analysis without those utterances, and the adapter was not changed:
+the check with the limit put back covers two utterances, not the test sets, and a fix belongs in a
+new, declared run. In the notebook, the GPU setup for Whisper now follows the PyTorch models: placed
+before them, Parakeet crashed the session on a T4. The cause was not isolated (the CUDA 12 libraries
+are the likely one, though a similar setup ran E7), so the order is a workaround backed by one
+successful run. The runs live on the machine's local disk, so a new machine starts from zero.

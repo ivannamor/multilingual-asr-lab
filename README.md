@@ -98,9 +98,15 @@ Key findings so far:
   Presidente, onorevoli colleghi". Filtering the suspect transcripts or balancing the speakers
   limited the damage significantly compared with random sampling (0.55 to 0.80 WER points
   in-domain, after Holm's correction).
+- **Three model families, and a failure that WER alone would misread** (experiment E1b). Parakeet TDT
+  is 0.36 to 0.64 points behind large-v3-turbo on FLEURS at about 2.8 times its speed on the same GPU,
+  and a wav2vec2 CTC model without a language model is fastest and far behind in English (14.54%).
+  On parliamentary speech, two runaway Parakeet transcripts (1,588 words for 12.7 seconds of audio)
+  hold a quarter of its errors: the decoding path used has no limit on the tokens written at one
+  frame. A words-per-second check catches both, with no false alarm in any of the 16 runs.
 
-To reproduce: `experiments/E1/run.sh`, `experiments/E2/run.sh`, `experiments/E3/run.sh`,
-`experiments/E6/run.sh`, `experiments/E7/run.sh` and `experiments/E10/run.sh` (see
+To reproduce: `experiments/E1/run.sh`, `experiments/E1b/run.sh`, `experiments/E2/run.sh`,
+`experiments/E3/run.sh`, `experiments/E6/run.sh`, `experiments/E7/run.sh` and `experiments/E10/run.sh` (see
 [Experiments](#experiments)).
 
 ## Try it in your browser
@@ -169,6 +175,7 @@ its numbers (`run.sh`, and `run.ps1` for Windows) and a TOML spec of the tables 
 
 ```bash
 bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, German, English
+bash experiments/E1b/run.sh   # model families: Whisper, CTC and Transducer on the same test sets
 bash experiments/E2/run.sh    # decoding settings: selection on dev, test comparisons, figure
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
 bash experiments/E6/run.sh    # training-data quality: features, rules, clusters, second opinion
