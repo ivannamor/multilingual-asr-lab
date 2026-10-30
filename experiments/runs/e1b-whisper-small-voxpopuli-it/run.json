@@ -1,0 +1,46 @@
+{
+  "model": "faster-whisper/small-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "small",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 5,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "vad_filter": false,
+    "hallucination_silence_threshold": 2.0,
+    "word_timestamps": true,
+    "condition_on_previous_text": false,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0
+  },
+  "manifest_sha256": "54f0cda1e23e8236ee66f1cd6e008b6cf86d7672c4005bc3eae5faba012dc3a0",
+  "limit": null,
+  "manifest": "data/voxpopuli_it/test.jsonl",
+  "n_utterances": 1177,
+  "audio_seconds": 15592.5566875,
+  "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux x86_64",
+    "executable_is_venv": false
+  },
+  "started_at": "2026-10-30T15:03:51+00:00",
+  "finished_at": "2026-10-30T15:16:23+00:00",
+  "processing_seconds": 528.7216980449994,
+  "rtf": 0.03390859553320443
+}

@@ -1,0 +1,28 @@
+{
+  "model": "transformers/nvidia/parakeet-tdt-0.6b-v3-float16",
+  "model_config": {
+    "library": "transformers",
+    "library_version": "5.20.2",
+    "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+    "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+    "dtype": "float16",
+    "device": "cuda",
+    "decoding": "tdt-greedy"
+  },
+  "manifest_sha256": "5473ea7c268ab45f6d16fcd0c37ac2d3a85843a4f0a21212256a7c53dc924d81",
+  "limit": null,
+  "manifest": "data/fleurs_en/test.jsonl",
+  "n_utterances": 647,
+  "audio_seconds": 6387.9,
+  "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux x86_64",
+    "executable_is_venv": false
+  },
+  "started_at": "2026-10-30T14:53:57+00:00",
+  "finished_at": "2026-10-30T14:55:33+00:00",
+  "processing_seconds": 95.93258515200068,
+  "rtf": 0.015017859570751059
+}

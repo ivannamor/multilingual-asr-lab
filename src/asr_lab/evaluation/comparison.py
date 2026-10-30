@@ -12,6 +12,7 @@ unit and the widest one is the headline.
 from __future__ import annotations
 
 import json
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -31,9 +32,10 @@ from asr_lab.evaluation.scoring import (
     normalized_pairs,
     resampling_units,
 )
-from asr_lab.evaluation.stats import paired_bootstrap
+from asr_lab.evaluation.stats import bootstrap_ci, holm, paired_bootstrap
 
 METRICS = {"wer": word_tokens, "cer": char_tokens}
+LEVEL = 0.95
 
 
 def compare_runs(
@@ -97,6 +99,77 @@ def save_comparison(result: dict[str, Any], path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(result, ensure_ascii=False, indent=2) + "\n"
     path.write_text(text, encoding="utf-8", newline="\n")
+
+
+def headline_interval(
+    counts: Sequence[ErrorCounts], units: dict[str, list[str] | None], options: dict[str, int]
+) -> dict[str, Any]:
+    """The corpus rate with the widest interval among the resampling units."""
+    intervals = {
+        unit: bootstrap_ci(counts, groups=groups, level=LEVEL, **options)
+        for unit, groups in units.items()
+    }
+    unit = max(intervals, key=lambda u: intervals[u].high - intervals[u].low)
+    ci = intervals[unit]
+    return {
+        "wer": ci.estimate,
+        "low": ci.low,
+        "high": ci.high,
+        "unit": unit,
+        "n_units": ci.n_units,
+    }
+
+
+def comparison_family(
+    pairs: Sequence[tuple[str, str, Sequence[ErrorCounts], Sequence[ErrorCounts]]],
+    units: dict[str, list[str] | None],
+    options: dict[str, int],
+) -> list[dict[str, Any]]:
+    """Paired bootstraps of B against A for a family of comparisons, with Holm's correction."""
+    results = []
+    for a, b, counts_a, counts_b in pairs:
+        by_unit = {
+            unit: paired_bootstrap(counts_a, counts_b, groups=groups, level=LEVEL, **options)
+            for unit, groups in units.items()
+        }
+        unit = max(by_unit, key=lambda u: by_unit[u].high - by_unit[u].low)
+        result = by_unit[unit]
+        results.append(
+            {
+                "a": a,
+                "b": b,
+                "delta": result.delta,
+                "low": result.low,
+                "high": result.high,
+                "prob_b_better": result.prob_b_better,
+                "p_value": result.p_value,
+                "unit": unit,
+                "n_units": result.n_units,
+            }
+        )
+    for result, adjusted in zip(results, holm([r["p_value"] for r in results]), strict=True):
+        result["p_holm"] = adjusted
+        result["significant"] = adjusted < 1 - LEVEL
+    return results
+
+
+def save_results(report: dict[str, Any], path: Path) -> None:
+    """Write the results as JSON (UTF-8, LF).
+
+    A file with the same results is left as it is (with its original ``created`` and
+    ``git_commit``), so running the experiment again does not modify committed results.
+    """
+    text = json.dumps(report, ensure_ascii=False, indent=2) + "\n"
+    if path.exists():
+        previous = json.loads(path.read_text(encoding="utf-8"))
+        if _without_provenance(previous) == _without_provenance(json.loads(text)):
+            return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8", newline="\n")
+
+
+def _without_provenance(report: dict[str, Any]) -> dict[str, Any]:
+    return {key: value for key, value in report.items() if key not in ("created", "git_commit")}
 
 
 def format_comparison(result: dict[str, Any]) -> str:

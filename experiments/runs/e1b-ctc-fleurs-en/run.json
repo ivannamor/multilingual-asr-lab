@@ -1,0 +1,28 @@
+{
+  "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16",
+  "model_config": {
+    "library": "transformers",
+    "library_version": "5.20.2",
+    "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+    "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+    "dtype": "float16",
+    "device": "cuda",
+    "decoding": "ctc-greedy"
+  },
+  "manifest_sha256": "5473ea7c268ab45f6d16fcd0c37ac2d3a85843a4f0a21212256a7c53dc924d81",
+  "limit": null,
+  "manifest": "data/fleurs_en/test.jsonl",
+  "n_utterances": 647,
+  "audio_seconds": 6387.9,
+  "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux x86_64",
+    "executable_is_venv": false
+  },
+  "started_at": "2026-10-30T15:03:20+00:00",
+  "finished_at": "2026-10-30T15:03:47+00:00",
+  "processing_seconds": 27.00150270799986,
+  "rtf": 0.004226976425429306
+}

@@ -1,0 +1,2155 @@
+{
+  "spec": "experiments/E1b/models.toml",
+  "models": [
+    "whisper_small",
+    "whisper_turbo",
+    "ctc",
+    "tdt"
+  ],
+  "parameters": {
+    "whisper_small": 241734912,
+    "whisper_turbo": 808878080,
+    "ctc": 315483820,
+    "tdt": 627008134
+  },
+  "comparisons": [
+    [
+      "ctc",
+      "whisper_small"
+    ],
+    [
+      "ctc",
+      "whisper_turbo"
+    ],
+    [
+      "tdt",
+      "whisper_small"
+    ],
+    [
+      "tdt",
+      "whisper_turbo"
+    ],
+    [
+      "tdt",
+      "ctc"
+    ]
+  ],
+  "level": 0.95,
+  "n_resamples": 1000,
+  "seed": 0,
+  "test_sets": [
+    {
+      "name": "fleurs-it",
+      "lang": "it",
+      "normalizer": "it-v2",
+      "runs": {
+        "whisper_small": {
+          "run_dir": "experiments/runs/whisper-small-float16-fleurs-it",
+          "model": "faster-whisper/small-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "small",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "condition_on_previous_text": false,
+            "vad_filter": false
+          },
+          "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+          "rtf": 0.022944130447308596,
+          "processing_seconds": 290.84576302400006,
+          "audio_seconds": 12676.26
+        },
+        "whisper_turbo": {
+          "run_dir": "experiments/runs/whisper-large-v3-turbo-float16-fleurs-it",
+          "model": "faster-whisper/large-v3-turbo-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "large-v3-turbo",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "condition_on_previous_text": false,
+            "vad_filter": false
+          },
+          "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+          "rtf": 0.03357517049074412,
+          "processing_seconds": 425.6075906850001,
+          "audio_seconds": 12676.26
+        },
+        "ctc": {
+          "run_dir": "experiments/runs/e1b-ctc-fleurs-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+            "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.0047643399924741005,
+          "processing_seconds": 60.39401247299975,
+          "audio_seconds": 12676.26
+        },
+        "tdt": {
+          "run_dir": "experiments/runs/e1b-tdt-fleurs-it",
+          "model": "transformers/nvidia/parakeet-tdt-0.6b-v3-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+            "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "tdt-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.012191445900131445,
+          "processing_seconds": 154.54193800600024,
+          "audio_seconds": 12676.26
+        }
+      },
+      "n_with_digits": 162,
+      "all": {
+        "n_utterances": 865,
+        "n_words": 21262,
+        "n_speakers": 865,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.0711127833693914,
+            "low": 0.06462755323706804,
+            "high": 0.07747746833862297,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.018368470134992584,
+            "substitutions": 1171,
+            "deletions": 165,
+            "insertions": 176,
+            "errors": 1512,
+            "edge_errors": 223,
+            "invented_closing_phrases": 4,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.02398645470792964,
+            "low": 0.02035014443367341,
+            "high": 0.027980700923306304,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.006535597988105976,
+            "substitutions": 404,
+            "deletions": 44,
+            "insertions": 62,
+            "errors": 510,
+            "edge_errors": 68,
+            "invented_closing_phrases": 3,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.07355846110431756,
+            "low": 0.06664716331076112,
+            "high": 0.08017227009227915,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.016702083747381937,
+            "substitutions": 1133,
+            "deletions": 253,
+            "insertions": 178,
+            "errors": 1564,
+            "edge_errors": 166,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.027607939046185682,
+            "low": 0.023370908285933724,
+            "high": 0.031996454938843386,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.008316643989543043,
+            "substitutions": 439,
+            "deletions": 90,
+            "insertions": 58,
+            "errors": 587,
+            "edge_errors": 69,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.002445677734926155,
+            "low": -0.004550247537656429,
+            "high": 0.009680774005740205,
+            "prob_b_better": 0.242,
+            "p_value": 0.494,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.494,
+            "significant": false
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.049572006396387924,
+            "low": 0.04431208147914902,
+            "high": 0.05491089647917794,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.04350484432320573,
+            "low": -0.04881524531415876,
+            "high": -0.038155546923768435,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.0036214843382560424,
+            "low": 0.0009408096409052053,
+            "high": 0.006596697306386888,
+            "prob_b_better": 0.007,
+            "p_value": 0.016000000000000014,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.03200000000000003,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.04595052205813188,
+            "low": -0.05121645499220953,
+            "high": -0.040823921650185474,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 703,
+        "n_words": 16806,
+        "n_speakers": 703,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.07045102939426395,
+            "low": 0.0631359594520693,
+            "high": 0.07763639549011192,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.01732022019203697,
+            "substitutions": 929,
+            "deletions": 135,
+            "insertions": 120,
+            "errors": 1184,
+            "edge_errors": 178,
+            "invented_closing_phrases": 4,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.022372962037367605,
+            "low": 0.018377534206111445,
+            "high": 0.026633091715086224,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.005330045339365637,
+            "substitutions": 306,
+            "deletions": 36,
+            "insertions": 34,
+            "errors": 376,
+            "edge_errors": 55,
+            "invented_closing_phrases": 2,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.0632512198024515,
+            "low": 0.05710978872405522,
+            "high": 0.06972543161806263,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.013698896127222067,
+            "substitutions": 797,
+            "deletions": 195,
+            "insertions": 71,
+            "errors": 1063,
+            "edge_errors": 96,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.026419136022848982,
+            "low": 0.022157401802528925,
+            "high": 0.03127652468262788,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.007174687624391996,
+            "substitutions": 342,
+            "deletions": 72,
+            "insertions": 30,
+            "errors": 444,
+            "edge_errors": 60,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": -0.007199809591812448,
+            "low": -0.014201822723067909,
+            "high": -0.0003050693620689446,
+            "prob_b_better": 0.98,
+            "p_value": 0.040000000000000036,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.040000000000000036,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.0408782577650839,
+            "low": 0.03564293038790818,
+            "high": 0.04652310467416149,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.04403189337141497,
+            "low": -0.0497731930568686,
+            "high": -0.037866131746822525,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.004046173985481377,
+            "low": 0.001067045622490667,
+            "high": 0.007077470587288862,
+            "prob_b_better": 0.002,
+            "p_value": 0.0040000000000000036,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.008000000000000007,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.03683208377960252,
+            "low": -0.042094971224035174,
+            "high": -0.031804826044872885,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "runaway": [],
+      "without_runaway": {
+        "n_utterances": 865,
+        "n_words": 21262,
+        "n_speakers": 865,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.0711127833693914,
+            "low": 0.06462755323706804,
+            "high": 0.07747746833862297,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.018368470134992584,
+            "substitutions": 1171,
+            "deletions": 165,
+            "insertions": 176,
+            "errors": 1512,
+            "edge_errors": 223,
+            "invented_closing_phrases": 4,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.02398645470792964,
+            "low": 0.02035014443367341,
+            "high": 0.027980700923306304,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.006535597988105976,
+            "substitutions": 404,
+            "deletions": 44,
+            "insertions": 62,
+            "errors": 510,
+            "edge_errors": 68,
+            "invented_closing_phrases": 3,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.07355846110431756,
+            "low": 0.06664716331076112,
+            "high": 0.08017227009227915,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.016702083747381937,
+            "substitutions": 1133,
+            "deletions": 253,
+            "insertions": 178,
+            "errors": 1564,
+            "edge_errors": 166,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.027607939046185682,
+            "low": 0.023370908285933724,
+            "high": 0.031996454938843386,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.008316643989543043,
+            "substitutions": 439,
+            "deletions": 90,
+            "insertions": 58,
+            "errors": 587,
+            "edge_errors": 69,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.002445677734926155,
+            "low": -0.004550247537656429,
+            "high": 0.009680774005740205,
+            "prob_b_better": 0.242,
+            "p_value": 0.494,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.494,
+            "significant": false
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.049572006396387924,
+            "low": 0.04431208147914902,
+            "high": 0.05491089647917794,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.04350484432320573,
+            "low": -0.04881524531415876,
+            "high": -0.038155546923768435,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.0036214843382560424,
+            "low": 0.0009408096409052053,
+            "high": 0.006596697306386888,
+            "prob_b_better": 0.007,
+            "p_value": 0.016000000000000014,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.03200000000000003,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.04595052205813188,
+            "low": -0.05121645499220953,
+            "high": -0.040823921650185474,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "silent": {
+        "n_utterances": 0,
+        "n_words": 0,
+        "mean_duration": 0.0,
+        "systems": {
+          "whisper_small": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "whisper_turbo": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "ctc": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "tdt": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "fleurs-de",
+      "lang": "de",
+      "normalizer": "de-v1",
+      "runs": {
+        "whisper_small": {
+          "run_dir": "experiments/runs/whisper-small-float16-fleurs-de",
+          "model": "faster-whisper/small-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "small",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "condition_on_previous_text": false,
+            "vad_filter": false
+          },
+          "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+          "rtf": 0.024074710149084088,
+          "processing_seconds": 273.23110789500004,
+          "audio_seconds": 11349.3
+        },
+        "whisper_turbo": {
+          "run_dir": "experiments/runs/whisper-large-v3-turbo-float16-fleurs-de",
+          "model": "faster-whisper/large-v3-turbo-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "large-v3-turbo",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "condition_on_previous_text": false,
+            "vad_filter": false
+          },
+          "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+          "rtf": 0.03690197182072903,
+          "processing_seconds": 418.811548785,
+          "audio_seconds": 11349.3
+        },
+        "ctc": {
+          "run_dir": "experiments/runs/e1b-ctc-fleurs-de",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+            "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.004727064427585854,
+          "processing_seconds": 53.648872308000136,
+          "audio_seconds": 11349.3
+        },
+        "tdt": {
+          "run_dir": "experiments/runs/e1b-tdt-fleurs-de",
+          "model": "transformers/nvidia/parakeet-tdt-0.6b-v3-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+            "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "tdt-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.013438299460759714,
+          "processing_seconds": 152.5152920700002,
+          "audio_seconds": 11349.3
+        }
+      },
+      "n_with_digits": 164,
+      "all": {
+        "n_utterances": 862,
+        "n_words": 18703,
+        "n_speakers": 862,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.0913222477677378,
+            "low": 0.08426062569854648,
+            "high": 0.0989699341663779,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.025357307514983864,
+            "substitutions": 1303,
+            "deletions": 168,
+            "insertions": 237,
+            "errors": 1708,
+            "edge_errors": 250,
+            "invented_closing_phrases": 3,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.04448484200395658,
+            "low": 0.039142101678136705,
+            "high": 0.05005265953276778,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.01435481476271968,
+            "substitutions": 612,
+            "deletions": 89,
+            "insertions": 131,
+            "errors": 832,
+            "edge_errors": 132,
+            "invented_closing_phrases": 12,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.11789552478212051,
+            "low": 0.10839865272337249,
+            "high": 0.12854031851829636,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.04902673261910902,
+            "substitutions": 1746,
+            "deletions": 257,
+            "insertions": 202,
+            "errors": 2205,
+            "edge_errors": 266,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.050900924985296477,
+            "low": 0.04522197810931578,
+            "high": 0.05724821600145186,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.015034656289315548,
+            "substitutions": 735,
+            "deletions": 134,
+            "insertions": 83,
+            "errors": 952,
+            "edge_errors": 125,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.02657327701438271,
+            "low": 0.018012421954107682,
+            "high": 0.03483605733025237,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.07341068277816393,
+            "low": 0.06524966897156091,
+            "high": 0.08178420623299373,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.04042132278244132,
+            "low": -0.047195040559841445,
+            "high": -0.03439313333462449,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.006416082981339895,
+            "low": 0.002261116183164998,
+            "high": 0.010740704100088124,
+            "prob_b_better": 0.001,
+            "p_value": 0.0020000000000000018,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0020000000000000018,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.06699459979682404,
+            "low": -0.07488973455344025,
+            "high": -0.05997953032460499,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 698,
+        "n_words": 14761,
+        "n_speakers": 698,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.08441162522864304,
+            "low": 0.07640857488477339,
+            "high": 0.09274134612445728,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.022150936362655367,
+            "substitutions": 959,
+            "deletions": 125,
+            "insertions": 162,
+            "errors": 1246,
+            "edge_errors": 193,
+            "invented_closing_phrases": 3,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.03915723866946684,
+            "low": 0.03342287927033338,
+            "high": 0.04550145520580391,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.011771976809205685,
+            "substitutions": 430,
+            "deletions": 63,
+            "insertions": 85,
+            "errors": 578,
+            "edge_errors": 106,
+            "invented_closing_phrases": 9,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.0951832531671296,
+            "low": 0.08675903361312319,
+            "high": 0.10371905642710898,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.020365519879925836,
+            "substitutions": 1109,
+            "deletions": 184,
+            "insertions": 112,
+            "errors": 1405,
+            "edge_errors": 180,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.04200257435133121,
+            "low": 0.036433050544333545,
+            "high": 0.04798152203112471,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.011507107330998557,
+            "substitutions": 490,
+            "deletions": 86,
+            "insertions": 44,
+            "errors": 620,
+            "edge_errors": 87,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.010771627938486558,
+            "low": 0.003504258319291501,
+            "high": 0.018138469248853893,
+            "prob_b_better": 0.003,
+            "p_value": 0.006000000000000005,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.01200000000000001,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.05602601449766276,
+            "low": 0.049218910660179686,
+            "high": 0.06269185154445156,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.04240905087731183,
+            "low": -0.04936432804320956,
+            "high": -0.035444807300824485,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.002845335681864368,
+            "low": -0.0011673496434472966,
+            "high": 0.006706873119368873,
+            "prob_b_better": 0.065,
+            "p_value": 0.1419999999999999,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.1419999999999999,
+            "significant": false
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.05318067881579839,
+            "low": -0.05980002160560777,
+            "high": -0.04622349100998844,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "runaway": [],
+      "without_runaway": {
+        "n_utterances": 862,
+        "n_words": 18703,
+        "n_speakers": 862,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.0913222477677378,
+            "low": 0.08426062569854648,
+            "high": 0.0989699341663779,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.025357307514983864,
+            "substitutions": 1303,
+            "deletions": 168,
+            "insertions": 237,
+            "errors": 1708,
+            "edge_errors": 250,
+            "invented_closing_phrases": 3,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.04448484200395658,
+            "low": 0.039142101678136705,
+            "high": 0.05005265953276778,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.01435481476271968,
+            "substitutions": 612,
+            "deletions": 89,
+            "insertions": 131,
+            "errors": 832,
+            "edge_errors": 132,
+            "invented_closing_phrases": 12,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.11789552478212051,
+            "low": 0.10839865272337249,
+            "high": 0.12854031851829636,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.04902673261910902,
+            "substitutions": 1746,
+            "deletions": 257,
+            "insertions": 202,
+            "errors": 2205,
+            "edge_errors": 266,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.050900924985296477,
+            "low": 0.04522197810931578,
+            "high": 0.05724821600145186,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.015034656289315548,
+            "substitutions": 735,
+            "deletions": 134,
+            "insertions": 83,
+            "errors": 952,
+            "edge_errors": 125,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.02657327701438271,
+            "low": 0.018012421954107682,
+            "high": 0.03483605733025237,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.07341068277816393,
+            "low": 0.06524966897156091,
+            "high": 0.08178420623299373,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.04042132278244132,
+            "low": -0.047195040559841445,
+            "high": -0.03439313333462449,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.006416082981339895,
+            "low": 0.002261116183164998,
+            "high": 0.010740704100088124,
+            "prob_b_better": 0.001,
+            "p_value": 0.0020000000000000018,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0020000000000000018,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.06699459979682404,
+            "low": -0.07488973455344025,
+            "high": -0.05997953032460499,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "silent": {
+        "n_utterances": 0,
+        "n_words": 0,
+        "mean_duration": 0.0,
+        "systems": {
+          "whisper_small": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "whisper_turbo": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "ctc": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "tdt": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "fleurs-en",
+      "lang": "en",
+      "normalizer": "en-v1",
+      "runs": {
+        "whisper_small": {
+          "run_dir": "experiments/runs/whisper-small-float16-fleurs-en",
+          "model": "faster-whisper/small-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "small",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "condition_on_previous_text": false,
+            "vad_filter": false
+          },
+          "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+          "rtf": 0.025117052674900983,
+          "processing_seconds": 160.44522078199998,
+          "audio_seconds": 6387.9
+        },
+        "whisper_turbo": {
+          "run_dir": "experiments/runs/whisper-large-v3-turbo-float16-fleurs-en",
+          "model": "faster-whisper/large-v3-turbo-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "large-v3-turbo",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "condition_on_previous_text": false,
+            "vad_filter": false
+          },
+          "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+          "rtf": 0.04391865583885156,
+          "processing_seconds": 280.54798163299984,
+          "audio_seconds": 6387.9
+        },
+        "ctc": {
+          "run_dir": "experiments/runs/e1b-ctc-fleurs-en",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+            "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.004226976425429306,
+          "processing_seconds": 27.00150270799986,
+          "audio_seconds": 6387.9
+        },
+        "tdt": {
+          "run_dir": "experiments/runs/e1b-tdt-fleurs-en",
+          "model": "transformers/nvidia/parakeet-tdt-0.6b-v3-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+            "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "tdt-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.015017859570751059,
+          "processing_seconds": 95.93258515200068,
+          "audio_seconds": 6387.9
+        }
+      },
+      "n_with_digits": 122,
+      "all": {
+        "n_utterances": 647,
+        "n_words": 14467,
+        "n_speakers": 647,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.0659431810326951,
+            "low": 0.059291180116595475,
+            "high": 0.07272478491073278,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.026986435263546858,
+            "substitutions": 696,
+            "deletions": 104,
+            "insertions": 154,
+            "errors": 954,
+            "edge_errors": 150,
+            "invented_closing_phrases": 1,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.05004492984032626,
+            "low": 0.04448529460992487,
+            "high": 0.05552599176903224,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.0213126087682075,
+            "substitutions": 517,
+            "deletions": 110,
+            "insertions": 97,
+            "errors": 724,
+            "edge_errors": 108,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.14543443699453928,
+            "low": 0.1338373972751998,
+            "high": 0.15754791939522134,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.06678665935585382,
+            "substitutions": 1611,
+            "deletions": 252,
+            "insertions": 241,
+            "errors": 2104,
+            "edge_errors": 348,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.054468791041681064,
+            "low": 0.048611582126055874,
+            "high": 0.06071939905579083,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.023184017927384556,
+            "substitutions": 586,
+            "deletions": 143,
+            "insertions": 59,
+            "errors": 788,
+            "edge_errors": 116,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.07949125596184418,
+            "low": 0.06914332841004105,
+            "high": 0.0903347571886262,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.09538950715421302,
+            "low": 0.0849954688681198,
+            "high": 0.10641518794654067,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.011474389991014036,
+            "low": -0.016263999852505557,
+            "high": -0.006442982640606672,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.004423861201354802,
+            "low": 0.0005521972371692637,
+            "high": 0.008397208555732507,
+            "prob_b_better": 0.013,
+            "p_value": 0.03200000000000003,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.03200000000000003,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.09096564595285822,
+            "low": -0.10122863974970671,
+            "high": -0.08073263280277225,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 525,
+        "n_words": 11444,
+        "n_speakers": 525,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.05950716532680881,
+            "low": 0.05238195574649062,
+            "high": 0.06661085004507926,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.024167601945379723,
+            "substitutions": 515,
+            "deletions": 76,
+            "insertions": 90,
+            "errors": 681,
+            "edge_errors": 97,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.045263893743446346,
+            "low": 0.039529871330984276,
+            "high": 0.05132414687052642,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.01887018331462776,
+            "substitutions": 378,
+            "deletions": 80,
+            "insertions": 60,
+            "errors": 518,
+            "edge_errors": 81,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.11429570080391471,
+            "low": 0.10519966042287299,
+            "high": 0.12410734136564919,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.03874298540965208,
+            "substitutions": 1068,
+            "deletions": 187,
+            "insertions": 53,
+            "errors": 1308,
+            "edge_errors": 194,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.04954561342188046,
+            "low": 0.0426471733751528,
+            "high": 0.055939002175315146,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.021069958847736627,
+            "substitutions": 426,
+            "deletions": 107,
+            "insertions": 34,
+            "errors": 567,
+            "edge_errors": 76,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.0547885354771059,
+            "low": 0.0460749245081959,
+            "high": 0.06300298321819674,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.06903180706046837,
+            "low": 0.061264011175106214,
+            "high": 0.07707064472068229,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.009961551904928347,
+            "low": -0.015265961429261793,
+            "high": -0.00485039700654801,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.004281719678434118,
+            "low": -0.00017212594526334212,
+            "high": 0.008484217445225546,
+            "prob_b_better": 0.027,
+            "p_value": 0.05800000000000005,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.05800000000000005,
+            "significant": false
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.06475008738203425,
+            "low": -0.07292341012774005,
+            "high": -0.05756536799060871,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "runaway": [],
+      "without_runaway": {
+        "n_utterances": 647,
+        "n_words": 14467,
+        "n_speakers": 647,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.0659431810326951,
+            "low": 0.059291180116595475,
+            "high": 0.07272478491073278,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.026986435263546858,
+            "substitutions": 696,
+            "deletions": 104,
+            "insertions": 154,
+            "errors": 954,
+            "edge_errors": 150,
+            "invented_closing_phrases": 1,
+            "empty": 0
+          },
+          "whisper_turbo": {
+            "wer": 0.05004492984032626,
+            "low": 0.04448529460992487,
+            "high": 0.05552599176903224,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.0213126087682075,
+            "substitutions": 517,
+            "deletions": 110,
+            "insertions": 97,
+            "errors": 724,
+            "edge_errors": 108,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.14543443699453928,
+            "low": 0.1338373972751998,
+            "high": 0.15754791939522134,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.06678665935585382,
+            "substitutions": 1611,
+            "deletions": 252,
+            "insertions": 241,
+            "errors": 2104,
+            "edge_errors": 348,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.054468791041681064,
+            "low": 0.048611582126055874,
+            "high": 0.06071939905579083,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.023184017927384556,
+            "substitutions": 586,
+            "deletions": 143,
+            "insertions": 59,
+            "errors": 788,
+            "edge_errors": 116,
+            "invented_closing_phrases": 0,
+            "empty": 0
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.07949125596184418,
+            "low": 0.06914332841004105,
+            "high": 0.0903347571886262,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.09538950715421302,
+            "low": 0.0849954688681198,
+            "high": 0.10641518794654067,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.011474389991014036,
+            "low": -0.016263999852505557,
+            "high": -0.006442982640606672,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.004423861201354802,
+            "low": 0.0005521972371692637,
+            "high": 0.008397208555732507,
+            "prob_b_better": 0.013,
+            "p_value": 0.03200000000000003,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.03200000000000003,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.09096564595285822,
+            "low": -0.10122863974970671,
+            "high": -0.08073263280277225,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "silent": {
+        "n_utterances": 0,
+        "n_words": 0,
+        "mean_duration": 0.0,
+        "systems": {
+          "whisper_small": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "whisper_turbo": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "ctc": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          },
+          "tdt": {
+            "errors": 0,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "voxpopuli-it",
+      "lang": "it",
+      "normalizer": "it-v2",
+      "runs": {
+        "whisper_small": {
+          "run_dir": "experiments/runs/e1b-whisper-small-voxpopuli-it",
+          "model": "faster-whisper/small-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "small",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "temperature": [
+              0.0,
+              0.2,
+              0.4,
+              0.6,
+              0.8,
+              1.0
+            ],
+            "compression_ratio_threshold": 2.4,
+            "log_prob_threshold": -1.0,
+            "no_speech_threshold": 0.6,
+            "vad_filter": false,
+            "hallucination_silence_threshold": 2.0,
+            "word_timestamps": true,
+            "condition_on_previous_text": false,
+            "best_of": 5,
+            "patience": 1.0,
+            "length_penalty": 1.0
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.03390859553320443,
+          "processing_seconds": 528.7216980449994,
+          "audio_seconds": 15592.5566875
+        },
+        "whisper_turbo": {
+          "run_dir": "experiments/runs/e1b-whisper-turbo-voxpopuli-it",
+          "model": "faster-whisper/large-v3-turbo-float16",
+          "model_config": {
+            "library": "faster-whisper",
+            "library_version": "1.2.1",
+            "model_size": "large-v3-turbo",
+            "compute_type": "float16",
+            "device": "cuda",
+            "cpu_threads": 4,
+            "beam_size": 5,
+            "temperature": [
+              0.0,
+              0.2,
+              0.4,
+              0.6,
+              0.8,
+              1.0
+            ],
+            "compression_ratio_threshold": 2.4,
+            "log_prob_threshold": -1.0,
+            "no_speech_threshold": 0.6,
+            "vad_filter": false,
+            "hallucination_silence_threshold": 2.0,
+            "word_timestamps": true,
+            "condition_on_previous_text": false,
+            "best_of": 5,
+            "patience": 1.0,
+            "length_penalty": 1.0
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.041520851129244904,
+          "processing_seconds": 647.4162249459996,
+          "audio_seconds": 15592.5566875
+        },
+        "ctc": {
+          "run_dir": "experiments/runs/e1b-ctc-voxpopuli-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+            "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.004773055993739834,
+          "processing_seconds": 74.42414615500002,
+          "audio_seconds": 15592.5566875
+        },
+        "tdt": {
+          "run_dir": "experiments/runs/e1b-tdt-voxpopuli-it",
+          "model": "transformers/nvidia/parakeet-tdt-0.6b-v3-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "nvidia/parakeet-tdt-0.6b-v3",
+            "revision": "541d1f99c6b0c3cd0b11a95167540bb8edefd82b",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "tdt-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.01500026709503665,
+          "processing_seconds": 233.89251500699993,
+          "audio_seconds": 15592.5566875
+        }
+      },
+      "n_with_digits": 134,
+      "all": {
+        "n_utterances": 1177,
+        "n_words": 37454,
+        "n_speakers": 81,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.20625300368451968,
+            "low": 0.18333565281498213,
+            "high": 0.23240326763067876,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.13957176843774782,
+            "substitutions": 3060,
+            "deletions": 2732,
+            "insertions": 1933,
+            "errors": 7725,
+            "edge_errors": 4408,
+            "invented_closing_phrases": 22,
+            "empty": 3
+          },
+          "whisper_turbo": {
+            "wer": 0.19111443370534523,
+            "low": 0.16119837368451692,
+            "high": 0.22182917146083977,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.15593416235004304,
+            "substitutions": 1782,
+            "deletions": 3964,
+            "insertions": 1412,
+            "errors": 7158,
+            "edge_errors": 5226,
+            "invented_closing_phrases": 70,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.26194798953382814,
+            "low": 0.2406798262610856,
+            "high": 0.28675127660306937,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.14908802537668517,
+            "substitutions": 4502,
+            "deletions": 3149,
+            "insertions": 2160,
+            "errors": 9811,
+            "edge_errors": 4903,
+            "invented_closing_phrases": 11,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.20507822929460137,
+            "low": 0.1396033566902772,
+            "high": 0.3088846010707875,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.14613528607825602,
+            "substitutions": 1958,
+            "deletions": 2579,
+            "insertions": 3144,
+            "errors": 7681,
+            "edge_errors": 5341,
+            "invented_closing_phrases": 2,
+            "empty": 38
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.05569498584930846,
+            "low": 0.050178267262493345,
+            "high": 0.061734723253121106,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.07083355582848291,
+            "low": 0.055445498975821274,
+            "high": 0.08712894434201192,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.0011747743899183094,
+            "low": -0.05613809144343543,
+            "high": 0.09724515421534144,
+            "prob_b_better": 0.584,
+            "p_value": 0.8320000000000001,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.013963795589256145,
+            "low": -0.042839025917718467,
+            "high": 0.11672147950203154,
+            "prob_b_better": 0.411,
+            "p_value": 0.8220000000000001,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.05686976023922677,
+            "low": -0.11077740540985728,
+            "high": 0.042216645088937306,
+            "prob_b_better": 0.915,
+            "p_value": 0.16999999999999993,
+            "unit": "utterance",
+            "n_units": 1177,
+            "p_holm": 0.5099999999999998,
+            "significant": false
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 1043,
+        "n_words": 32242,
+        "n_speakers": 80,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.21639476459276719,
+            "low": 0.1880346097931172,
+            "high": 0.2473215515749665,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.14912164255055532,
+            "substitutions": 2652,
+            "deletions": 2553,
+            "insertions": 1772,
+            "errors": 6977,
+            "edge_errors": 4171,
+            "invented_closing_phrases": 20,
+            "empty": 3
+          },
+          "whisper_turbo": {
+            "wer": 0.20460889522982445,
+            "low": 0.16989985720025558,
+            "high": 0.24248392607588998,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.16811461667428745,
+            "substitutions": 1574,
+            "deletions": 3733,
+            "insertions": 1290,
+            "errors": 6597,
+            "edge_errors": 4984,
+            "invented_closing_phrases": 69,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.26952422306308543,
+            "low": 0.24214953254965788,
+            "high": 0.29830307828690616,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.15864025448520339,
+            "substitutions": 3868,
+            "deletions": 2866,
+            "insertions": 1956,
+            "errors": 8690,
+            "edge_errors": 4620,
+            "invented_closing_phrases": 11,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.2243037032442156,
+            "low": 0.15135690588885942,
+            "high": 0.35122617850165694,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.1605184103524738,
+            "substitutions": 1762,
+            "deletions": 2423,
+            "insertions": 3047,
+            "errors": 7232,
+            "edge_errors": 5198,
+            "invented_closing_phrases": 2,
+            "empty": 38
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.05312945847031825,
+            "low": 0.04710135318897084,
+            "high": 0.05903494715937185,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.06491532783326098,
+            "low": 0.048311398162539446,
+            "high": 0.08101625148745906,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": 0.007908938651448427,
+            "low": -0.0549592069199396,
+            "high": 0.1305058075906292,
+            "prob_b_better": 0.467,
+            "p_value": 0.9339999999999999,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": 0.019694808014391163,
+            "low": -0.04825887484741835,
+            "high": 0.14500365023170494,
+            "prob_b_better": 0.369,
+            "p_value": 0.74,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.04522051981886982,
+            "low": -0.10833609108188465,
+            "high": 0.07590420295487393,
+            "prob_b_better": 0.832,
+            "p_value": 0.3360000000000001,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 1.0,
+            "significant": false
+          }
+        ]
+      },
+      "runaway": [
+        {
+          "utterance_id": "voxpopuli_it_20160608-0900-PLENARY-23-it_20160608-20-03-57_7",
+          "duration": 5.6599375,
+          "reference_words": 16,
+          "words": {
+            "whisper_small": 11,
+            "whisper_turbo": 12,
+            "ctc": 16,
+            "tdt": 355
+          }
+        },
+        {
+          "utterance_id": "voxpopuli_it_20170912-0900-PLENARY-18-it_20170912-19-18-17_7",
+          "duration": 12.7199375,
+          "reference_words": 28,
+          "words": {
+            "whisper_small": 29,
+            "whisper_turbo": 29,
+            "ctc": 28,
+            "tdt": 1588
+          }
+        }
+      ],
+      "without_runaway": {
+        "n_utterances": 1175,
+        "n_words": 37410,
+        "n_speakers": 81,
+        "systems": {
+          "whisper_small": {
+            "wer": 0.2061213579256883,
+            "low": 0.18328733201763917,
+            "high": 0.2323137613428787,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.13942342205387417,
+            "substitutions": 3060,
+            "deletions": 2723,
+            "insertions": 1928,
+            "errors": 7711,
+            "edge_errors": 4396,
+            "invented_closing_phrases": 22,
+            "empty": 3
+          },
+          "whisper_turbo": {
+            "wer": 0.19099171344560278,
+            "low": 0.16107439051374609,
+            "high": 0.22167006208119827,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.15582046442099395,
+            "substitutions": 1782,
+            "deletions": 3956,
+            "insertions": 1407,
+            "errors": 7145,
+            "edge_errors": 5215,
+            "invented_closing_phrases": 70,
+            "empty": 0
+          },
+          "ctc": {
+            "wer": 0.26182838813151565,
+            "low": 0.2405257088275288,
+            "high": 0.2866779011130132,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.1489246698844226,
+            "substitutions": 4500,
+            "deletions": 3142,
+            "insertions": 2153,
+            "errors": 9795,
+            "edge_errors": 4889,
+            "invented_closing_phrases": 11,
+            "empty": 0
+          },
+          "tdt": {
+            "wer": 0.15348837209302327,
+            "low": 0.13261872456535445,
+            "high": 0.17762316122976232,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.11574208968333397,
+            "substitutions": 1918,
+            "deletions": 2579,
+            "insertions": 1245,
+            "errors": 5742,
+            "edge_errors": 3751,
+            "invented_closing_phrases": 2,
+            "empty": 38
+          }
+        },
+        "comparisons": [
+          {
+            "a": "whisper_small",
+            "b": "ctc",
+            "delta": 0.055707030205827346,
+            "low": 0.05010987228956638,
+            "high": 0.061669290440324126,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "ctc",
+            "delta": 0.07083667468591287,
+            "low": 0.05533424948663195,
+            "high": 0.0873275755862516,
+            "prob_b_better": 0.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_small",
+            "b": "tdt",
+            "delta": -0.05263298583266504,
+            "low": -0.060691720456549435,
+            "high": -0.04534666677347465,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "whisper_turbo",
+            "b": "tdt",
+            "delta": -0.03750334135257952,
+            "low": -0.05100550390584214,
+            "high": -0.02362781770948641,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "ctc",
+            "b": "tdt",
+            "delta": -0.10834001603849239,
+            "low": -0.11737576562977538,
+            "high": -0.10046439995003333,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "silent": {
+        "n_utterances": 38,
+        "n_words": 348,
+        "mean_duration": 3.32117927631579,
+        "systems": {
+          "whisper_small": {
+            "errors": 291,
+            "hits": 111,
+            "insertions": 54,
+            "closing": 1
+          },
+          "whisper_turbo": {
+            "errors": 280,
+            "hits": 113,
+            "insertions": 45,
+            "closing": 10
+          },
+          "ctc": {
+            "errors": 308,
+            "hits": 108,
+            "insertions": 68,
+            "closing": 1
+          },
+          "tdt": {
+            "errors": 348,
+            "hits": 0,
+            "insertions": 0,
+            "closing": 0
+          }
+        }
+      }
+    }
+  ],
+  "created": "2026-10-30T15:51:42+00:00",
+  "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea"
+}

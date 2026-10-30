@@ -23,6 +23,7 @@ Usage::
         --strategy random --seed 0 --output models/e7/random-s0
     uv run asr-lab finetune-results --spec experiments/E7/finetune.toml \
         --records experiments/E7/results/training --output finetune.json
+    uv run asr-lab family-results --spec experiments/E1b/models.toml --output families.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -51,8 +52,10 @@ from asr_lab.evaluation.comparison import (
     compare_runs,
     format_comparison,
     save_comparison,
+    save_results,
 )
 from asr_lab.evaluation.error_analysis import analyze_run, format_errors
+from asr_lab.evaluation.families import family_results
 from asr_lab.evaluation.normalize import NORMALIZER_NAMES, get_normalizer_by_name
 from asr_lab.evaluation.scoring import (
     DEFAULT_N_RESAMPLES,
@@ -68,7 +71,7 @@ from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
 from asr_lab.tracking import log_comparison, log_scores
 from asr_lab.training.lora import fine_tune, load_training_config
-from asr_lab.training.results import finetune_results, save_results
+from asr_lab.training.results import finetune_results
 from asr_lab.training.selection import (
     load_selection_spec,
     save_selections,
@@ -297,6 +300,16 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     finetune_res.add_argument("--output", required=True, type=Path, help="results JSON")
 
+    families = commands.add_parser(
+        "family-results",
+        help="WER, comparisons and errors of the Whisper, CTC and Transducer models (E1b)",
+    )
+    families.add_argument("--spec", required=True, type=Path, help="TOML model-family spec")
+    families.add_argument(
+        "--runs", type=Path, default=Path("experiments/runs"), help="folder of the run directories"
+    )
+    families.add_argument("--output", required=True, type=Path, help="results JSON")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -478,6 +491,15 @@ def main(argv: Sequence[str] | None = None) -> None:
             )
             print(f"{subset['name']} ({subset['n_utterances']} utterances): {systems}")
         print(f"Fine-tuning results: {args.output}")
+    elif args.command == "family-results":
+        report = family_results(args.spec, args.runs)
+        save_results(report, args.output)
+        for test_set in report["test_sets"]:
+            systems = ", ".join(
+                f"{name} {result['wer']:.2%}" for name, result in test_set["all"]["systems"].items()
+            )
+            print(f"{test_set['name']}: {systems}")
+        print(f"Model-family results: {args.output}")
     elif args.command == "render-results":
         changed = render_results(
             args.spec,

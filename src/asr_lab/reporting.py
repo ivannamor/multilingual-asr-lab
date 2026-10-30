@@ -23,6 +23,7 @@ from typing import Any
 
 from asr_lab.analytics.usage import usage_table
 from asr_lab.data.quality import quality_table
+from asr_lab.evaluation.families import families_table
 from asr_lab.training.results import finetune_table
 
 
@@ -112,8 +113,8 @@ def build_tables(spec_path: Path) -> dict[str, str]:
     Table kinds: ``scores`` and ``comparisons`` (one JSON file per row),
     ``closing-phrases`` (one error report per row and column), ``selection``
     (a single selection file), ``usage`` (one ``section`` of a usage report), ``quality``
-    (one ``section`` of a data quality report) and ``finetune`` (one ``section`` of the results
-    of fine-tuned models).
+    (one ``section`` of a data quality report), ``finetune`` (one ``section`` of the results
+    of fine-tuned models) and ``families`` (one ``section`` of the model-family comparison).
     """
     spec = tomllib.loads(spec_path.read_text(encoding="utf-8"))
     row_builders = {"scores": scores_table, "comparisons": comparisons_table}
@@ -136,6 +137,8 @@ def build_tables(spec_path: Path) -> dict[str, str]:
             tables[table["name"]] = quality_table(_read_json(table["file"]), table["section"])
         elif kind == "finetune":
             tables[table["name"]] = finetune_table(_read_json(table["file"]), table["section"])
+        elif kind == "families":
+            tables[table["name"]] = families_table(_read_json(table["file"]), table["section"])
         else:
             raise ValueError(f"{spec_path}: unknown table kind {kind!r}")
     return tables
