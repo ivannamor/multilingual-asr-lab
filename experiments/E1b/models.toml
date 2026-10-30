@@ -1,0 +1,61 @@
+# Experiment E1b: the CTC and Transducer families next to Whisper. Everything here is fixed before
+# any model transcribes a test set: models, revisions, test sets, normalizers and comparisons.
+
+[models.ctc]
+# wav2vec2 XLS-R, fine-tuned per language on Common Voice 6.1 (train and validation), greedy decoding
+it = { id = "jonatasgrosman/wav2vec2-large-xlsr-53-italian", revision = "dab04a3e00d8326052f3fb22a6ff276b822f6131" }
+de = { id = "jonatasgrosman/wav2vec2-large-xlsr-53-german", revision = "4b8a02957378d0f2da2ef74091156b032c485a89" }
+en = { id = "jonatasgrosman/wav2vec2-large-xlsr-53-english", revision = "569a6236e92bd5f7652a0420bfe9bb94c5664080" }
+
+[models.tdt]
+# One model for 25 European languages. Trained on NeMo ASR Set 3.0 (including Europarl-ASR and
+# Common Voice) and on Granary, whose MOSEL part is the unlabelled VoxPopuli audio with Whisper's
+# transcripts: it has probably heard the sessions of the VoxPopuli test split.
+all = { id = "nvidia/parakeet-tdt-0.6b-v3", revision = "541d1f99c6b0c3cd0b11a95167540bb8edefd82b" }
+
+# Whisper reference runs. FLEURS: the float16 runs of E1 (beam 5, Colab T4). VoxPopuli: transcribed
+# for this experiment on a T4, with the decoding selected in E2 (beam 5, hallucination silence 2 s).
+[[test_sets]]
+name = "fleurs-it"
+manifest = "data/fleurs_it/test.jsonl"
+lang = "it"
+normalizer = "it-v2"
+whisper_small = "experiments/runs/whisper-small-float16-fleurs-it"
+whisper_turbo = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-it"
+
+[[test_sets]]
+name = "fleurs-de"
+manifest = "data/fleurs_de/test.jsonl"
+lang = "de"
+normalizer = "de-v1"
+whisper_small = "experiments/runs/whisper-small-float16-fleurs-de"
+whisper_turbo = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-de"
+
+[[test_sets]]
+name = "fleurs-en"
+manifest = "data/fleurs_en/test.jsonl"
+lang = "en"
+normalizer = "en-v1"
+whisper_small = "experiments/runs/whisper-small-float16-fleurs-en"
+whisper_turbo = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-en"
+
+[[test_sets]]
+name = "voxpopuli-it"
+manifest = "data/voxpopuli_it/test.jsonl"
+lang = "it"
+normalizer = "it-v2"
+whisper_small = "experiments/runs/e1b-whisper-small-voxpopuli-it"
+whisper_turbo = "experiments/runs/e1b-whisper-turbo-voxpopuli-it"
+
+[analysis]
+# Per test set: paired bootstrap of B - A (the widest resampling unit), Holm's correction for the
+# five comparisons. FLEURS is the primary result; on VoxPopuli, Parakeet is reported as probably
+# contaminated. The CTC models cannot write digits, and only the Italian normalizer writes numbers
+# in words, so every comparison is repeated on the utterances whose reference has no digit.
+comparisons = [
+  ["ctc", "whisper_small"],
+  ["ctc", "whisper_turbo"],
+  ["tdt", "whisper_small"],
+  ["tdt", "whisper_turbo"],
+  ["tdt", "ctc"],
+]

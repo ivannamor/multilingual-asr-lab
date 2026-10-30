@@ -3,6 +3,8 @@
 Usage::
 
     uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/whisper-small-it
+    uv run asr-lab transcribe --manifest data/fleurs_it/test.jsonl --output runs/parakeet-it \
+        --family tdt --model-id nvidia/parakeet-tdt-0.6b-v3 --revision 541d1f9 --device cuda
     uv run asr-lab score --run runs/whisper-small-it
     uv run asr-lab errors --run runs/whisper-small-it
     uv run asr-lab compare --a runs/A --b runs/B
@@ -60,6 +62,7 @@ from asr_lab.evaluation.scoring import (
 )
 from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
+from asr_lab.inference.transformers_models import FAMILIES
 from asr_lab.plots import plot_selection, plot_usage
 from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
@@ -84,14 +87,26 @@ def main(argv: Sequence[str] | None = None) -> None:
     commands = parser.add_subparsers(dest="command", required=True)
 
     transcribe = commands.add_parser(
-        "transcribe", help="transcribe a manifest with Whisper and save the predictions"
+        "transcribe", help="transcribe a manifest with a model and save the predictions"
     )
     transcribe.add_argument("--manifest", required=True, type=Path)
     transcribe.add_argument("--output", required=True, type=Path, help="run directory")
-    transcribe.add_argument("--model-size", default="small")
+    transcribe.add_argument(
+        "--family",
+        default="whisper",
+        choices=["whisper", *FAMILIES],
+        help="whisper (faster-whisper), ctc (wav2vec2) or tdt (Parakeet); the last two need "
+        "`uv sync --extra hf`",
+    )
+    transcribe.add_argument("--model-size", default="small", help="Whisper checkpoint")
+    transcribe.add_argument("--model-id", default=None, help="ctc, tdt: repository on the Hub")
+    transcribe.add_argument("--revision", default=None, help="ctc, tdt: commit of the repository")
     transcribe.add_argument("--device", default="cpu", choices=["cpu", "cuda"])
     transcribe.add_argument(
-        "--compute-type", default=None, help="default: int8 on CPU, float16 on CUDA"
+        "--compute-type",
+        default=None,
+        help="Whisper default: int8 on CPU, float16 on CUDA; ctc, tdt: float32 on CPU, float16 "
+        "on CUDA",
     )
     transcribe.add_argument("--beam-size", type=int, default=5)
     transcribe.add_argument("--cpu-threads", type=int, default=4)
@@ -300,19 +315,29 @@ def main(argv: Sequence[str] | None = None) -> None:
     if args.command == "compare" and args.mlflow and not args.output:
         parser.error("--mlflow needs --output: MLflow mirrors a saved comparison file")
     if args.command == "transcribe":
-        model = FasterWhisperModel(
-            args.model_size,
-            device=args.device,
-            compute_type=args.compute_type,
-            beam_size=args.beam_size,
-            cpu_threads=args.cpu_threads,
-            temperature=args.temperature,
-            compression_ratio_threshold=args.compression_ratio_threshold,
-            log_prob_threshold=args.log_prob_threshold,
-            no_speech_threshold=args.no_speech_threshold,
-            vad_filter=args.vad,
-            hallucination_silence_threshold=args.hallucination_silence_threshold,
-        )
+        if args.family == "whisper":
+            model = FasterWhisperModel(
+                args.model_size,
+                device=args.device,
+                compute_type=args.compute_type,
+                beam_size=args.beam_size,
+                cpu_threads=args.cpu_threads,
+                temperature=args.temperature,
+                compression_ratio_threshold=args.compression_ratio_threshold,
+                log_prob_threshold=args.log_prob_threshold,
+                no_speech_threshold=args.no_speech_threshold,
+                vad_filter=args.vad,
+                hallucination_silence_threshold=args.hallucination_silence_threshold,
+            )
+        else:
+            if not (args.model_id and args.revision):
+                parser.error(f"--family {args.family} needs --model-id and --revision")
+            model = FAMILIES[args.family](
+                args.model_id,
+                revision=args.revision,
+                device=args.device,
+                dtype=args.compute_type,
+            )
         path = transcribe_manifest(
             model, args.manifest, args.output, batch_size=args.batch_size, limit=args.limit
         )
