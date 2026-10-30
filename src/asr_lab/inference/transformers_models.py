@@ -19,6 +19,8 @@ from collections.abc import Sequence
 from importlib.metadata import version
 from typing import Any
 
+import numpy as np
+
 from asr_lab.inference.base import SAMPLE_RATE, ASRModel, AudioSample, Hypothesis
 
 # The precision of each device, as for Whisper on a GPU; half precision is not useful on a CPU
@@ -113,11 +115,27 @@ class Wav2Vec2CTCModel(TransformersModel):
         )
         return model.to(self.device).eval(), processor
 
-    def _transcribe_one(self, sample: AudioSample) -> str:
+    def _logits(self, sample: AudioSample) -> Any:
         inputs = self._processor(sample.waveform, sampling_rate=SAMPLE_RATE, return_tensors="pt")
         inputs = inputs.to(self.device, dtype=self._torch_dtype())
-        logits = self._model(**inputs).logits
-        return self._processor.batch_decode(logits.argmax(dim=-1))[0]
+        return self._model(**inputs).logits
+
+    def _transcribe_one(self, sample: AudioSample) -> str:
+        return self._processor.batch_decode(self._logits(sample).argmax(dim=-1))[0]
+
+    @property
+    def tokens(self) -> list[str]:
+        """The token of each column of ``log_probabilities``."""
+        tokenizer = self._processor.tokenizer
+        return tokenizer.convert_ids_to_tokens(list(range(self._model.config.vocab_size)))
+
+    def log_probabilities(self, sample: AudioSample) -> np.ndarray:
+        """Natural log probabilities of one utterance, frames x tokens, for a beam search."""
+        import torch
+
+        with torch.inference_mode():
+            logits = self._logits(sample).float()
+            return torch.log_softmax(logits, dim=-1)[0].cpu().numpy()
 
 
 class ParakeetTDTModel(TransformersModel):

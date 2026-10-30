@@ -210,6 +210,21 @@ because correlated utterances make narrower intervals over-optimistic. The score
 records the number of utterances and reference words, S/D/I counts, the model and its settings,
 and the manifest hash.
 
+### Language models for CTC (experiment E4)
+
+The CTC models can be decoded with n-gram language models, on a CPU, from saved frame probabilities.
+KenLM's `lmplz` and `build_binary` are compiled separately, and `uv sync --extra lm` installs the
+Python package that reads the models:
+
+```bash
+uv run asr-lab ingest-voxpopuli --spec experiments/E4/voxpopuli_dev.toml
+uv run asr-lab lm-prepare --spec experiments/E4/lm.toml --kenlm-bin ~/tools/kenlm/build/bin \
+    --report experiments/E4/results/text.json
+uv run asr-lab lm-logprobs --spec experiments/E4/lm.toml   # needs a GPU in practice
+uv run asr-lab lm-tune --spec experiments/E4/lm.toml --output experiments/E4/results/grid.json
+uv run asr-lab lm-decode --spec experiments/E4/lm.toml --selection experiments/E4/results/grid.json
+```
+
 ### Experiment tracking (MLflow)
 
 Scores and comparisons can also be logged to [MLflow](https://mlflow.org), to browse, filter and

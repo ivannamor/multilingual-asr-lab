@@ -1,0 +1,11 @@
+# Dev set of experiment E4 on parliamentary speech (asr-lab ingest-voxpopuli): the whole Italian
+# VoxPopuli validation split, 1,257 utterances in two row groups, at the revision of the test split.
+
+[data]
+repo = "facebook/voxpopuli"
+revision = "42f01879c780b4a2e90ec0b4f616c2ece526e4f1"
+lang = "it"
+split = "validation"
+row_groups = [[0, 0], [0, 1]]
+output = "data/voxpopuli_it"  # next to the test split: data/voxpopuli_it/validation.jsonl
+normalizer = "it-v2"

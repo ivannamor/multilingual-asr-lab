@@ -24,6 +24,9 @@ Usage::
     uv run asr-lab finetune-results --spec experiments/E7/finetune.toml \
         --records experiments/E7/results/training --output finetune.json
     uv run asr-lab family-results --spec experiments/E1b/models.toml --output families.json
+    uv run asr-lab lm-prepare --spec experiments/E4/lm.toml --kenlm-bin ~/tools/kenlm/build/bin
+    uv run asr-lab lm-logprobs --spec experiments/E4/lm.toml
+    uv run asr-lab lm-tune --spec experiments/E4/lm.toml --output grid.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -66,6 +69,7 @@ from asr_lab.evaluation.scoring import (
 from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisperModel
 from asr_lab.inference.run import transcribe_manifest
 from asr_lab.inference.transformers_models import FAMILIES
+from asr_lab.lm.experiment import run_lm_decode, run_lm_logprobs, run_lm_prepare, run_lm_tune
 from asr_lab.plots import plot_selection, plot_usage
 from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
@@ -310,6 +314,42 @@ def main(argv: Sequence[str] | None = None) -> None:
     )
     families.add_argument("--output", required=True, type=Path, help="results JSON")
 
+    lm_prepare = commands.add_parser(
+        "lm-prepare", help="clean the text of the language models and build them with KenLM (E4)"
+    )
+    lm_prepare.add_argument("--spec", required=True, type=Path, help="TOML language-model spec")
+    lm_prepare.add_argument(
+        "--kenlm-bin", required=True, type=Path, help="folder with lmplz and build_binary"
+    )
+    lm_prepare.add_argument("--models", type=Path, default=Path("models/e4"), help="output folder")
+    lm_prepare.add_argument("--report", required=True, type=Path, help="description of the text")
+
+    lm_logprobs = commands.add_parser(
+        "lm-logprobs", help="save the frame probabilities of the CTC models, for decoding (E4)"
+    )
+    lm_logprobs.add_argument("--spec", required=True, type=Path, help="TOML language-model spec")
+    lm_logprobs.add_argument(
+        "--output", type=Path, default=Path("data/e4_logprobs"), help="output folder"
+    )
+    lm_logprobs.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
+
+    lm_tune = commands.add_parser(
+        "lm-tune", help="choose the weights of every language model on the dev sets (E4)"
+    )
+    lm_decode = commands.add_parser(
+        "lm-decode", help="decode the test sets once, with the weights chosen on the dev sets (E4)"
+    )
+    for lm_command in (lm_tune, lm_decode):
+        lm_command.add_argument("--spec", required=True, type=Path, help="TOML language-model spec")
+        lm_command.add_argument("--models", type=Path, default=Path("models/e4"))
+        lm_command.add_argument("--logprobs", type=Path, default=Path("data/e4_logprobs"))
+    lm_tune.add_argument("--output", required=True, type=Path, help="grid and chosen weights")
+    lm_tune.add_argument("--workers", type=int, default=8)
+    lm_decode.add_argument("--selection", required=True, type=Path, help="output of lm-tune")
+    lm_decode.add_argument(
+        "--runs", type=Path, default=Path("experiments/runs"), help="folder of the run directories"
+    )
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -500,6 +540,18 @@ def main(argv: Sequence[str] | None = None) -> None:
             )
             print(f"{test_set['name']}: {systems}")
         print(f"Model-family results: {args.output}")
+    elif args.command == "lm-prepare":
+        report = run_lm_prepare(args.spec, args.kenlm_bin, args.models, args.report)
+        print(f"Language-model text: {report}")
+    elif args.command == "lm-logprobs":
+        for path in run_lm_logprobs(args.spec, args.output, args.device):
+            print(path)
+    elif args.command == "lm-tune":
+        grid = run_lm_tune(args.spec, args.models, args.logprobs, args.output, args.workers)
+        print(f"Grid and chosen weights: {grid}")
+    elif args.command == "lm-decode":
+        for path in run_lm_decode(args.spec, args.models, args.logprobs, args.selection, args.runs):
+            print(path)
     elif args.command == "render-results":
         changed = render_results(
             args.spec,
