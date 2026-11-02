@@ -9,9 +9,9 @@ data-centric optimization.
 
 > **Status:** early development. The evaluation pipeline (FLEURS ingestion, Whisper inference,
 > WER/CER with versioned normalizers and bootstrap confidence intervals) works end to end and has
-> produced the first results (baseline, decoding settings, text normalization, training-data
-> quality, data selection for fine-tuning and usage analytics on simulated traffic); more
-> experiments are next.
+> produced the first results (baseline, model families, decoding settings, text normalization,
+> language models for CTC, training-data quality, data selection for fine-tuning and usage analytics
+> on simulated traffic); more experiments are next.
 
 Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
 
@@ -105,8 +105,13 @@ Key findings so far:
   hold a quarter of its errors: the decoding path used has no limit on the tokens written at one
   frame. A words-per-second check catches both, with no false alarm in any of the 16 runs.
 
+- **A language model helps a CTC model, most of all with text from the domain** (experiment E4). With
+  5 million words, n-gram language models lower the WER significantly on all four test sets: 0.56 to
+  1.16 points on FLEURS, and on Italian parliamentary speech 4.40 points with Europarl (from 26.19% to
+  21.79%) against 2.25 with OpenSubtitles. A 5-gram adds almost nothing to a 3-gram.
+
 To reproduce: `experiments/E1/run.sh`, `experiments/E1b/run.sh`, `experiments/E2/run.sh`,
-`experiments/E3/run.sh`, `experiments/E6/run.sh`, `experiments/E7/run.sh` and `experiments/E10/run.sh` (see
+`experiments/E3/run.sh`, `experiments/E4/run.sh`, `experiments/E6/run.sh`, `experiments/E7/run.sh` and `experiments/E10/run.sh` (see
 [Experiments](#experiments)).
 
 ## Try it in your browser
@@ -178,6 +183,7 @@ bash experiments/E1/run.sh    # baseline: Whisper base to large-v3 on Italian, G
 bash experiments/E1b/run.sh   # model families: Whisper, CTC and Transducer on the same test sets
 bash experiments/E2/run.sh    # decoding settings: selection on dev, test comparisons, figure
 bash experiments/E3/run.sh    # text normalization: rescoring, paired comparisons, tables
+bash experiments/E4/run.sh    # language models for CTC: results, comparisons, recall, figure
 bash experiments/E6/run.sh    # training-data quality: features, rules, clusters, second opinion
 bash experiments/E7/run.sh    # fine-tuning data: second model, four strategies, results
 bash experiments/E10/run.sh   # usage analytics on simulated sessions: segments, priorities, review

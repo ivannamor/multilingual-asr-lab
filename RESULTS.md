@@ -13,11 +13,12 @@ that regenerates it.
 4. [E1b. Three model families on the same test sets](#e1b-three-model-families-on-the-same-test-sets)
 5. [E2. Which decoding settings?](#e2-which-decoding-settings)
 6. [E3. How much does text normalization change WER?](#e3-how-much-does-text-normalization-change-wer)
-7. [E6. Which training transcripts can be trusted?](#e6-which-training-transcripts-can-be-trusted)
-8. [E7. Does the choice of training data matter when the amount does not?](#e7-does-the-choice-of-training-data-matter-when-the-amount-does-not)
-9. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
+7. [E4. How much does a language model help a CTC model?](#e4-how-much-does-a-language-model-help-a-ctc-model)
+8. [E6. Which training transcripts can be trusted?](#e6-which-training-transcripts-can-be-trusted)
+9. [E7. Does the choice of training data matter when the amount does not?](#e7-does-the-choice-of-training-data-matter-when-the-amount-does-not)
+10. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
    (simulated traffic, real audio and errors)
-10. [Limitations and next steps](#limitations-and-next-steps)
+11. [Limitations and next steps](#limitations-and-next-steps)
 
 ## Executive summary
 
@@ -66,6 +67,13 @@ that regenerates it.
   ranges from 40% (no normalization) to 55%.
 - **Numbers matter.** Writing numbers, symbols and units in words (`it-v2`) lowers Whisper-small's
   WER by 0.31 points (95% CI [0.15, 0.48]) and removes most digit/symbol substitutions (56 to 10).
+- **A language model helps a CTC model, most of all with text from the domain.** With 5 million words,
+  n-gram language models lower the WER of the XLS-R models significantly on all four test sets: by
+  0.56 to 1.16 points on FLEURS, and on Italian parliamentary speech by 4.40 points with Europarl
+  (from 26.19% to 21.79%, 95% CI of the difference [-4.80, -4.01]) against 2.25 with OpenSubtitles. A
+  5-gram adds almost nothing to a 3-gram. English stays at about twice the error of Whisper-small
+  (13.55% against 6.59%), and on parliamentary speech only 293 of the 1,648 errors removed are at the
+  segment edges.
 - **In simulated usage, competing speakers are the problem, and confidence helps find it.** On
   3,000 sessions with simulated traffic but real noise, telephone degradations and transcripts,
   large-v3-turbo's WER is 3.56% in quiet rooms and 45.47% with babble at 0 dB on a headset, where
@@ -602,8 +610,8 @@ misses; these utterances were not listened to:
   242 M). In Italian it does not differ from Whisper-small (+0.24 [-0.46, +0.97]), and without digits
   it is slightly better (-0.72 [-1.42, -0.03]). In English it is far behind (+7.95 [+6.91, +9.03]).
   Removing digits narrows that gap to +5.48, so most of it remains. A model without a memory of the
-  text writes what it hears, as in "cabbige", "hostitle" and "protocal". The next experiment adds a
-  language model, which addresses this directly.
+  text writes what it hears, as in "cabbige", "hostitle" and "protocal". [E4](#e4-how-much-does-a-language-model-help-a-ctc-model) adds a
+  language model, which repairs part of this.
 - **Word error rate hides how near the errors are.** Those misspellings cost a whole word and a few
   characters. In Italian, XLS-R has a higher WER than Whisper-small (7.36% against 7.11%) and a lower
   CER (1.67% against 1.84%).
@@ -957,6 +965,320 @@ normalizer designed for one dataset can silently penalize another.
 **Reproduce:** `bash experiments/E3/run.sh` (or `experiments/E3/run.ps1` on Windows). With the
 committed transcripts it only rescores; without them it first transcribes the test set
 (about 40 minutes on a laptop CPU).
+
+## E4. How much does a language model help a CTC model?
+
+**Question.** A CTC model writes what it hears, with no memory of the text. How much does an n-gram
+language model improve it, does it matter where the text comes from, and does a longer context help?
+
+**Method.** Sources, sizes, grid, selection rule and comparisons were fixed in
+[`experiments/E4/lm.toml`](experiments/E4/lm.toml) before any language model decoded a test set
+([decision 29](docs/design.md#29-n-gram-language-models-for-ctc-with-a-beam-search-of-our-own-and-text-that-avoids-the-test-sets)),
+except for the two changes declared below.
+
+- **Acoustic models.** The three XLS-R checkpoints of E1b. Their frame probabilities were saved once,
+  on a T4, and all decoding ran from those files on a CPU.
+- **Text.** Europarl and OpenSubtitles, 5 million words per source and language, so that domains are
+  compared and not sizes, in 3-gram and 5-gram models built with KenLM. Europarl is the domain of
+  VoxPopuli and out of domain for FLEURS. Wikipedia was excluded because FLEURS comes from Wikimedia
+  projects, and any sentence identical to a dev or test sentence was removed and counted.
+- **Decoding.** Our own beam search, with a beam of 100 chosen on 60 Italian dev utterances:
+  `score = acoustic + alpha * ln P(word | previous words) + beta` at each word.
+- **Selection.** For each test set and language model, the lowest dev WER over a grid of 63 cells.
+  Each test set was then decoded once with those weights, which had been committed in a separate pull
+  request before that decoding.
+- **Statistics.** Corpus WER, the widest of the bootstrap intervals (1,000 resamples), paired bootstrap
+  with Holm's correction over the seven comparisons of each test set, repeated on the utterances
+  whose reference has no digit, since these models cannot write digits. Greedy decoding is the run of
+  E1b, unchanged.
+
+**Two changes after the pre-registration, both before any test decoding.**
+
+- **`ß`.** The German checkpoint cannot write `ß`, so the first build dropped every sentence with one:
+  35% of German Europarl was rejected, against 12% to 13% in the other languages, which left `grosse`
+  and `strasse` almost unknown to the language model. The text now writes `ss`, as the model and the
+  normalizer do. No language model had been scored on German data.
+- **Beta.** The first grid stopped at beta = 3, and 12 of its 16 choices fell there, so 4, 5 and 6 were
+  added. Three choices changed, by at most 0.13 points of dev WER. The 672 earlier cells came out
+  identical.
+
+### The text and the check of the decoder
+
+<!-- BEGIN e4-text -->
+| Source | Language | Lines read | Not writable | In a dev or test set (distinct) | Duplicates | Words available | Sentences used | Words used |
+|---|---|---|---|---|---|---|---|---|
+| Europarl | de | 1,961,119 | 243,367 (12.4%) | 0 (0) | 45,990 | 38,416,562 | 217,541 | 5,000,010 |
+| OpenSubtitles | de | 10,223,850 | 322,358 (3.2%) | 0 (0) | 2,140,914 | 54,827,002 | 707,963 | 5,000,002 |
+| Europarl | en | 1,946,253 | 256,136 (13.2%) | 0 (0) | 41,415 | 42,523,324 | 194,278 | 5,000,005 |
+| OpenSubtitles | en | 1,019,920 | 25,131 (2.5%) | 0 (0) | 159,273 | 6,116,934 | 682,883 | 5,000,001 |
+| Europarl | it | 1,946,253 | 234,706 (12.1%) | 4,699 (11) | 34,527 | 41,376,531 | 202,289 | 5,000,001 |
+| OpenSubtitles | it | 1,017,631 | 22,790 (2.2%) | 179 (6) | 163,545 | 5,327,492 | 779,976 | 5,000,004 |
+<!-- END e4-text -->
+
+The leakage filter removed stock phrases, such as "la discussione è chiusa": 11 distinct sentences in
+Italian Europarl and 6 in Italian OpenSubtitles, and none in German or English.
+
+Decoding the saved probabilities greedily gives back the transcripts of E1b, apart from spaces and the
+`<unk>` token, which the tokenizer of the checkpoint writes and our decoder does not:
+
+<!-- BEGIN e4-greedy-check -->
+| Test set | Utterances | Transcripts that differ | Beyond spaces | Beyond spaces and special tokens | WER of E1b | WER from the log probabilities | Greedy WER on the dev set |
+|---|---|---|---|---|---|---|---|
+| fleurs-it | 865 | 6 | 3 | 0 | 7.36% | 7.36% | 7.83% |
+| fleurs-de | 862 | 7 | 7 | 0 | 11.79% | 11.78% | 11.78% |
+| fleurs-en | 647 | 5 | 0 | 0 | 14.54% | 14.54% | 15.98% |
+| voxpopuli-it | 1,177 | 73 | 4 | 0 | 26.19% | 26.19% | 23.61% |
+<!-- END e4-greedy-check -->
+
+### The weights chosen on the dev sets
+
+<!-- BEGIN e4-weights -->
+| Test set | Language model | Alpha | Beta | Dev WER | RTF of the decoding |
+|---|---|---|---|---|---|
+| fleurs-it | Europarl 3-gram | 0.7 | 5 | 6.42% | 0.0022 |
+| fleurs-it | Europarl 5-gram | 0.7 | 5 | 6.44% | 0.0025 |
+| fleurs-it | OpenSubtitles 3-gram | 0.5 | 3 | 6.81% | 0.0025 |
+| fleurs-it | OpenSubtitles 5-gram | 0.5 | 3 | 6.82% | 0.0025 |
+| fleurs-de | Europarl 3-gram | 0.4 | 3 | 10.90% | 0.0042 |
+| fleurs-de | Europarl 5-gram | 0.5 | 3 | 10.89% | 0.0040 |
+| fleurs-de | OpenSubtitles 3-gram | 0.3 | 3 | 11.01% | 0.0045 |
+| fleurs-de | OpenSubtitles 5-gram | 0.4 | 3 | 10.99% | 0.0050 |
+| fleurs-en | Europarl 3-gram | 0.3 | 2 | 14.60% | 0.0100 |
+| fleurs-en | Europarl 5-gram | 0.3 | 2 | 14.61% | 0.0093 |
+| fleurs-en | OpenSubtitles 3-gram | 0.4 | 4 | 14.62% | 0.0079 |
+| fleurs-en | OpenSubtitles 5-gram | 0.4 | 3 | 14.61% | 0.0082 |
+| voxpopuli-it | Europarl 3-gram | 0.7 | 3 | 19.54% | 0.0071 |
+| voxpopuli-it | Europarl 5-gram | 0.7 | 3 | 19.51% | 0.0072 |
+| voxpopuli-it | OpenSubtitles 3-gram | 0.5 | 2 | 21.36% | 0.0075 |
+| voxpopuli-it | OpenSubtitles 5-gram | 0.5 | 2 | 21.34% | 0.0083 |
+<!-- END e4-weights -->
+
+![Dev WER of the Europarl 5-gram over alpha and beta, one panel per test set](reports/e4_grid.png)
+
+*Dev WER of the Europarl 5-gram above the best cell of each panel (the dot). The full grid of every
+language model is in [`experiments/E4/results/grid.json`](experiments/E4/results/grid.json).*
+
+### Results
+
+<!-- BEGIN e4-wer -->
+| Test set | Utterances / words | System | WER [95% CI] | S / D / I | CER |
+|---|---|---|---|---|---|
+| fleurs-it (`it-v2`) | 865 / 21,262 | Greedy | 7.36% [6.66%, 8.02%] | 1,133 / 253 / 178 | 1.67% |
+| fleurs-it (`it-v2`) | 865 / 21,262 | Europarl 3-gram | 6.42% [5.76%, 7.07%] | 974 / 194 / 197 | 1.54% |
+| fleurs-it (`it-v2`) | 865 / 21,262 | Europarl 5-gram | 6.41% [5.76%, 7.07%] | 974 / 191 / 198 | 1.54% |
+| fleurs-it (`it-v2`) | 865 / 21,262 | OpenSubtitles 3-gram | 6.51% [5.83%, 7.19%] | 989 / 207 / 189 | 1.54% |
+| fleurs-it (`it-v2`) | 865 / 21,262 | OpenSubtitles 5-gram | 6.50% [5.83%, 7.17%] | 990 / 203 / 190 | 1.53% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | Greedy | 11.79% [10.84%, 12.85%] | 1,746 / 257 / 202 | 4.90% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | Europarl 3-gram | 11.04% [10.07%, 12.13%] | 1,615 / 216 / 234 | 4.78% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | Europarl 5-gram | 11.10% [10.13%, 12.17%] | 1,604 / 259 / 213 | 4.79% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | OpenSubtitles 3-gram | 11.23% [10.28%, 12.33%] | 1,643 / 193 / 265 | 4.82% |
+| fleurs-de (`de-v1`) | 862 / 18,703 | OpenSubtitles 5-gram | 11.04% [10.09%, 12.14%] | 1,616 / 216 / 232 | 4.79% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | Greedy | 14.54% [13.38%, 15.75%] | 1,611 / 252 / 241 | 6.68% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | Europarl 3-gram | 13.55% [12.46%, 14.75%] | 1,478 / 241 / 241 | 6.54% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | Europarl 5-gram | 13.55% [12.46%, 14.75%] | 1,478 / 241 / 241 | 6.54% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | OpenSubtitles 3-gram | 13.38% [12.29%, 14.56%] | 1,456 / 175 / 305 | 6.54% |
+| fleurs-en (`en-v1`) | 647 / 14,467 | OpenSubtitles 5-gram | 13.39% [12.26%, 14.56%] | 1,455 / 226 / 256 | 6.55% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | Greedy | 26.19% [24.07%, 28.68%] | 4,502 / 3,149 / 2,160 | 14.91% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | Europarl 3-gram | 21.81% [19.50%, 24.41%] | 3,158 / 2,843 / 2,166 | 14.42% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | Europarl 5-gram | 21.79% [19.50%, 24.37%] | 3,163 / 2,836 / 2,164 | 14.42% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | OpenSubtitles 3-gram | 23.93% [21.74%, 26.39%] | 3,778 / 3,069 / 2,115 | 14.70% |
+| voxpopuli-it (`it-v2`) | 1,177 / 37,454 | OpenSubtitles 5-gram | 23.94% [21.75%, 26.40%] | 3,785 / 3,066 / 2,117 | 14.70% |
+<!-- END e4-wer -->
+
+<!-- BEGIN e4-comparisons -->
+| Test set | B - A | WER difference [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|
+| fleurs-it | Europarl 3-gram - Greedy | -0.94% [-1.21%, -0.68%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | Europarl 5-gram - Greedy | -0.95% [-1.22%, -0.69%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | OpenSubtitles 3-gram - Greedy | -0.84% [-1.08%, -0.60%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | OpenSubtitles 5-gram - Greedy | -0.85% [-1.08%, -0.60%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | Europarl 5-gram - OpenSubtitles 5-gram | -0.09% [-0.30%, +0.12%] | 0.358 | 1.000 | no |
+| fleurs-it | Europarl 5-gram - Europarl 3-gram | -0.01% [-0.05%, +0.03%] | 0.680 | 1.000 | no |
+| fleurs-it | OpenSubtitles 5-gram - OpenSubtitles 3-gram | -0.01% [-0.05%, +0.02%] | 0.760 | 1.000 | no |
+| fleurs-de | Europarl 3-gram - Greedy | -0.75% [-1.03%, -0.47%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | Europarl 5-gram - Greedy | -0.69% [-0.97%, -0.40%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | OpenSubtitles 3-gram - Greedy | -0.56% [-0.81%, -0.28%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | OpenSubtitles 5-gram - Greedy | -0.75% [-1.02%, -0.49%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | Europarl 5-gram - OpenSubtitles 5-gram | +0.06% [-0.18%, +0.32%] | 0.592 | 0.792 | no |
+| fleurs-de | Europarl 5-gram - Europarl 3-gram | +0.06% [-0.07%, +0.19%] | 0.396 | 0.792 | no |
+| fleurs-de | OpenSubtitles 5-gram - OpenSubtitles 3-gram | -0.20% [-0.33%, -0.07%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | Europarl 3-gram - Greedy | -1.00% [-1.28%, -0.73%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | Europarl 5-gram - Greedy | -1.00% [-1.28%, -0.73%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | OpenSubtitles 3-gram - Greedy | -1.16% [-1.50%, -0.81%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | OpenSubtitles 5-gram - Greedy | -1.15% [-1.45%, -0.86%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | Europarl 5-gram - OpenSubtitles 5-gram | +0.16% [-0.06%, +0.39%] | 0.184 | 0.552 | no |
+| fleurs-en | Europarl 5-gram - Europarl 3-gram | +0.00% [-0.03%, +0.03%] | 1.000 | 1.000 | no |
+| fleurs-en | OpenSubtitles 5-gram - OpenSubtitles 3-gram | +0.01% [-0.17%, +0.19%] | 0.994 | 1.000 | no |
+| voxpopuli-it | Europarl 3-gram - Greedy | -4.39% [-4.81%, -4.01%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | Europarl 5-gram - Greedy | -4.40% [-4.80%, -4.01%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | OpenSubtitles 3-gram - Greedy | -2.27% [-2.55%, -2.00%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | OpenSubtitles 5-gram - Greedy | -2.25% [-2.53%, -2.00%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | Europarl 5-gram - OpenSubtitles 5-gram | -2.15% [-2.47%, -1.84%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | Europarl 5-gram - Europarl 3-gram | -0.01% [-0.07%, +0.05%] | 0.760 | 0.984 | no |
+| voxpopuli-it | OpenSubtitles 5-gram - OpenSubtitles 3-gram | +0.02% [-0.03%, +0.05%] | 0.492 | 0.984 | no |
+<!-- END e4-comparisons -->
+
+### Without the references with digits
+
+<!-- BEGIN e4-no-digit -->
+| System | fleurs-it | fleurs-de | fleurs-en | voxpopuli-it |
+|---|---|---|---|---|
+| Greedy | 6.33% [5.71%, 6.97%] | 9.52% [8.68%, 10.37%] | 11.43% [10.52%, 12.41%] | 26.95% [24.21%, 29.83%] |
+| Europarl 3-gram | 5.35% [4.73%, 5.99%] | 8.83% [7.95%, 9.76%] | 10.35% [9.46%, 11.30%] | 22.65% [19.85%, 25.70%] |
+| Europarl 5-gram | 5.34% [4.73%, 5.99%] | 8.90% [8.04%, 9.80%] | 10.35% [9.47%, 11.28%] | 22.64% [19.84%, 25.65%] |
+| OpenSubtitles 3-gram | 5.46% [4.85%, 6.11%] | 8.96% [8.09%, 9.87%] | 10.30% [9.38%, 11.23%] | 24.73% [22.00%, 27.60%] |
+| OpenSubtitles 5-gram | 5.44% [4.84%, 6.09%] | 8.82% [8.00%, 9.74%] | 10.21% [9.35%, 11.16%] | 24.75% [22.02%, 27.61%] |
+| *utterances kept* | 703 of 865 | 698 of 862 | 525 of 647 | 1,043 of 1,177 |
+
+| Test set | B - A | WER difference [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|
+| fleurs-it | Europarl 3-gram - Greedy | -0.98% [-1.31%, -0.64%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | Europarl 5-gram - Greedy | -0.98% [-1.33%, -0.65%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | OpenSubtitles 3-gram - Greedy | -0.87% [-1.15%, -0.59%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | OpenSubtitles 5-gram - Greedy | -0.88% [-1.15%, -0.60%] | < 0.001 | < 0.007 | yes |
+| fleurs-it | Europarl 5-gram - OpenSubtitles 5-gram | -0.10% [-0.34%, +0.14%] | 0.376 | 1.000 | no |
+| fleurs-it | Europarl 5-gram - Europarl 3-gram | -0.01% [-0.05%, +0.05%] | 0.936 | 1.000 | no |
+| fleurs-it | OpenSubtitles 5-gram - OpenSubtitles 3-gram | -0.01% [-0.04%, +0.02%] | 0.550 | 1.000 | no |
+| fleurs-de | Europarl 3-gram - Greedy | -0.69% [-1.00%, -0.36%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | Europarl 5-gram - Greedy | -0.62% [-0.94%, -0.28%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | OpenSubtitles 3-gram - Greedy | -0.56% [-0.86%, -0.26%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | OpenSubtitles 5-gram - Greedy | -0.70% [-0.99%, -0.39%] | < 0.001 | < 0.007 | yes |
+| fleurs-de | Europarl 5-gram - OpenSubtitles 5-gram | +0.08% [-0.20%, +0.35%] | 0.582 | 0.582 | no |
+| fleurs-de | Europarl 5-gram - Europarl 3-gram | +0.07% [-0.06%, +0.21%] | 0.280 | 0.560 | no |
+| fleurs-de | OpenSubtitles 5-gram - OpenSubtitles 3-gram | -0.14% [-0.26%, +0.00%] | 0.062 | 0.186 | no |
+| fleurs-en | Europarl 3-gram - Greedy | -1.08% [-1.42%, -0.74%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | Europarl 5-gram - Greedy | -1.08% [-1.42%, -0.75%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | OpenSubtitles 3-gram - Greedy | -1.13% [-1.53%, -0.71%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | OpenSubtitles 5-gram - Greedy | -1.21% [-1.56%, -0.86%] | < 0.001 | < 0.007 | yes |
+| fleurs-en | Europarl 5-gram - OpenSubtitles 5-gram | +0.13% [-0.10%, +0.39%] | 0.332 | 0.996 | no |
+| fleurs-en | Europarl 5-gram - Europarl 3-gram | +0.00% [-0.04%, +0.04%] | 1.000 | 1.000 | no |
+| fleurs-en | OpenSubtitles 5-gram - OpenSubtitles 3-gram | -0.09% [-0.31%, +0.12%] | 0.454 | 0.996 | no |
+| voxpopuli-it | Europarl 3-gram - Greedy | -4.30% [-4.74%, -3.86%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | Europarl 5-gram - Greedy | -4.32% [-4.76%, -3.90%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | OpenSubtitles 3-gram - Greedy | -2.22% [-2.55%, -1.93%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | OpenSubtitles 5-gram - Greedy | -2.21% [-2.52%, -1.93%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | Europarl 5-gram - OpenSubtitles 5-gram | -2.11% [-2.46%, -1.75%] | < 0.001 | < 0.007 | yes |
+| voxpopuli-it | Europarl 5-gram - Europarl 3-gram | -0.02% [-0.08%, +0.04%] | 0.600 | 1.000 | no |
+| voxpopuli-it | OpenSubtitles 5-gram - OpenSubtitles 3-gram | +0.02% [-0.03%, +0.06%] | 0.522 | 1.000 | no |
+<!-- END e4-no-digit -->
+
+### Words inside and outside the vocabulary
+
+Recall of the reference words on the utterances without digits, with the vocabulary of each language
+model. The intervals are descriptive, outside Holm's correction.
+
+<!-- BEGIN e4-vocabulary -->
+| Test set | Language model | Reference words outside its vocabulary | Words it knows: greedy, with LM, difference [95% CI] | Words it does not know: greedy, with LM, difference [95% CI] |
+|---|---|---|---|---|
+| fleurs-it | Europarl 3-gram | 839 of 16,806 (5.0%) | 95.4%, 96.6%, +1.3% [+1.0%, +1.6%] | 69.5%, 67.9%, -1.5% [-2.9%, -0.4%] |
+| fleurs-it | Europarl 5-gram | 839 of 16,806 (5.0%) | 95.4%, 96.7%, +1.3% [+1.0%, +1.6%] | 69.5%, 67.9%, -1.5% [-2.9%, -0.4%] |
+| fleurs-it | OpenSubtitles 3-gram | 697 of 16,806 (4.1%) | 95.2%, 96.3%, +1.1% [+0.8%, +1.3%] | 67.9%, 66.3%, -1.6% [-3.0%, -0.3%] |
+| fleurs-it | OpenSubtitles 5-gram | 697 of 16,806 (4.1%) | 95.2%, 96.3%, +1.1% [+0.8%, +1.3%] | 67.9%, 66.3%, -1.6% [-3.0%, -0.3%] |
+| fleurs-de | Europarl 3-gram | 1,149 of 14,761 (7.8%) | 93.5%, 94.5%, +1.0% [+0.7%, +1.3%] | 64.4%, 64.0%, -0.4% [-1.2%, +0.3%] |
+| fleurs-de | Europarl 5-gram | 1,149 of 14,761 (7.8%) | 93.5%, 94.4%, +0.9% [+0.6%, +1.2%] | 64.4%, 63.3%, -1.1% [-2.0%, -0.3%] |
+| fleurs-de | OpenSubtitles 3-gram | 863 of 14,761 (5.8%) | 92.8%, 93.8%, +1.0% [+0.7%, +1.2%] | 65.8%, 64.8%, -1.0% [-2.0%, -0.2%] |
+| fleurs-de | OpenSubtitles 5-gram | 863 of 14,761 (5.8%) | 92.8%, 93.8%, +1.0% [+0.7%, +1.3%] | 65.8%, 64.9%, -0.9% [-1.9%, -0.1%] |
+| fleurs-en | Europarl 3-gram | 569 of 11,444 (5.0%) | 91.0%, 92.3%, +1.3% [+1.0%, +1.6%] | 50.6%, 48.0%, -2.6% [-4.2%, -1.3%] |
+| fleurs-en | Europarl 5-gram | 569 of 11,444 (5.0%) | 91.0%, 92.3%, +1.3% [+1.0%, +1.6%] | 50.6%, 48.0%, -2.6% [-4.2%, -1.3%] |
+| fleurs-en | OpenSubtitles 3-gram | 452 of 11,444 (3.9%) | 90.8%, 92.5%, +1.7% [+1.3%, +2.0%] | 45.4%, 43.8%, -1.5% [-3.1%, -0.2%] |
+| fleurs-en | OpenSubtitles 5-gram | 452 of 11,444 (3.9%) | 90.8%, 92.2%, +1.4% [+1.1%, +1.8%] | 45.4%, 43.4%, -2.0% [-3.6%, -0.5%] |
+| voxpopuli-it | Europarl 3-gram | 284 of 32,242 (0.9%) | 79.4%, 83.8%, +4.5% [+4.1%, +4.9%] | 48.9%, 46.1%, -2.8% [-6.0%, -0.0%] |
+| voxpopuli-it | Europarl 5-gram | 284 of 32,242 (0.9%) | 79.4%, 83.8%, +4.5% [+4.1%, +4.9%] | 48.9%, 46.1%, -2.8% [-6.0%, -0.0%] |
+| voxpopuli-it | OpenSubtitles 3-gram | 1,098 of 32,242 (3.4%) | 79.8%, 82.1%, +2.2% [+2.0%, +2.5%] | 59.1%, 58.4%, -0.7% [-1.7%, +0.2%] |
+| voxpopuli-it | OpenSubtitles 5-gram | 1,098 of 32,242 (3.4%) | 79.8%, 82.1%, +2.2% [+2.0%, +2.5%] | 59.1%, 58.4%, -0.7% [-1.7%, +0.2%] |
+<!-- END e4-vocabulary -->
+
+### Which words change (post hoc)
+
+Added after seeing that the WER moves far more than the CER. A word is repaired if greedy decoding
+got it wrong and the language model right, and broken in the opposite case.
+
+<!-- BEGIN e4-changes -->
+| Test set | Language model | Reference words repaired | Reference words broken | Commonest repairs (greedy → with LM, times) | Commonest breaks (reference → with LM, times) |
+|---|---|---|---|---|---|
+| fleurs-it | Europarl 5-gram | 319 | 98 | (nothing) → e (13), è → e (6), (nothing) → dall (5), ad → a (4), hongkong → kong (4) | l → (nothing) (4), oro → loro (4), è → e (4), ad → a (3), sudafrica → africa (3) |
+| fleurs-it | OpenSubtitles 5-gram | 252 | 59 | (nothing) → e (8), hongkong → kong (4), (nothing) → hong (4), (nothing) → l (4), ad → a (3) | sudafrica → africa (7), ad → a (2), asciugatura → (nothing) (2), decida → decide (2), molti → asciugaturamolti (2) |
+| fleurs-de | Europarl 5-gram | 258 | 118 | sodass → dass (5), (nothing) → so (5), (nothing) → in (3), (nothing) → sei (3), berichtenzufolge → zufolge (2) | zu → zur (3), zurecht → recht (3), carolina → northcarolina (2), desgleichen → gleichen (2), ihre → ihrer (2) |
+| fleurs-de | OpenSubtitles 5-gram | 254 | 83 | sodass → dass (4), (nothing) → so (4), (nothing) → in (3), (nothing) → sei (3), berichtenzufolge → zufolge (2) | daherkommt → kommt (2), desgleichen → gleichen (2), immerzu → zu (2), indem → dem (2), nachdem → dem (2) |
+| fleurs-en | Europarl 5-gram | 212 | 68 | (nothing) → the (7), (nothing) → a (5), te → the (4), travelers → travellers (3), county → country (2) | behavior → behaviour (5), and → f (2), hockey → and (2), honor → honour (2), neighbors → neighbours (2) |
+| fleurs-en | OpenSubtitles 5-gram | 244 | 62 | (nothing) → the (8), (nothing) → a (6), te → the (4), an → and (3), (nothing) → and (3) | an → a (1), and → f (1), are → a (1), attractions → attraction (1), b → be (1) |
+| voxpopuli-it | Europarl 5-gram | 1,940 | 288 | (nothing) → l (140), (nothing) → dell (74), (nothing) → e (42), (nothing) → all (28), dellunione → unione (19) | di → (nothing) (5), e → (nothing) (5), che → (nothing) (3), di → dei (3), single → (nothing) (3) |
+| voxpopuli-it | OpenSubtitles 5-gram | 1,058 | 258 | (nothing) → l (83), (nothing) → dell (32), dellunione → unione (16), (nothing) → c (16), (nothing) → e (15) | e → (nothing) (10), e → è (3), ad → a (2), alle → le (2), ed → di (2) |
+<!-- END e4-changes -->
+
+### Findings
+
+- **Every language model helps, significantly, on every test set.** All 16 comparisons with greedy
+  decoding are significant after Holm's correction, and they stay so without digits. On FLEURS the gain
+  is 0.56 to 1.16 points. On VoxPopuli it is 4.40 points with Europarl (from 26.19% to 21.79%,
+  [-4.80, -4.01]) and 2.25 with OpenSubtitles (from 26.19% to 23.94%, [-2.53, -2.00]).
+- **The domain of the text matters when it matches the speech, and only then.** On VoxPopuli, the
+  Europarl 5-gram beats the OpenSubtitles 5-gram by 2.15 points ([-2.47, -1.84]) at the same size of
+  text. On FLEURS, where neither source is in domain, the two do not differ in any language.
+- **A longer context adds almost nothing here.** Seven of the eight 5-gram against 3-gram comparisons are
+  not significant, most within 0.02 points, while the 5-gram files are 2.8 to 3.8 times larger. The
+  exception, OpenSubtitles in German (-0.20, [-0.33, -0.07]), compares different weights and loses
+  significance without digits (-0.14, [-0.26, +0.00]). This holds for 5 million words, where long
+  contexts are rarely seen, and may not hold for a much larger text.
+- **It does not close the gap with Whisper.** With the Europarl 5-gram, a fixed choice for all sets, CTC
+  reaches 6.41% in Italian (Whisper-small 7.11% in E1b), 11.10% in German (9.13%), 13.55% in English
+  (6.59%) and 21.79% on VoxPopuli (20.63%). These were not pre-registered as comparisons, and the
+  intervals of Italian and VoxPopuli overlap. English stays about twice Whisper-small.
+- **It repairs words, and few characters.** On VoxPopuli the Europarl 5-gram lowers the WER by 4.40
+  points and the CER by 0.49; on FLEURS, across the language models, 0.56 to 1.16 points of WER against
+  0.09 to 0.14 of CER. Substitutions on VoxPopuli fall from 4,502 to 3,163 and deletions from 3,149 to
+  2,836, while insertions stay at about 2,160.
+- **It works inside the segments, not at their edges.** Of the 1,648 errors the Europarl 5-gram removes
+  on VoxPopuli, 293 are at the segment edges, whose share of the errors rises from 50% to 56%. A language
+  model cannot fix what the segmentation of the dataset cut off, as E1b and E7 suggested.
+- **In Italian, much of the repair is apostrophes.** The checkpoint often glues elided words, as in
+  `dellunione`, which counts as a wrong word and a missing one. The commonest repairs on VoxPopuli are
+  `l`, `dell` and `all`, restored 242 times out of 1,940 repaired words, and the transcripts hold 937
+  apostrophes against 494.
+- **The price is paid by unknown words, but there are few of them.** Recall rises by 0.9 to 1.7 points
+  on the words a language model knows on FLEURS and by 2.2 to 4.5 on VoxPopuli, and falls by 0.4 to 2.8
+  on the words it does not know, which are 0.9% to 7.8% of the reference; two of these sixteen intervals
+  include zero. The commonest breaks show the mechanism: `sudafrica` becomes `africa` and `daherkommt` becomes `kommt`, and a misspelling can
+  survive by merging two words into one unknown word, as in `cabbige jice`, written `cabbigejice`.
+  `protocal` becomes `protocol`, but `hostitle` stays as it is.
+- **The source's spelling comes along.** In English, Europarl turns `behavior` into `behaviour` 5 times
+  and repairs `travelers` into `travellers` 3 times, because FLEURS mixes the two spellings and
+  `en-v1` does not unify them. Some of these errors, in both directions, are notation.
+- **The weights must be tuned, and dev flatters the gain on FLEURS.** Over the grid, the dev WER of the
+  Europarl 5-gram in English goes from 14.61% to 34.24%, at alpha = 1 and beta = 0. The chosen weights
+  run from alpha 0.3 to 0.7 and beta 2 to 5. The gain of the Europarl 5-gram is larger on dev than on
+  test in all three FLEURS languages (1.39 against 0.95 points in Italian, 0.89 against 0.69 in German,
+  1.37 against 1.00 in English), as expected from choosing on dev, and that is why the test sets were
+  decoded once only. On VoxPopuli it is similar (4.10 against 4.40).
+- **It costs about as much as the acoustic model again, on a laptop core.** The search runs at an RTF of
+  0.002 to 0.010 on one CPU core in plain Python, close to the 0.004 to 0.005 of the acoustic model on
+  a T4 in E1b.
+
+For a product, the first thing to get is text from the domain, since it doubled the gain on
+parliamentary speech at no extra size, and a 3-gram is enough to start at this amount of text.
+
+### Limitations
+
+- FLEURS has no language model in its domain, by design, so this does not show how much encyclopedic
+  text would help on it. The result on domain rests on one test set in one language.
+- Europarl and VoxPopuli are the same institution, with sessions up to 2011 and from 2013, so stock
+  phrases and some speakers recur. The filter removes identical sentences only. That is what a domain
+  language model is, but the gain may be lower for a new domain.
+- OpenSubtitles has OCR errors, which were not cleaned beyond dropping sentences outside the alphabet.
+- Sizes, grid and beam were not explored further: 5 million words is small for a language model, the
+  grid is coarse between alpha 0.7 and 1, and the beam was set on 60 Italian utterances only.
+- Holm's correction applies within each test set, and the choice of weights makes several small dev
+  differences a matter of noise.
+- Recall outside the vocabulary rests on few words on some sets (284 on VoxPopuli with Europarl), and
+  the word changes and the comparison with Whisper were added after seeing the data.
+- The speed comes from one run on one core of an ARM laptop, in Python with no optimization, and is not
+  on the same hardware as the acoustic model.
+
+**Reproduce:** `bash experiments/E4/run.sh` (or `experiments/E4/run.ps1` on Windows). With the committed
+transcripts and weights it only rescores, after downloading the manifests and rebuilding the text of the
+language models if they are missing (set `KENLM_BIN`). The frame probabilities come from
+[`notebooks/e4_logprobs_colab.ipynb`](notebooks/e4_logprobs_colab.ipynb), and the commands for the grid
+and the decoding are in the [README](README.md#language-models-for-ctc-experiment-e4).
 
 ## E6. Which training transcripts can be trusted?
 
@@ -1601,9 +1923,11 @@ degraded audio and transcribes it on a Colab GPU (about 25 minutes on a T4).
   gender; E10 adds synthetic noise and a telephone channel, and E6 parliamentary speech, but real
   noisy recordings and spontaneous conversation are still missing. The normalization study (E3) covers Italian only.
 - The model families (E1b) were compared as distributed, with greedy decoding for CTC and
-  Transducer: a CTC model with an n-gram language model is the next experiment. Parakeet's two
-  runaway transcripts come from a missing limit in the decoding path used here, and the runs were
-  not repeated with the limit in place.
+  Transducer. Parakeet's two runaway transcripts come from a missing limit in the decoding path used
+  here, and the runs were not repeated with the limit in place.
+- The language models (E4) stop at 5 million words, and their benefit from the domain rests on one
+  test set in one language. A larger text, a test of how much of the gain survives on sessions of a
+  new domain, and a language model for the Transducer are the next steps.
 - Decoding settings were tuned for large-v3-turbo only, one option at a time and on read speech
   (E2); the next sweep should fix a non-inferiority margin in advance and include long recordings
   with pauses, where voice activity detection matters most.

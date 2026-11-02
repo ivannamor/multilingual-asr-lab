@@ -149,6 +149,68 @@ def plot_usage(report: dict[str, Any], path: Path) -> Path:
     return path
 
 
+def plot_lm_grid(grid: dict[str, Any], language_model: str, path: Path) -> Path:
+    """Dev WER of a language model over the weights, one panel per test set, with the chosen cell.
+
+    The colour is the distance from the best cell of the panel, because the test sets have very
+    different error rates; the scale stops where the weights are clearly wrong.
+    """
+    plt = _import_pyplot()
+    from matplotlib.colors import LinearSegmentedColormap
+
+    colours = LinearSegmentedColormap.from_list("excess", ("#e4eef9", HIGHLIGHT, "#0f3a70"))
+    test_sets = grid["test_sets"]
+    figure, axes = plt.subplots(
+        1, len(test_sets), figsize=(3.1 * len(test_sets), 3.5), sharey=True, facecolor=SURFACE
+    )
+    image = None
+    for axis, (name, models) in zip(np.atleast_1d(axes), test_sets.items(), strict=True):
+        result = models[language_model]
+        alphas = sorted({cell["alpha"] for cell in result["grid"]})
+        betas = sorted({cell["beta"] for cell in result["grid"]})
+        best = result["selected"]["wer"]
+        values = np.array(
+            [
+                [
+                    next(
+                        100 * (cell["wer"] - best)
+                        for cell in result["grid"]
+                        if cell["alpha"] == alpha and cell["beta"] == beta
+                    )
+                    for beta in betas
+                ]
+                for alpha in alphas
+            ]
+        )
+        image = axis.pcolormesh(
+            values, cmap=colours, vmin=0, vmax=LM_GRID_SCALE_POINTS,
+            edgecolors=SURFACE, linewidth=2,
+        )  # fmt: skip
+        axis.scatter(
+            betas.index(result["selected"]["beta"]) + 0.5,
+            alphas.index(result["selected"]["alpha"]) + 0.5,
+            s=70, color=INK, edgecolors=SURFACE, linewidths=2, zorder=3,
+        )  # fmt: skip
+        axis.set_xticks(np.arange(len(betas)) + 0.5, [f"{beta:g}" for beta in betas])
+        axis.set_yticks(np.arange(len(alphas)) + 0.5, [f"{alpha:g}" for alpha in alphas])
+        axis.tick_params(colors=MUTED, labelsize=8, labelcolor=SECONDARY, length=0)
+        for side in axis.spines.values():
+            side.set_visible(False)
+        axis.set_title(f"{name}: best {best:.2%}", loc="left", fontsize=10, color=INK)
+    np.atleast_1d(axes)[0].set_ylabel("Alpha", color=SECONDARY, fontsize=9)
+    figure.supxlabel("Beta", color=SECONDARY, fontsize=9)
+    figure.tight_layout(rect=(0, 0, 0.92, 1))
+    bar = figure.colorbar(image, ax=axes, fraction=0.015, pad=0.02, extend="max")
+    bar.set_label("Dev WER above the best cell (points)", color=SECONDARY, fontsize=8)
+    bar.ax.tick_params(colors=MUTED, labelsize=8, labelcolor=SECONDARY)
+    bar.outline.set_visible(False)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    figure.savefig(path, dpi=150, facecolor=SURFACE, metadata={"Software": None})
+    plt.close(figure)
+    return path
+
+
+LM_GRID_SCALE_POINTS = 3.0
 # Noise types of E10 (categorical slots 1 and 2 of the palette) and the x position of an SNR:
 # quiet at 0, then 15 dB at 5 ... 0 dB at 20, so that the noise grows to the right.
 NOISE_COLOURS = {"stationary": HIGHLIGHT, "babble": "#eb6834"}

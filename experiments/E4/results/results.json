@@ -1,0 +1,4339 @@
+{
+  "spec": "experiments/E4/lm.toml",
+  "systems": [
+    "greedy",
+    "europarl-3",
+    "europarl-5",
+    "opensubtitles-3",
+    "opensubtitles-5"
+  ],
+  "comparisons": [
+    [
+      "europarl-3",
+      "greedy"
+    ],
+    [
+      "europarl-5",
+      "greedy"
+    ],
+    [
+      "opensubtitles-3",
+      "greedy"
+    ],
+    [
+      "opensubtitles-5",
+      "greedy"
+    ],
+    [
+      "europarl-5",
+      "opensubtitles-5"
+    ],
+    [
+      "europarl-5",
+      "europarl-3"
+    ],
+    [
+      "opensubtitles-5",
+      "opensubtitles-3"
+    ]
+  ],
+  "level": 0.95,
+  "n_resamples": 1000,
+  "seed": 0,
+  "text": [
+    {
+      "corpus": "europarl",
+      "repo": "Helsinki-NLP/europarl",
+      "revision": "ab45e286aef3fb5780067100cb5a1132b52b7949",
+      "lang": "de",
+      "seed": 0,
+      "read": 1961119,
+      "not_writable": 243367,
+      "in_dev_or_test": 0,
+      "duplicates": 45990,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 1671762,
+      "available_words": 38416562,
+      "sentences": 217541,
+      "words": 5000010,
+      "forbidden_sentences": 401,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "40417c2e6a53e2d329ef349943b716a72ac25e2c76ef817f52b77dd89aa99fdc",
+          "bytes": 90257269
+        },
+        {
+          "order": 5,
+          "text_sha256": "40417c2e6a53e2d329ef349943b716a72ac25e2c76ef817f52b77dd89aa99fdc",
+          "bytes": 285495461
+        }
+      ]
+    },
+    {
+      "corpus": "opensubtitles",
+      "repo": "sentence-transformers/parallel-sentences-opensubtitles",
+      "revision": "d86a387587ab6f2fd9ec7453b2765cec68111c87",
+      "lang": "de",
+      "seed": 0,
+      "read": 10223850,
+      "not_writable": 322358,
+      "in_dev_or_test": 0,
+      "duplicates": 2140914,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 7760578,
+      "available_words": 54827002,
+      "sentences": 707963,
+      "words": 5000002,
+      "forbidden_sentences": 401,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "3c96b9f98583ff59d45f2aedd3b53d47cc2e2a4956563cd8770fb9b84f2afb4b",
+          "bytes": 92064732
+        },
+        {
+          "order": 5,
+          "text_sha256": "3c96b9f98583ff59d45f2aedd3b53d47cc2e2a4956563cd8770fb9b84f2afb4b",
+          "bytes": 258602216
+        }
+      ]
+    },
+    {
+      "corpus": "europarl",
+      "repo": "Helsinki-NLP/europarl",
+      "revision": "ab45e286aef3fb5780067100cb5a1132b52b7949",
+      "lang": "en",
+      "seed": 0,
+      "read": 1946253,
+      "not_writable": 256136,
+      "in_dev_or_test": 0,
+      "duplicates": 41415,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 1648702,
+      "available_words": 42523324,
+      "sentences": 194278,
+      "words": 5000005,
+      "forbidden_sentences": 406,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "c71d0cbb61e280e54cf8ff7917a0a2851d03b77cafa5ca04bb139fa9e8f65740",
+          "bytes": 63047128
+        },
+        {
+          "order": 5,
+          "text_sha256": "c71d0cbb61e280e54cf8ff7917a0a2851d03b77cafa5ca04bb139fa9e8f65740",
+          "bytes": 238594584
+        }
+      ]
+    },
+    {
+      "corpus": "opensubtitles",
+      "repo": "sentence-transformers/parallel-sentences-opensubtitles",
+      "revision": "d86a387587ab6f2fd9ec7453b2765cec68111c87",
+      "lang": "en",
+      "seed": 0,
+      "read": 1019920,
+      "not_writable": 25131,
+      "in_dev_or_test": 0,
+      "duplicates": 159273,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 835516,
+      "available_words": 6116934,
+      "sentences": 682883,
+      "words": 5000001,
+      "forbidden_sentences": 406,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "48b42a81d1db34c447b30f8c579d74bab949e2c06887816992b0fb29a15e1ee7",
+          "bytes": 68032623
+        },
+        {
+          "order": 5,
+          "text_sha256": "48b42a81d1db34c447b30f8c579d74bab949e2c06887816992b0fb29a15e1ee7",
+          "bytes": 222863143
+        }
+      ]
+    },
+    {
+      "corpus": "europarl",
+      "repo": "Helsinki-NLP/europarl",
+      "revision": "ab45e286aef3fb5780067100cb5a1132b52b7949",
+      "lang": "it",
+      "seed": 0,
+      "read": 1946253,
+      "not_writable": 234706,
+      "in_dev_or_test": 4699,
+      "duplicates": 34527,
+      "distinct_in_dev_or_test": 11,
+      "available_sentences": 1672321,
+      "available_words": 41376531,
+      "sentences": 202289,
+      "words": 5000001,
+      "forbidden_sentences": 2498,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "207e0cf6e67531b689cb458b7379bb326e8c25b868032b4d7343210da7a60447",
+          "bytes": 79125309
+        },
+        {
+          "order": 5,
+          "text_sha256": "207e0cf6e67531b689cb458b7379bb326e8c25b868032b4d7343210da7a60447",
+          "bytes": 269007989
+        }
+      ]
+    },
+    {
+      "corpus": "opensubtitles",
+      "repo": "sentence-transformers/parallel-sentences-opensubtitles",
+      "revision": "d86a387587ab6f2fd9ec7453b2765cec68111c87",
+      "lang": "it",
+      "seed": 0,
+      "read": 1017631,
+      "not_writable": 22790,
+      "in_dev_or_test": 179,
+      "duplicates": 163545,
+      "distinct_in_dev_or_test": 6,
+      "available_sentences": 831117,
+      "available_words": 5327492,
+      "sentences": 779976,
+      "words": 5000004,
+      "forbidden_sentences": 2498,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "0c47f930b94367e7ac01e8be9a8fc5c7976540cac74e9d725d8b66dc3a4effce",
+          "bytes": 85085394
+        },
+        {
+          "order": 5,
+          "text_sha256": "0c47f930b94367e7ac01e8be9a8fc5c7976540cac74e9d725d8b66dc3a4effce",
+          "bytes": 246954230
+        }
+      ]
+    }
+  ],
+  "test_sets": [
+    {
+      "name": "fleurs-it",
+      "lang": "it",
+      "normalizer": "it-v2",
+      "runs": {
+        "greedy": {
+          "run_dir": "experiments/runs/e1b-ctc-fleurs-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+            "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.0047643399924741005,
+          "processing_seconds": 60.39401247299975,
+          "audio_seconds": 12676.26
+        },
+        "europarl-3": {
+          "run_dir": "experiments/runs/e4-europarl-3-fleurs-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-3",
+            "language_model_sha256": "73fcd0c84c21750c4e7421556d7cf810b58aab9d8a86d5357ed6d3944b47e872",
+            "decoding": {
+              "alpha": 0.7,
+              "beta": 5.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.0022276712763065767,
+          "processing_seconds": 28.238540292994003,
+          "audio_seconds": 12676.259999999998
+        },
+        "europarl-5": {
+          "run_dir": "experiments/runs/e4-europarl-5-fleurs-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-5",
+            "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+            "decoding": {
+              "alpha": 0.7,
+              "beta": 5.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.0025196443347647608,
+          "processing_seconds": 31.939666695005144,
+          "audio_seconds": 12676.259999999998
+        },
+        "opensubtitles-3": {
+          "run_dir": "experiments/runs/e4-opensubtitles-3-fleurs-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+opensubtitles-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-3",
+            "language_model_sha256": "8e9151afb5b740c4f4411dfe13de7948908f7221e37477fecaa6c8e1bad0a9e7",
+            "decoding": {
+              "alpha": 0.5,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.002520565223338832,
+          "processing_seconds": 31.9513401180011,
+          "audio_seconds": 12676.259999999998
+        },
+        "opensubtitles-5": {
+          "run_dir": "experiments/runs/e4-opensubtitles-5-fleurs-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+opensubtitles-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-5",
+            "language_model_sha256": "24bde944258e6fc79ce364704aa6b2508d21a8d8e548b65cb7ed1705df559575",
+            "decoding": {
+              "alpha": 0.5,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.002489239877850847,
+          "processing_seconds": 31.554251894005574,
+          "audio_seconds": 12676.259999999998
+        }
+      },
+      "weights": {
+        "europarl-3": {
+          "alpha": 0.7,
+          "beta": 5.0,
+          "wer": 0.06419068736141907
+        },
+        "europarl-5": {
+          "alpha": 0.7,
+          "beta": 5.0,
+          "wer": 0.06441241685144124
+        },
+        "opensubtitles-3": {
+          "alpha": 0.5,
+          "beta": 3.0,
+          "wer": 0.0680709534368071
+        },
+        "opensubtitles-5": {
+          "alpha": 0.5,
+          "beta": 3.0,
+          "wer": 0.06818181818181818
+        }
+      },
+      "n_with_digits": 162,
+      "all": {
+        "n_utterances": 865,
+        "n_words": 21262,
+        "n_speakers": 865,
+        "systems": {
+          "greedy": {
+            "wer": 0.07355846110431756,
+            "low": 0.06664716331076112,
+            "high": 0.08017227009227915,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.016702083747381937,
+            "substitutions": 1133,
+            "deletions": 253,
+            "insertions": 178,
+            "errors": 1564,
+            "edge_errors": 166
+          },
+          "europarl-3": {
+            "wer": 0.06419904054181168,
+            "low": 0.05762673363663899,
+            "high": 0.07069473058348232,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.015417896072526027,
+            "substitutions": 974,
+            "deletions": 194,
+            "insertions": 197,
+            "errors": 1365,
+            "edge_errors": 150
+          },
+          "europarl-5": {
+            "wer": 0.0641049760135453,
+            "low": 0.05761938358591543,
+            "high": 0.07068789472654433,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.015394964149760744,
+            "substitutions": 974,
+            "deletions": 191,
+            "insertions": 198,
+            "errors": 1363,
+            "edge_errors": 150
+          },
+          "opensubtitles-3": {
+            "wer": 0.06513968582447559,
+            "low": 0.058322075692675834,
+            "high": 0.07187058511507419,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.01537203222699546,
+            "substitutions": 989,
+            "deletions": 207,
+            "insertions": 189,
+            "errors": 1385,
+            "edge_errors": 151
+          },
+          "opensubtitles-5": {
+            "wer": 0.0650456212962092,
+            "low": 0.058313260115309636,
+            "high": 0.07174384653494158,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "cer": 0.015326168381464892,
+            "substitutions": 990,
+            "deletions": 203,
+            "insertions": 190,
+            "errors": 1383,
+            "edge_errors": 151
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.009359420562505882,
+            "low": -0.012122740008500948,
+            "high": -0.006755557132445113,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.009453485090772262,
+            "low": -0.012227428391566219,
+            "high": -0.006912227274584833,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.008418775279841972,
+            "low": -0.010785052552129987,
+            "high": -0.005954698004597262,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.008512839808108366,
+            "low": -0.010824989181668106,
+            "high": -0.006047099395159547,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": -0.0009406452826638961,
+            "low": -0.0030325178788476793,
+            "high": 0.0011538766965059235,
+            "prob_b_better": 0.821,
+            "p_value": 0.3580000000000001,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": -9.40645282663799e-05,
+            "low": -0.0004807459257965126,
+            "high": 0.0002805591222766194,
+            "prob_b_better": 0.66,
+            "p_value": 0.6799999999999999,
+            "unit": "sentence_id",
+            "n_units": 346,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": -9.406452826639378e-05,
+            "low": -0.00046212979432481386,
+            "high": 0.00023464072601203436,
+            "prob_b_better": 0.62,
+            "p_value": 0.76,
+            "unit": "utterance",
+            "n_units": 865,
+            "p_holm": 1.0,
+            "significant": false
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 703,
+        "n_words": 16806,
+        "n_speakers": 703,
+        "systems": {
+          "greedy": {
+            "wer": 0.0632512198024515,
+            "low": 0.05710978872405522,
+            "high": 0.06972543161806263,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.013698896127222067,
+            "substitutions": 797,
+            "deletions": 195,
+            "insertions": 71,
+            "errors": 1063,
+            "edge_errors": 96
+          },
+          "europarl-3": {
+            "wer": 0.05349280019040819,
+            "low": 0.047318894420960704,
+            "high": 0.05985609224170646,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.012329977378860399,
+            "substitutions": 664,
+            "deletions": 140,
+            "insertions": 95,
+            "errors": 899,
+            "edge_errors": 80
+          },
+          "europarl-5": {
+            "wer": 0.05343329763179817,
+            "low": 0.0473215803268127,
+            "high": 0.05992650822820976,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.012310560091649596,
+            "substitutions": 665,
+            "deletions": 137,
+            "insertions": 96,
+            "errors": 898,
+            "edge_errors": 80
+          },
+          "opensubtitles-3": {
+            "wer": 0.05456384624538855,
+            "low": 0.04852103653238599,
+            "high": 0.06108205807414101,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.0123396860224658,
+            "substitutions": 678,
+            "deletions": 154,
+            "insertions": 85,
+            "errors": 917,
+            "edge_errors": 80
+          },
+          "opensubtitles-5": {
+            "wer": 0.05444484112816851,
+            "low": 0.04835804932327419,
+            "high": 0.06087581241387752,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.012291142804438791,
+            "substitutions": 680,
+            "deletions": 150,
+            "insertions": 85,
+            "errors": 915,
+            "edge_errors": 80
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.009758419612043316,
+            "low": -0.013081513721116059,
+            "high": -0.0064448347022788965,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.009817922170653338,
+            "low": -0.013321156799798733,
+            "high": -0.006468984801637981,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.008687373557062956,
+            "low": -0.011545809540937606,
+            "high": -0.00591868072143985,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.008806378674282994,
+            "low": -0.011532358993236689,
+            "high": -0.00603428426065719,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": -0.0010115434963703443,
+            "low": -0.00341929581146568,
+            "high": 0.0014423909652980748,
+            "prob_b_better": 0.812,
+            "p_value": 0.3759999999999999,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": -5.9502558610022294e-05,
+            "low": -0.0005316943603808186,
+            "high": 0.0004695640160984786,
+            "prob_b_better": 0.532,
+            "p_value": 0.9359999999999999,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": -0.00011900511722003765,
+            "low": -0.0004135296395486758,
+            "high": 0.0001767721407106293,
+            "prob_b_better": 0.725,
+            "p_value": 0.55,
+            "unit": "utterance",
+            "n_units": 703,
+            "p_holm": 1.0,
+            "significant": false
+          }
+        ]
+      },
+      "vocabulary": {
+        "europarl-3": {
+          "known": {
+            "n_words": 15967,
+            "greedy_recall": 0.9539049289158891,
+            "greedy_low": 0.9490229088251586,
+            "greedy_high": 0.9586901324068994,
+            "lm_recall": 0.9664933926222835,
+            "lm_low": 0.9621921068807514,
+            "lm_high": 0.9706731213782528,
+            "difference": 0.012588463706394437,
+            "difference_low": 0.009558485031855876,
+            "difference_high": 0.015737780601386094
+          },
+          "unknown": {
+            "n_words": 839,
+            "greedy_recall": 0.6948748510131109,
+            "greedy_low": 0.646112812248187,
+            "greedy_high": 0.7395181683936449,
+            "lm_recall": 0.6793802145411204,
+            "lm_low": 0.6299504367165982,
+            "lm_high": 0.7263321257659108,
+            "difference": -0.015494636471990453,
+            "difference_low": -0.028747782830774952,
+            "difference_high": -0.0036846069692785055
+          }
+        },
+        "europarl-5": {
+          "known": {
+            "n_words": 15967,
+            "greedy_recall": 0.9539049289158891,
+            "greedy_low": 0.9490229088251586,
+            "greedy_high": 0.9586901324068994,
+            "lm_recall": 0.9666186509676207,
+            "lm_low": 0.9622580841373832,
+            "lm_high": 0.9707744370039076,
+            "difference": 0.012713722051731692,
+            "difference_low": 0.009620751265827319,
+            "difference_high": 0.015851197843269313
+          },
+          "unknown": {
+            "n_words": 839,
+            "greedy_recall": 0.6948748510131109,
+            "greedy_low": 0.646112812248187,
+            "greedy_high": 0.7395181683936449,
+            "lm_recall": 0.6793802145411204,
+            "lm_low": 0.6299504367165982,
+            "lm_high": 0.7263321257659108,
+            "difference": -0.015494636471990453,
+            "difference_low": -0.028747782830774952,
+            "difference_high": -0.0036846069692785055
+          }
+        },
+        "opensubtitles-3": {
+          "known": {
+            "n_words": 16109,
+            "greedy_recall": 0.9523247873859333,
+            "greedy_low": 0.9471018477432087,
+            "greedy_high": 0.9576608742069339,
+            "lm_recall": 0.9629399714445341,
+            "lm_low": 0.9579365536918135,
+            "lm_high": 0.9675005981547776,
+            "difference": 0.010615184058600784,
+            "difference_low": 0.008060683583096763,
+            "difference_high": 0.013254773038405112
+          },
+          "unknown": {
+            "n_words": 697,
+            "greedy_recall": 0.678622668579627,
+            "greedy_low": 0.6251667594344874,
+            "greedy_high": 0.7300754432289702,
+            "lm_recall": 0.6628407460545194,
+            "lm_low": 0.6083071862348178,
+            "lm_high": 0.7162052102459686,
+            "difference": -0.015781922525107628,
+            "difference_low": -0.029748699039290522,
+            "difference_high": -0.0029710034087929277
+          }
+        },
+        "opensubtitles-5": {
+          "known": {
+            "n_words": 16109,
+            "greedy_recall": 0.9523247873859333,
+            "greedy_low": 0.9471018477432087,
+            "greedy_high": 0.9576608742069339,
+            "lm_recall": 0.9630641256440499,
+            "lm_low": 0.9581460097635048,
+            "lm_high": 0.9675959819427113,
+            "difference": 0.010739338258116585,
+            "difference_low": 0.008224882640601486,
+            "difference_high": 0.013322430304875581
+          },
+          "unknown": {
+            "n_words": 697,
+            "greedy_recall": 0.678622668579627,
+            "greedy_low": 0.6251667594344874,
+            "greedy_high": 0.7300754432289702,
+            "lm_recall": 0.6628407460545194,
+            "lm_low": 0.6083071862348178,
+            "lm_high": 0.7162052102459686,
+            "difference": -0.015781922525107628,
+            "difference_low": -0.029748699039290522,
+            "difference_high": -0.0029710034087929277
+          }
+        }
+      },
+      "changes": {
+        "europarl-3": {
+          "repaired": 315,
+          "broken": 97,
+          "most_repaired": [
+            [
+              null,
+              "e",
+              12
+            ],
+            [
+              "è",
+              "e",
+              6
+            ],
+            [
+              null,
+              "dall",
+              5
+            ],
+            [
+              "hongkong",
+              "kong",
+              4
+            ],
+            [
+              null,
+              "hong",
+              4
+            ],
+            [
+              null,
+              "i",
+              4
+            ],
+            [
+              "al",
+              "il",
+              3
+            ],
+            [
+              "dallunesco",
+              "unesco",
+              3
+            ],
+            [
+              null,
+              "a",
+              3
+            ],
+            [
+              null,
+              "di",
+              3
+            ]
+          ],
+          "most_broken": [
+            [
+              "l",
+              null,
+              4
+            ],
+            [
+              "oro",
+              "loro",
+              4
+            ],
+            [
+              "è",
+              "e",
+              4
+            ],
+            [
+              "ad",
+              "a",
+              3
+            ],
+            [
+              "sudafrica",
+              "africa",
+              3
+            ],
+            [
+              "d",
+              "di",
+              2
+            ],
+            [
+              "dall",
+              "all",
+              2
+            ],
+            [
+              "decida",
+              "decide",
+              2
+            ],
+            [
+              "innanzitutto",
+              "tutto",
+              2
+            ],
+            [
+              "miglior",
+              "migliore",
+              2
+            ]
+          ]
+        },
+        "europarl-5": {
+          "repaired": 319,
+          "broken": 98,
+          "most_repaired": [
+            [
+              null,
+              "e",
+              13
+            ],
+            [
+              "è",
+              "e",
+              6
+            ],
+            [
+              null,
+              "dall",
+              5
+            ],
+            [
+              "ad",
+              "a",
+              4
+            ],
+            [
+              "hongkong",
+              "kong",
+              4
+            ],
+            [
+              null,
+              "a",
+              4
+            ],
+            [
+              null,
+              "hong",
+              4
+            ],
+            [
+              null,
+              "i",
+              4
+            ],
+            [
+              "al",
+              "il",
+              3
+            ],
+            [
+              "dallunesco",
+              "unesco",
+              3
+            ]
+          ],
+          "most_broken": [
+            [
+              "l",
+              null,
+              4
+            ],
+            [
+              "oro",
+              "loro",
+              4
+            ],
+            [
+              "è",
+              "e",
+              4
+            ],
+            [
+              "ad",
+              "a",
+              3
+            ],
+            [
+              "sudafrica",
+              "africa",
+              3
+            ],
+            [
+              "d",
+              "di",
+              2
+            ],
+            [
+              "dall",
+              "all",
+              2
+            ],
+            [
+              "decida",
+              "decide",
+              2
+            ],
+            [
+              "innanzitutto",
+              "tutto",
+              2
+            ],
+            [
+              "miglior",
+              "migliore",
+              2
+            ]
+          ]
+        },
+        "opensubtitles-3": {
+          "repaired": 249,
+          "broken": 59,
+          "most_repaired": [
+            [
+              null,
+              "e",
+              7
+            ],
+            [
+              "hongkong",
+              "kong",
+              4
+            ],
+            [
+              null,
+              "hong",
+              4
+            ],
+            [
+              null,
+              "l",
+              4
+            ],
+            [
+              "ad",
+              "a",
+              3
+            ],
+            [
+              "far",
+              "fare",
+              3
+            ],
+            [
+              null,
+              "i",
+              3
+            ],
+            [
+              null,
+              "un",
+              3
+            ],
+            [
+              "a",
+              "ha",
+              2
+            ],
+            [
+              "al",
+              "il",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "sudafrica",
+              "africa",
+              7
+            ],
+            [
+              "ad",
+              "a",
+              2
+            ],
+            [
+              "asciugatura",
+              null,
+              2
+            ],
+            [
+              "molti",
+              "asciugaturamolti",
+              2
+            ],
+            [
+              "sepulveda",
+              null,
+              2
+            ],
+            [
+              "allo",
+              "lo",
+              1
+            ],
+            [
+              "arrampicate",
+              "arrampicata",
+              1
+            ],
+            [
+              "asse",
+              null,
+              1
+            ],
+            [
+              "assegnazione",
+              "sullassegnazione",
+              1
+            ],
+            [
+              "celebrata",
+              "celebrato",
+              1
+            ]
+          ]
+        },
+        "opensubtitles-5": {
+          "repaired": 252,
+          "broken": 59,
+          "most_repaired": [
+            [
+              null,
+              "e",
+              8
+            ],
+            [
+              "hongkong",
+              "kong",
+              4
+            ],
+            [
+              null,
+              "hong",
+              4
+            ],
+            [
+              null,
+              "l",
+              4
+            ],
+            [
+              "ad",
+              "a",
+              3
+            ],
+            [
+              "far",
+              "fare",
+              3
+            ],
+            [
+              null,
+              "a",
+              3
+            ],
+            [
+              null,
+              "i",
+              3
+            ],
+            [
+              null,
+              "un",
+              3
+            ],
+            [
+              null,
+              "è",
+              3
+            ]
+          ],
+          "most_broken": [
+            [
+              "sudafrica",
+              "africa",
+              7
+            ],
+            [
+              "ad",
+              "a",
+              2
+            ],
+            [
+              "asciugatura",
+              null,
+              2
+            ],
+            [
+              "decida",
+              "decide",
+              2
+            ],
+            [
+              "molti",
+              "asciugaturamolti",
+              2
+            ],
+            [
+              "sepulveda",
+              null,
+              2
+            ],
+            [
+              "allo",
+              "lo",
+              1
+            ],
+            [
+              "arrampicate",
+              "arrampicata",
+              1
+            ],
+            [
+              "asse",
+              null,
+              1
+            ],
+            [
+              "assegnazione",
+              "sullassegnazione",
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "fleurs-de",
+      "lang": "de",
+      "normalizer": "de-v1",
+      "runs": {
+        "greedy": {
+          "run_dir": "experiments/runs/e1b-ctc-fleurs-de",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+            "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.004727064427585854,
+          "processing_seconds": 53.648872308000136,
+          "audio_seconds": 11349.3
+        },
+        "europarl-3": {
+          "run_dir": "experiments/runs/e4-europarl-3-fleurs-de",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+europarl-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+              "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-3",
+            "language_model_sha256": "c5ac54ddae64f2d3843240e252f45d00724e5e7ae948d8f97a52a859b65fee5f",
+            "decoding": {
+              "alpha": 0.4,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.00421890590098111,
+          "processing_seconds": 47.88162874200498,
+          "audio_seconds": 11349.300000000014
+        },
+        "europarl-5": {
+          "run_dir": "experiments/runs/e4-europarl-5-fleurs-de",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+europarl-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+              "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-5",
+            "language_model_sha256": "75d10572ca8894d6509498e056e5a210df8b0deff994908c56a793cc452a87c0",
+            "decoding": {
+              "alpha": 0.5,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.004020754862591037,
+          "processing_seconds": 45.63275316200452,
+          "audio_seconds": 11349.300000000014
+        },
+        "opensubtitles-3": {
+          "run_dir": "experiments/runs/e4-opensubtitles-3-fleurs-de",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+opensubtitles-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+              "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-3",
+            "language_model_sha256": "86cea9c9adfd5ad3068ac50101aa862fb71f922eaf47e3b20b67806ebe2c689c",
+            "decoding": {
+              "alpha": 0.3,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.004511625733921646,
+          "processing_seconds": 51.20379394199699,
+          "audio_seconds": 11349.300000000014
+        },
+        "opensubtitles-5": {
+          "run_dir": "experiments/runs/e4-opensubtitles-5-fleurs-de",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+opensubtitles-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+              "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-5",
+            "language_model_sha256": "c8c33168dd33a8fb580160ecf38f810c2059b4dff1f54bf01af63066e8ab64dd",
+            "decoding": {
+              "alpha": 0.4,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.005021157238509131,
+          "processing_seconds": 56.98661984701175,
+          "audio_seconds": 11349.300000000014
+        }
+      },
+      "weights": {
+        "europarl-3": {
+          "alpha": 0.4,
+          "beta": 3.0,
+          "wer": 0.10904183535762484
+        },
+        "europarl-5": {
+          "alpha": 0.5,
+          "beta": 3.0,
+          "wer": 0.10890688259109312
+        },
+        "opensubtitles-3": {
+          "alpha": 0.3,
+          "beta": 3.0,
+          "wer": 0.11012145748987855
+        },
+        "opensubtitles-5": {
+          "alpha": 0.4,
+          "beta": 3.0,
+          "wer": 0.10985155195681512
+        }
+      },
+      "n_with_digits": 164,
+      "all": {
+        "n_utterances": 862,
+        "n_words": 18703,
+        "n_speakers": 862,
+        "systems": {
+          "greedy": {
+            "wer": 0.11789552478212051,
+            "low": 0.10839865272337249,
+            "high": 0.12854031851829636,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.04902673261910902,
+            "substitutions": 1746,
+            "deletions": 257,
+            "insertions": 202,
+            "errors": 2205,
+            "edge_errors": 266
+          },
+          "europarl-3": {
+            "wer": 0.11041009463722397,
+            "low": 0.10074254143262222,
+            "high": 0.12134213137352627,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.047838963515171404,
+            "substitutions": 1615,
+            "deletions": 216,
+            "insertions": 234,
+            "errors": 2065,
+            "edge_errors": 252
+          },
+          "europarl-5": {
+            "wer": 0.11099823557718014,
+            "low": 0.1012918230982794,
+            "high": 0.12168364990463158,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.047870220596853974,
+            "substitutions": 1604,
+            "deletions": 259,
+            "insertions": 213,
+            "errors": 2076,
+            "edge_errors": 261
+          },
+          "opensubtitles-3": {
+            "wer": 0.11233491953162594,
+            "low": 0.10279735231505553,
+            "high": 0.12330677727215128,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.04817497714325902,
+            "substitutions": 1643,
+            "deletions": 193,
+            "insertions": 265,
+            "errors": 2101,
+            "edge_errors": 257
+          },
+          "opensubtitles-5": {
+            "wer": 0.11035662727904615,
+            "low": 0.10089353469661713,
+            "high": 0.12138078259403698,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "cer": 0.04788584913769526,
+            "substitutions": 1616,
+            "deletions": 216,
+            "insertions": 232,
+            "errors": 2064,
+            "edge_errors": 257
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.0074854301448965405,
+            "low": -0.010326873676444233,
+            "high": -0.004657610030014552,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.006897289204940371,
+            "low": -0.009733314514202132,
+            "high": -0.0039807364357415335,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.005560605250494566,
+            "low": -0.008098514246398762,
+            "high": -0.0028353773039446082,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.007538897503074363,
+            "low": -0.010166568450116683,
+            "high": -0.004851854423108213,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": 0.0006416082981339916,
+            "low": -0.0017604170317278385,
+            "high": 0.0031984146017594063,
+            "prob_b_better": 0.278,
+            "p_value": 0.5920000000000001,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.7919999999999998,
+            "significant": false
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": 0.0005881409399561693,
+            "low": -0.000743131395503201,
+            "high": 0.0019159522269145426,
+            "prob_b_better": 0.18,
+            "p_value": 0.3959999999999999,
+            "unit": "utterance",
+            "n_units": 862,
+            "p_holm": 0.7919999999999998,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": -0.001978292252579797,
+            "low": -0.0032645445809180843,
+            "high": -0.0007393891505587143,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 347,
+            "p_holm": 0.0,
+            "significant": true
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 698,
+        "n_words": 14761,
+        "n_speakers": 698,
+        "systems": {
+          "greedy": {
+            "wer": 0.0951832531671296,
+            "low": 0.08675903361312319,
+            "high": 0.10371905642710898,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.020365519879925836,
+            "substitutions": 1109,
+            "deletions": 184,
+            "insertions": 112,
+            "errors": 1405,
+            "edge_errors": 180
+          },
+          "europarl-3": {
+            "wer": 0.08827315222545898,
+            "low": 0.07953139639735794,
+            "high": 0.09761930598616742,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.019512051561258424,
+            "substitutions": 1014,
+            "deletions": 147,
+            "insertions": 142,
+            "errors": 1303,
+            "edge_errors": 162
+          },
+          "europarl-5": {
+            "wer": 0.08901835918975678,
+            "low": 0.08038821606592692,
+            "high": 0.09795148909786154,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.019561101464630113,
+            "substitutions": 1009,
+            "deletions": 175,
+            "insertions": 130,
+            "errors": 1314,
+            "edge_errors": 170
+          },
+          "opensubtitles-3": {
+            "wer": 0.08956032789106429,
+            "low": 0.08091043786719643,
+            "high": 0.09871127221742866,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.01967882123272217,
+            "substitutions": 1032,
+            "deletions": 135,
+            "insertions": 155,
+            "errors": 1322,
+            "edge_errors": 166
+          },
+          "opensubtitles-5": {
+            "wer": 0.08820540613779554,
+            "low": 0.0799813812948383,
+            "high": 0.09741682420152865,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "cer": 0.019463001657886735,
+            "substitutions": 1012,
+            "deletions": 151,
+            "insertions": 139,
+            "errors": 1302,
+            "edge_errors": 166
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.006910100941670619,
+            "low": -0.009992507388986868,
+            "high": -0.0036020869915790264,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.006164893977372812,
+            "low": -0.009390833766105292,
+            "high": -0.0027947942528134353,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.00562292527606531,
+            "low": -0.0086199282972549,
+            "high": -0.002557456465734766,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.006977847029334058,
+            "low": -0.009892537357035915,
+            "high": -0.0038604189785769326,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": 0.000812953051961246,
+            "low": -0.001975456412265676,
+            "high": 0.003466031376266329,
+            "prob_b_better": 0.268,
+            "p_value": 0.5820000000000001,
+            "unit": "sentence_id",
+            "n_units": 277,
+            "p_holm": 0.5820000000000001,
+            "significant": false
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": 0.0007452069642978065,
+            "low": -0.000557107071506721,
+            "high": 0.002137179029834521,
+            "prob_b_better": 0.125,
+            "p_value": 0.28,
+            "unit": "utterance",
+            "n_units": 698,
+            "p_holm": 0.56,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": -0.001354921753268748,
+            "low": -0.002615171460908333,
+            "high": 0.0,
+            "prob_b_better": 0.969,
+            "p_value": 0.062000000000000055,
+            "unit": "utterance",
+            "n_units": 698,
+            "p_holm": 0.18600000000000017,
+            "significant": false
+          }
+        ]
+      },
+      "vocabulary": {
+        "europarl-3": {
+          "known": {
+            "n_words": 13612,
+            "greedy_recall": 0.9350573023802528,
+            "greedy_low": 0.9286981355357969,
+            "greedy_high": 0.9410392980667395,
+            "lm_recall": 0.9451219512195121,
+            "lm_low": 0.9392127895806597,
+            "lm_high": 0.9507371003715608,
+            "difference": 0.01006464883925947,
+            "difference_low": 0.007036484245439469,
+            "difference_high": 0.012864936021339061
+          },
+          "unknown": {
+            "n_words": 1149,
+            "greedy_recall": 0.6440382941688425,
+            "greedy_low": 0.5972571876377528,
+            "greedy_high": 0.6890897348549367,
+            "lm_recall": 0.639686684073107,
+            "lm_low": 0.5915565757533534,
+            "lm_high": 0.6856418577061307,
+            "difference": -0.004351610095735425,
+            "difference_low": -0.012491943326020025,
+            "difference_high": 0.0028374658175344273
+          }
+        },
+        "europarl-5": {
+          "known": {
+            "n_words": 13612,
+            "greedy_recall": 0.9350573023802528,
+            "greedy_low": 0.9286981355357969,
+            "greedy_high": 0.9410392980667395,
+            "lm_recall": 0.9440199823684984,
+            "lm_low": 0.9382480643962625,
+            "lm_high": 0.9499661117038238,
+            "difference": 0.00896267998824566,
+            "difference_low": 0.0059996787383177555,
+            "difference_high": 0.012015028603774819
+          },
+          "unknown": {
+            "n_words": 1149,
+            "greedy_recall": 0.6440382941688425,
+            "greedy_low": 0.5972571876377528,
+            "greedy_high": 0.6890897348549367,
+            "lm_recall": 0.6327241079199304,
+            "lm_low": 0.5856145195634814,
+            "lm_high": 0.6796075002307648,
+            "difference": -0.011314186248912061,
+            "difference_low": -0.01979474040621995,
+            "difference_high": -0.0027690128431125957
+          }
+        },
+        "opensubtitles-3": {
+          "known": {
+            "n_words": 13898,
+            "greedy_recall": 0.928191106634048,
+            "greedy_low": 0.9218526972098043,
+            "greedy_high": 0.9345990965518358,
+            "lm_recall": 0.9379047344941718,
+            "lm_low": 0.9313856484919296,
+            "lm_high": 0.9439170562236423,
+            "difference": 0.00971362786012376,
+            "difference_low": 0.0068713246681799435,
+            "difference_high": 0.01233311358592139
+          },
+          "unknown": {
+            "n_words": 863,
+            "greedy_recall": 0.6581691772885283,
+            "greedy_low": 0.611616701132222,
+            "greedy_high": 0.7048297947883255,
+            "lm_recall": 0.6477404403244496,
+            "lm_low": 0.5985391691023617,
+            "lm_high": 0.694255155815594,
+            "difference": -0.010428736964078755,
+            "difference_low": -0.020068010687393775,
+            "difference_high": -0.002171376397760763
+          }
+        },
+        "opensubtitles-5": {
+          "known": {
+            "n_words": 13898,
+            "greedy_recall": 0.928191106634048,
+            "greedy_low": 0.9218526972098043,
+            "greedy_high": 0.9345990965518358,
+            "lm_recall": 0.9381205928910634,
+            "lm_low": 0.9314727237203577,
+            "lm_high": 0.9441416425436185,
+            "difference": 0.009929486257015396,
+            "difference_low": 0.007065595372274687,
+            "difference_high": 0.012722900874441258
+          },
+          "unknown": {
+            "n_words": 863,
+            "greedy_recall": 0.6581691772885283,
+            "greedy_low": 0.611616701132222,
+            "greedy_high": 0.7048297947883255,
+            "lm_recall": 0.6488991888760138,
+            "lm_low": 0.6006197033898305,
+            "lm_high": 0.6952804793720926,
+            "difference": -0.009269988412514474,
+            "difference_low": -0.01882717984078229,
+            "difference_high": -0.0011033624224430594
+          }
+        }
+      },
+      "changes": {
+        "europarl-3": {
+          "repaired": 253,
+          "broken": 81,
+          "most_repaired": [
+            [
+              "sodass",
+              "dass",
+              4
+            ],
+            [
+              null,
+              "so",
+              4
+            ],
+            [
+              "un",
+              "und",
+              3
+            ],
+            [
+              null,
+              "in",
+              3
+            ],
+            [
+              null,
+              "sei",
+              3
+            ],
+            [
+              "berichtenzufolge",
+              "zufolge",
+              2
+            ],
+            [
+              "geldschein",
+              "geldscheinen",
+              2
+            ],
+            [
+              "georges",
+              "george",
+              2
+            ],
+            [
+              "hochgeschätzt",
+              "geschätzt",
+              2
+            ],
+            [
+              "marokanische",
+              "marokkanische",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "nachdem",
+              "dem",
+              3
+            ],
+            [
+              "zurecht",
+              "recht",
+              3
+            ],
+            [
+              "desgleichen",
+              "gleichen",
+              2
+            ],
+            [
+              "ihre",
+              "ihrer",
+              2
+            ],
+            [
+              "immerzu",
+              "zu",
+              2
+            ],
+            [
+              "indem",
+              "dem",
+              2
+            ],
+            [
+              "selbstbestimmten",
+              "bestimmten",
+              2
+            ],
+            [
+              "trocknen",
+              "trockenen",
+              2
+            ],
+            [
+              "umso",
+              "so",
+              2
+            ],
+            [
+              "vorkommt",
+              "kommt",
+              2
+            ]
+          ]
+        },
+        "europarl-5": {
+          "repaired": 258,
+          "broken": 118,
+          "most_repaired": [
+            [
+              "sodass",
+              "dass",
+              5
+            ],
+            [
+              null,
+              "so",
+              5
+            ],
+            [
+              null,
+              "in",
+              3
+            ],
+            [
+              null,
+              "sei",
+              3
+            ],
+            [
+              "berichtenzufolge",
+              "zufolge",
+              2
+            ],
+            [
+              "geldschein",
+              "geldscheinen",
+              2
+            ],
+            [
+              "georges",
+              "george",
+              2
+            ],
+            [
+              "hochgeschätzt",
+              "geschätzt",
+              2
+            ],
+            [
+              "in",
+              "im",
+              2
+            ],
+            [
+              "marokanische",
+              "marokkanische",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "zu",
+              "zur",
+              3
+            ],
+            [
+              "zurecht",
+              "recht",
+              3
+            ],
+            [
+              "carolina",
+              "northcarolina",
+              2
+            ],
+            [
+              "desgleichen",
+              "gleichen",
+              2
+            ],
+            [
+              "ihre",
+              "ihrer",
+              2
+            ],
+            [
+              "immerzu",
+              "zu",
+              2
+            ],
+            [
+              "indem",
+              "dem",
+              2
+            ],
+            [
+              "north",
+              null,
+              2
+            ],
+            [
+              "selbstbestimmten",
+              "bestimmten",
+              2
+            ],
+            [
+              "system",
+              "systeme",
+              2
+            ]
+          ]
+        },
+        "opensubtitles-3": {
+          "repaired": 239,
+          "broken": 72,
+          "most_repaired": [
+            [
+              "sodass",
+              "dass",
+              4
+            ],
+            [
+              null,
+              "so",
+              4
+            ],
+            [
+              null,
+              "in",
+              3
+            ],
+            [
+              null,
+              "sei",
+              3
+            ],
+            [
+              "berichtenzufolge",
+              "zufolge",
+              2
+            ],
+            [
+              "georges",
+              "george",
+              2
+            ],
+            [
+              "hochgeschätzt",
+              "geschätzt",
+              2
+            ],
+            [
+              "laplata",
+              "plata",
+              2
+            ],
+            [
+              "lason",
+              "larson",
+              2
+            ],
+            [
+              "seiden",
+              "denn",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "nachdem",
+              "dem",
+              3
+            ],
+            [
+              "daherkommt",
+              "kommt",
+              2
+            ],
+            [
+              "desgleichen",
+              "gleichen",
+              2
+            ],
+            [
+              "immerzu",
+              "zu",
+              2
+            ],
+            [
+              "indem",
+              "dem",
+              2
+            ],
+            [
+              "umso",
+              "so",
+              2
+            ],
+            [
+              "vorkommt",
+              "kommt",
+              2
+            ],
+            [
+              "weggelaufen",
+              "gelaufen",
+              2
+            ],
+            [
+              "zurecht",
+              "recht",
+              2
+            ],
+            [
+              "ab",
+              "am",
+              1
+            ]
+          ]
+        },
+        "opensubtitles-5": {
+          "repaired": 254,
+          "broken": 83,
+          "most_repaired": [
+            [
+              "sodass",
+              "dass",
+              4
+            ],
+            [
+              null,
+              "so",
+              4
+            ],
+            [
+              null,
+              "in",
+              3
+            ],
+            [
+              null,
+              "sei",
+              3
+            ],
+            [
+              "berichtenzufolge",
+              "zufolge",
+              2
+            ],
+            [
+              "georges",
+              "george",
+              2
+            ],
+            [
+              "hochgeschätzt",
+              "geschätzt",
+              2
+            ],
+            [
+              "kanibale",
+              "kannibale",
+              2
+            ],
+            [
+              "laplata",
+              "plata",
+              2
+            ],
+            [
+              "lason",
+              "larson",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "daherkommt",
+              "kommt",
+              2
+            ],
+            [
+              "desgleichen",
+              "gleichen",
+              2
+            ],
+            [
+              "immerzu",
+              "zu",
+              2
+            ],
+            [
+              "indem",
+              "dem",
+              2
+            ],
+            [
+              "nachdem",
+              "dem",
+              2
+            ],
+            [
+              "ab",
+              "am",
+              1
+            ],
+            [
+              "anderer",
+              "andere",
+              1
+            ],
+            [
+              "anderswo",
+              "so",
+              1
+            ],
+            [
+              "anderswo",
+              "wo",
+              1
+            ],
+            [
+              "aufgrund",
+              "grund",
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "fleurs-en",
+      "lang": "en",
+      "normalizer": "en-v1",
+      "runs": {
+        "greedy": {
+          "run_dir": "experiments/runs/e1b-ctc-fleurs-en",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+            "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.004226976425429306,
+          "processing_seconds": 27.00150270799986,
+          "audio_seconds": 6387.9
+        },
+        "europarl-3": {
+          "run_dir": "experiments/runs/e4-europarl-3-fleurs-en",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+europarl-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+              "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-3",
+            "language_model_sha256": "a1e0c71addaadc258910fcc5da127490d00c90b407de0a3cda2e13daedc76197",
+            "decoding": {
+              "alpha": 0.3,
+              "beta": 2.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.009998579944581084,
+          "processing_seconds": 63.8699288279895,
+          "audio_seconds": 6387.899999999999
+        },
+        "europarl-5": {
+          "run_dir": "experiments/runs/e4-europarl-5-fleurs-en",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+europarl-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+              "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-5",
+            "language_model_sha256": "feb414330ca4b5806893f61e532e50a81a04d50aed03e2368c4e1d8b13647fdb",
+            "decoding": {
+              "alpha": 0.3,
+              "beta": 2.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.009327257926548873,
+          "processing_seconds": 59.581590909001534,
+          "audio_seconds": 6387.899999999999
+        },
+        "opensubtitles-3": {
+          "run_dir": "experiments/runs/e4-opensubtitles-3-fleurs-en",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+opensubtitles-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+              "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-3",
+            "language_model_sha256": "f9f9c18bdbfaa679a82137257001a00786c5f9e8f23d1aafcf72b88f787c966e",
+            "decoding": {
+              "alpha": 0.4,
+              "beta": 4.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.007938193014447746,
+          "processing_seconds": 50.70838315699075,
+          "audio_seconds": 6387.899999999999
+        },
+        "opensubtitles-5": {
+          "run_dir": "experiments/runs/e4-opensubtitles-5-fleurs-en",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+opensubtitles-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+              "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-5",
+            "language_model_sha256": "4d703be3f324edb77a57e418ea9b97f12e445b71fd2a8449dd213c170f65c52a",
+            "decoding": {
+              "alpha": 0.4,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.008227023060785474,
+          "processing_seconds": 52.55340060999151,
+          "audio_seconds": 6387.899999999999
+        }
+      },
+      "weights": {
+        "europarl-3": {
+          "alpha": 0.3,
+          "beta": 2.0,
+          "wer": 0.14597742992355298
+        },
+        "europarl-5": {
+          "alpha": 0.3,
+          "beta": 2.0,
+          "wer": 0.14609877442058003
+        },
+        "opensubtitles-3": {
+          "alpha": 0.4,
+          "beta": 4.0,
+          "wer": 0.14622011891760708
+        },
+        "opensubtitles-5": {
+          "alpha": 0.4,
+          "beta": 3.0,
+          "wer": 0.14609877442058003
+        }
+      },
+      "n_with_digits": 122,
+      "all": {
+        "n_utterances": 647,
+        "n_words": 14467,
+        "n_speakers": 647,
+        "systems": {
+          "greedy": {
+            "wer": 0.14543443699453928,
+            "low": 0.1338373972751998,
+            "high": 0.15754791939522134,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.06678665935585382,
+            "substitutions": 1611,
+            "deletions": 252,
+            "insertions": 241,
+            "errors": 2104,
+            "edge_errors": 348
+          },
+          "europarl-3": {
+            "wer": 0.13548074929149098,
+            "low": 0.12461099524509993,
+            "high": 0.147452809423087,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.06538012253558062,
+            "substitutions": 1478,
+            "deletions": 241,
+            "insertions": 241,
+            "errors": 1960,
+            "edge_errors": 312
+          },
+          "europarl-5": {
+            "wer": 0.13548074929149098,
+            "low": 0.12456181868687767,
+            "high": 0.14754769944598217,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.06541588194626552,
+            "substitutions": 1478,
+            "deletions": 241,
+            "insertions": 241,
+            "errors": 1960,
+            "edge_errors": 312
+          },
+          "opensubtitles-3": {
+            "wer": 0.13382180134098293,
+            "low": 0.1228563970354228,
+            "high": 0.14564770380681588,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.06541588194626552,
+            "substitutions": 1456,
+            "deletions": 175,
+            "insertions": 305,
+            "errors": 1936,
+            "edge_errors": 327
+          },
+          "opensubtitles-5": {
+            "wer": 0.1338909241722541,
+            "low": 0.12257577666676726,
+            "high": 0.14555151843539674,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "cer": 0.06549932057119699,
+            "substitutions": 1455,
+            "deletions": 226,
+            "insertions": 256,
+            "errors": 1937,
+            "edge_errors": 326
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.009953687703048303,
+            "low": -0.012767371267426867,
+            "high": -0.0073100913888169295,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.009953687703048303,
+            "low": -0.012786978303432655,
+            "high": -0.007265331793336096,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.011612635653556358,
+            "low": -0.014991359635174208,
+            "high": -0.008126203791833419,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.01154351282228519,
+            "low": -0.014523889731148296,
+            "high": -0.008573303798955214,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": 0.0015898251192368873,
+            "low": -0.0006300712958308994,
+            "high": 0.003873934932943995,
+            "prob_b_better": 0.082,
+            "p_value": 0.18399999999999994,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 0.5519999999999998,
+            "significant": false
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": 0.0,
+            "low": -0.00027316530437837967,
+            "high": 0.00027598150621740427,
+            "prob_b_better": 0.391,
+            "p_value": 1.0,
+            "unit": "utterance",
+            "n_units": 647,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": 6.91228312711678e-05,
+            "low": -0.0017439302128525653,
+            "high": 0.0018936695973323097,
+            "prob_b_better": 0.475,
+            "p_value": 0.994,
+            "unit": "sentence_id",
+            "n_units": 350,
+            "p_holm": 1.0,
+            "significant": false
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 525,
+        "n_words": 11444,
+        "n_speakers": 525,
+        "systems": {
+          "greedy": {
+            "wer": 0.11429570080391471,
+            "low": 0.10519966042287299,
+            "high": 0.12410734136564919,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.03874298540965208,
+            "substitutions": 1068,
+            "deletions": 187,
+            "insertions": 53,
+            "errors": 1308,
+            "edge_errors": 194
+          },
+          "europarl-3": {
+            "wer": 0.1034603285564488,
+            "low": 0.09464952858324252,
+            "high": 0.11298723208221675,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.03720164609053498,
+            "substitutions": 961,
+            "deletions": 168,
+            "insertions": 55,
+            "errors": 1184,
+            "edge_errors": 167
+          },
+          "europarl-5": {
+            "wer": 0.1034603285564488,
+            "low": 0.09473716903268072,
+            "high": 0.11281318289691449,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.03724653946876169,
+            "substitutions": 961,
+            "deletions": 168,
+            "insertions": 55,
+            "errors": 1184,
+            "edge_errors": 167
+          },
+          "opensubtitles-3": {
+            "wer": 0.10302341838518,
+            "low": 0.09377973774089989,
+            "high": 0.11228850867270157,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.037276468387579496,
+            "substitutions": 956,
+            "deletions": 124,
+            "insertions": 99,
+            "errors": 1179,
+            "edge_errors": 179
+          },
+          "opensubtitles-5": {
+            "wer": 0.10214959804264244,
+            "low": 0.09348828913632232,
+            "high": 0.111639710905865,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "cer": 0.037081930415263746,
+            "substitutions": 949,
+            "deletions": 159,
+            "insertions": 61,
+            "errors": 1169,
+            "edge_errors": 175
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.010835372247465919,
+            "low": -0.014172754630707505,
+            "high": -0.007422725952270485,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.010835372247465919,
+            "low": -0.014179079890500459,
+            "high": -0.007478997104566675,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.011272282418734708,
+            "low": -0.015329550548411354,
+            "high": -0.007146284076110084,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.012146102761272273,
+            "low": -0.015598930378893773,
+            "high": -0.008640535525876921,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": 0.0013107305138063546,
+            "low": -0.0010373998736234445,
+            "high": 0.003907447038077702,
+            "prob_b_better": 0.148,
+            "p_value": 0.3320000000000001,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.9960000000000002,
+            "significant": false
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": 0.0,
+            "low": -0.0003520987607285277,
+            "high": 0.00035300847698944044,
+            "prob_b_better": 0.389,
+            "p_value": 1.0,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": -0.0008738203425375651,
+            "low": -0.0030704238392044794,
+            "high": 0.0012080923921254023,
+            "prob_b_better": 0.773,
+            "p_value": 0.45399999999999996,
+            "unit": "sentence_id",
+            "n_units": 281,
+            "p_holm": 0.9960000000000002,
+            "significant": false
+          }
+        ]
+      },
+      "vocabulary": {
+        "europarl-3": {
+          "known": {
+            "n_words": 10875,
+            "greedy_recall": 0.9104367816091954,
+            "greedy_low": 0.9027086112530879,
+            "greedy_high": 0.9185605418201097,
+            "lm_recall": 0.9234022988505747,
+            "lm_low": 0.9164781639082252,
+            "lm_high": 0.9307133812620588,
+            "difference": 0.012965517241379315,
+            "difference_low": 0.009762953135848136,
+            "difference_high": 0.016152470543960087
+          },
+          "unknown": {
+            "n_words": 569,
+            "greedy_recall": 0.5061511423550088,
+            "greedy_low": 0.44989154164800715,
+            "greedy_high": 0.5594586948321387,
+            "lm_recall": 0.4797891036906854,
+            "lm_low": 0.4252510401402554,
+            "lm_high": 0.5377927256831381,
+            "difference": -0.026362038664323406,
+            "difference_low": -0.042236716808760726,
+            "difference_high": -0.012769694877359074
+          }
+        },
+        "europarl-5": {
+          "known": {
+            "n_words": 10875,
+            "greedy_recall": 0.9104367816091954,
+            "greedy_low": 0.9027086112530879,
+            "greedy_high": 0.9185605418201097,
+            "lm_recall": 0.9234022988505747,
+            "lm_low": 0.9164190706588001,
+            "lm_high": 0.9306861739271823,
+            "difference": 0.012965517241379315,
+            "difference_low": 0.00985648089735349,
+            "difference_high": 0.015995963512319043
+          },
+          "unknown": {
+            "n_words": 569,
+            "greedy_recall": 0.5061511423550088,
+            "greedy_low": 0.44989154164800715,
+            "greedy_high": 0.5594586948321387,
+            "lm_recall": 0.4797891036906854,
+            "lm_low": 0.4252510401402554,
+            "lm_high": 0.5377927256831381,
+            "difference": -0.026362038664323406,
+            "difference_low": -0.042236716808760726,
+            "difference_high": -0.012769694877359074
+          }
+        },
+        "opensubtitles-3": {
+          "known": {
+            "n_words": 10992,
+            "greedy_recall": 0.9082969432314411,
+            "greedy_low": 0.8996613649223583,
+            "greedy_high": 0.9167051370999565,
+            "lm_recall": 0.9248544395924309,
+            "lm_low": 0.9170922363518618,
+            "lm_high": 0.9321743822285606,
+            "difference": 0.016557496360989812,
+            "difference_low": 0.012884027275272155,
+            "difference_high": 0.020011495182211726
+          },
+          "unknown": {
+            "n_words": 452,
+            "greedy_recall": 0.45353982300884954,
+            "greedy_low": 0.3931112523053395,
+            "greedy_high": 0.5128588516746411,
+            "lm_recall": 0.43805309734513276,
+            "lm_low": 0.3765652425544834,
+            "lm_high": 0.4954771241830066,
+            "difference": -0.015486725663716783,
+            "difference_low": -0.03125526685393258,
+            "difference_high": -0.0020448854388381735
+          }
+        },
+        "opensubtitles-5": {
+          "known": {
+            "n_words": 10992,
+            "greedy_recall": 0.9082969432314411,
+            "greedy_low": 0.8996613649223583,
+            "greedy_high": 0.9167051370999565,
+            "lm_recall": 0.9224890829694323,
+            "lm_low": 0.914450204433992,
+            "lm_high": 0.9303369423765673,
+            "difference": 0.014192139737991272,
+            "difference_low": 0.010678014182339214,
+            "difference_high": 0.017620877136784896
+          },
+          "unknown": {
+            "n_words": 452,
+            "greedy_recall": 0.45353982300884954,
+            "greedy_low": 0.3931112523053395,
+            "greedy_high": 0.5128588516746411,
+            "lm_recall": 0.4336283185840708,
+            "lm_low": 0.3746931181844976,
+            "lm_high": 0.4897709529767824,
+            "difference": -0.019911504424778736,
+            "difference_low": -0.035789724908931106,
+            "difference_high": -0.004605700170216281
+          }
+        }
+      },
+      "changes": {
+        "europarl-3": {
+          "repaired": 213,
+          "broken": 69,
+          "most_repaired": [
+            [
+              null,
+              "the",
+              7
+            ],
+            [
+              null,
+              "a",
+              5
+            ],
+            [
+              "te",
+              "the",
+              4
+            ],
+            [
+              "travelers",
+              "travellers",
+              3
+            ],
+            [
+              "county",
+              "country",
+              2
+            ],
+            [
+              "deepwater",
+              "water",
+              2
+            ],
+            [
+              "e",
+              "the",
+              2
+            ],
+            [
+              "he",
+              "the",
+              2
+            ],
+            [
+              "tha",
+              "the",
+              2
+            ],
+            [
+              "whule",
+              "whole",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "behavior",
+              "behaviour",
+              5
+            ],
+            [
+              "and",
+              "f",
+              2
+            ],
+            [
+              "hockey",
+              "and",
+              2
+            ],
+            [
+              "honor",
+              "honour",
+              2
+            ],
+            [
+              "neighbors",
+              "neighbours",
+              2
+            ],
+            [
+              "percent",
+              "cent",
+              2
+            ],
+            [
+              "roller",
+              "rollerhockey",
+              2
+            ],
+            [
+              "captain's",
+              "captains",
+              1
+            ],
+            [
+              "it's",
+              "its",
+              1
+            ],
+            [
+              "you're",
+              "are",
+              1
+            ]
+          ]
+        },
+        "europarl-5": {
+          "repaired": 212,
+          "broken": 68,
+          "most_repaired": [
+            [
+              null,
+              "the",
+              7
+            ],
+            [
+              null,
+              "a",
+              5
+            ],
+            [
+              "te",
+              "the",
+              4
+            ],
+            [
+              "travelers",
+              "travellers",
+              3
+            ],
+            [
+              "county",
+              "country",
+              2
+            ],
+            [
+              "deepwater",
+              "water",
+              2
+            ],
+            [
+              "e",
+              "the",
+              2
+            ],
+            [
+              "he",
+              "the",
+              2
+            ],
+            [
+              "tha",
+              "the",
+              2
+            ],
+            [
+              "whule",
+              "whole",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "behavior",
+              "behaviour",
+              5
+            ],
+            [
+              "and",
+              "f",
+              2
+            ],
+            [
+              "hockey",
+              "and",
+              2
+            ],
+            [
+              "honor",
+              "honour",
+              2
+            ],
+            [
+              "neighbors",
+              "neighbours",
+              2
+            ],
+            [
+              "percent",
+              "cent",
+              2
+            ],
+            [
+              "roller",
+              "rollerhockey",
+              2
+            ],
+            [
+              "captain's",
+              "captains",
+              1
+            ],
+            [
+              "it's",
+              "its",
+              1
+            ],
+            [
+              "you're",
+              "are",
+              1
+            ]
+          ]
+        },
+        "opensubtitles-3": {
+          "repaired": 284,
+          "broken": 52,
+          "most_repaired": [
+            [
+              null,
+              "the",
+              10
+            ],
+            [
+              null,
+              "a",
+              6
+            ],
+            [
+              "te",
+              "the",
+              4
+            ],
+            [
+              "an",
+              "and",
+              3
+            ],
+            [
+              null,
+              "and",
+              3
+            ],
+            [
+              "bangal",
+              "bengal",
+              2
+            ],
+            [
+              "county",
+              "country",
+              2
+            ],
+            [
+              "darkmatter",
+              "matter",
+              2
+            ],
+            [
+              "deepwater",
+              "water",
+              2
+            ],
+            [
+              "fostercare",
+              "care",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "bce",
+              "e",
+              2
+            ],
+            [
+              "paperwork",
+              "work",
+              2
+            ],
+            [
+              "wildlife",
+              "life",
+              2
+            ],
+            [
+              "ai",
+              "i",
+              1
+            ],
+            [
+              "an",
+              "a",
+              1
+            ],
+            [
+              "anyone",
+              "one",
+              1
+            ],
+            [
+              "are",
+              "a",
+              1
+            ],
+            [
+              "attractions",
+              "attraction",
+              1
+            ],
+            [
+              "b",
+              "be",
+              1
+            ],
+            [
+              "believed",
+              "believe",
+              1
+            ]
+          ]
+        },
+        "opensubtitles-5": {
+          "repaired": 244,
+          "broken": 62,
+          "most_repaired": [
+            [
+              null,
+              "the",
+              8
+            ],
+            [
+              null,
+              "a",
+              6
+            ],
+            [
+              "te",
+              "the",
+              4
+            ],
+            [
+              "an",
+              "and",
+              3
+            ],
+            [
+              null,
+              "and",
+              3
+            ],
+            [
+              "bangal",
+              "bengal",
+              2
+            ],
+            [
+              "county",
+              "country",
+              2
+            ],
+            [
+              "darkmatter",
+              "matter",
+              2
+            ],
+            [
+              "deepwater",
+              "water",
+              2
+            ],
+            [
+              "he",
+              "the",
+              2
+            ]
+          ],
+          "most_broken": [
+            [
+              "an",
+              "a",
+              1
+            ],
+            [
+              "and",
+              "f",
+              1
+            ],
+            [
+              "are",
+              "a",
+              1
+            ],
+            [
+              "attractions",
+              "attraction",
+              1
+            ],
+            [
+              "b",
+              "be",
+              1
+            ],
+            [
+              "bce",
+              "e",
+              1
+            ],
+            [
+              "believed",
+              "believe",
+              1
+            ],
+            [
+              "boxes",
+              "balladboxes",
+              1
+            ],
+            [
+              "citizen",
+              "citizens",
+              1
+            ],
+            [
+              "color",
+              "colour",
+              1
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "voxpopuli-it",
+      "lang": "it",
+      "normalizer": "it-v2",
+      "runs": {
+        "greedy": {
+          "run_dir": "experiments/runs/e1b-ctc-voxpopuli-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16",
+          "model_config": {
+            "library": "transformers",
+            "library_version": "5.20.2",
+            "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+            "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+            "dtype": "float16",
+            "device": "cuda",
+            "decoding": "ctc-greedy"
+          },
+          "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+          "rtf": 0.004773055993739834,
+          "processing_seconds": 74.42414615500002,
+          "audio_seconds": 15592.5566875
+        },
+        "europarl-3": {
+          "run_dir": "experiments/runs/e4-europarl-3-voxpopuli-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-3",
+            "language_model_sha256": "73fcd0c84c21750c4e7421556d7cf810b58aab9d8a86d5357ed6d3944b47e872",
+            "decoding": {
+              "alpha": 0.7,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.0070880372724000185,
+          "processing_seconds": 110.52062297301018,
+          "audio_seconds": 15592.556687500002
+        },
+        "europarl-5": {
+          "run_dir": "experiments/runs/e4-europarl-5-voxpopuli-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "europarl-5",
+            "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+            "decoding": {
+              "alpha": 0.7,
+              "beta": 3.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.007177425053116715,
+          "processing_seconds": 111.9144070110051,
+          "audio_seconds": 15592.556687500002
+        },
+        "opensubtitles-3": {
+          "run_dir": "experiments/runs/e4-opensubtitles-3-voxpopuli-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+opensubtitles-3",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-3",
+            "language_model_sha256": "8e9151afb5b740c4f4411dfe13de7948908f7221e37477fecaa6c8e1bad0a9e7",
+            "decoding": {
+              "alpha": 0.5,
+              "beta": 2.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.007504501880041753,
+          "processing_seconds": 117.01437097600137,
+          "audio_seconds": 15592.556687500002
+        },
+        "opensubtitles-5": {
+          "run_dir": "experiments/runs/e4-opensubtitles-5-voxpopuli-it",
+          "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+opensubtitles-5",
+          "model_config": {
+            "acoustic_model": {
+              "library": "transformers",
+              "library_version": "5.21.0",
+              "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+              "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+              "dtype": "float16",
+              "device": "cuda",
+              "decoding": "ctc-greedy"
+            },
+            "language_model": "opensubtitles-5",
+            "language_model_sha256": "24bde944258e6fc79ce364704aa6b2508d21a8d8e548b65cb7ed1705df559575",
+            "decoding": {
+              "alpha": 0.5,
+              "beta": 2.0,
+              "beam_width": 100,
+              "token_min_logp": -10.0,
+              "beam_prune_logp": -20.0
+            }
+          },
+          "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+          "rtf": 0.0082892340969083,
+          "processing_seconds": 129.25035255200055,
+          "audio_seconds": 15592.556687500002
+        }
+      },
+      "weights": {
+        "europarl-3": {
+          "alpha": 0.7,
+          "beta": 3.0,
+          "wer": 0.19544669173696513
+        },
+        "europarl-5": {
+          "alpha": 0.7,
+          "beta": 3.0,
+          "wer": 0.19511637361520479
+        },
+        "opensubtitles-3": {
+          "alpha": 0.5,
+          "beta": 2.0,
+          "wer": 0.21363959752007317
+        },
+        "opensubtitles-5": {
+          "alpha": 0.5,
+          "beta": 2.0,
+          "wer": 0.21341091574346988
+        }
+      },
+      "n_with_digits": 134,
+      "all": {
+        "n_utterances": 1177,
+        "n_words": 37454,
+        "n_speakers": 81,
+        "systems": {
+          "greedy": {
+            "wer": 0.26194798953382814,
+            "low": 0.2406798262610856,
+            "high": 0.28675127660306937,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.14908802537668517,
+            "substitutions": 4502,
+            "deletions": 3149,
+            "insertions": 2160,
+            "errors": 9811,
+            "edge_errors": 4903
+          },
+          "europarl-3": {
+            "wer": 0.21805414641960805,
+            "low": 0.19497895085246372,
+            "high": 0.24405977970984302,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.14423709652926586,
+            "substitutions": 3158,
+            "deletions": 2843,
+            "insertions": 2166,
+            "errors": 8167,
+            "edge_errors": 4606
+          },
+          "europarl-5": {
+            "wer": 0.2179473487477973,
+            "low": 0.19500630177521106,
+            "high": 0.24374059131867448,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.1442328783302681,
+            "substitutions": 3163,
+            "deletions": 2836,
+            "insertions": 2164,
+            "errors": 8163,
+            "edge_errors": 4610
+          },
+          "opensubtitles-3": {
+            "wer": 0.23928018369199552,
+            "low": 0.21741554964215287,
+            "high": 0.26387513998259926,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.14702532606678254,
+            "substitutions": 3778,
+            "deletions": 3069,
+            "insertions": 2115,
+            "errors": 8962,
+            "edge_errors": 4698
+          },
+          "opensubtitles-5": {
+            "wer": 0.23944038019971164,
+            "low": 0.2174669852487933,
+            "high": 0.2640136072271602,
+            "unit": "speaker",
+            "n_units": 81,
+            "cer": 0.14703376246477803,
+            "substitutions": 3785,
+            "deletions": 3066,
+            "insertions": 2117,
+            "errors": 8968,
+            "edge_errors": 4692
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.043893843114220094,
+            "low": -0.04810111659601376,
+            "high": -0.040050936275430986,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.04400064078603083,
+            "low": -0.04803809249203768,
+            "high": -0.040050554512243104,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.022667805841832617,
+            "low": -0.02545936380704256,
+            "high": -0.020030161113543853,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.022507609334116496,
+            "low": -0.025272648415891025,
+            "high": -0.019983947970199194,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": -0.021493031451914335,
+            "low": -0.02470174153981827,
+            "high": -0.018436002676075133,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": -0.00010679767181073774,
+            "low": -0.0006870058690500203,
+            "high": 0.000480482587100249,
+            "prob_b_better": 0.62,
+            "p_value": 0.76,
+            "unit": "speaker",
+            "n_units": 81,
+            "p_holm": 0.984,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": 0.00016019650771612048,
+            "low": -0.000273592209646234,
+            "high": 0.0005287097685674611,
+            "prob_b_better": 0.198,
+            "p_value": 0.492,
+            "unit": "utterance",
+            "n_units": 1177,
+            "p_holm": 0.984,
+            "significant": false
+          }
+        ]
+      },
+      "no_digit": {
+        "n_utterances": 1043,
+        "n_words": 32242,
+        "n_speakers": 80,
+        "systems": {
+          "greedy": {
+            "wer": 0.26952422306308543,
+            "low": 0.24214953254965788,
+            "high": 0.29830307828690616,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.15864025448520339,
+            "substitutions": 3868,
+            "deletions": 2866,
+            "insertions": 1956,
+            "errors": 8690,
+            "edge_errors": 4620
+          },
+          "europarl-3": {
+            "wer": 0.22653681533403636,
+            "low": 0.19848793902697756,
+            "high": 0.25703195011740027,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.1538465320491074,
+            "substitutions": 2704,
+            "deletions": 2615,
+            "insertions": 1985,
+            "errors": 7304,
+            "edge_errors": 4368
+          },
+          "europarl-5": {
+            "wer": 0.22635072265988462,
+            "low": 0.198423837093091,
+            "high": 0.25648730981477674,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.1538219488571274,
+            "substitutions": 2712,
+            "deletions": 2607,
+            "insertions": 1979,
+            "errors": 7298,
+            "edge_errors": 4369
+          },
+          "opensubtitles-3": {
+            "wer": 0.24731716394764594,
+            "low": 0.2199962311132335,
+            "high": 0.27600505540135106,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.1565801829972811,
+            "substitutions": 3245,
+            "deletions": 2798,
+            "insertions": 1931,
+            "errors": 7974,
+            "edge_errors": 4445
+          },
+          "opensubtitles-5": {
+            "wer": 0.2474722411761057,
+            "low": 0.2201739526729267,
+            "high": 0.27611643726750124,
+            "unit": "speaker",
+            "n_units": 80,
+            "cer": 0.1565949329124691,
+            "substitutions": 3250,
+            "deletions": 2796,
+            "insertions": 1933,
+            "errors": 7979,
+            "edge_errors": 4440
+          }
+        },
+        "comparisons": [
+          {
+            "a": "greedy",
+            "b": "europarl-3",
+            "delta": -0.042987407729049076,
+            "low": -0.04744866066619233,
+            "high": -0.03861557476811964,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "europarl-5",
+            "delta": -0.04317350040320081,
+            "low": -0.04758858462076752,
+            "high": -0.03902057302636863,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-3",
+            "delta": -0.022207059115439493,
+            "low": -0.02546028334243889,
+            "high": -0.01925494527141945,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "greedy",
+            "b": "opensubtitles-5",
+            "delta": -0.022051981886979738,
+            "low": -0.025193783164603807,
+            "high": -0.019280365027911386,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "opensubtitles-5",
+            "b": "europarl-5",
+            "delta": -0.02112151851622107,
+            "low": -0.02458864934067125,
+            "high": -0.017512488043875202,
+            "prob_b_better": 1.0,
+            "p_value": 0.0,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 0.0,
+            "significant": true
+          },
+          {
+            "a": "europarl-3",
+            "b": "europarl-5",
+            "delta": -0.00018609267415173325,
+            "low": -0.0008347387439239441,
+            "high": 0.000438238170976038,
+            "prob_b_better": 0.7,
+            "p_value": 0.6000000000000001,
+            "unit": "utterance",
+            "n_units": 1043,
+            "p_holm": 1.0,
+            "significant": false
+          },
+          {
+            "a": "opensubtitles-3",
+            "b": "opensubtitles-5",
+            "delta": 0.00015507722845975458,
+            "low": -0.0002994064287968611,
+            "high": 0.0006116662775068969,
+            "prob_b_better": 0.223,
+            "p_value": 0.522,
+            "unit": "speaker",
+            "n_units": 80,
+            "p_holm": 1.0,
+            "significant": false
+          }
+        ]
+      },
+      "vocabulary": {
+        "europarl-3": {
+          "known": {
+            "n_words": 31958,
+            "greedy_recall": 0.7938231428750235,
+            "greedy_low": 0.7720738454898702,
+            "greedy_high": 0.812143409354231,
+            "lm_recall": 0.838350334814444,
+            "lm_low": 0.815991950252551,
+            "lm_high": 0.8574817020034475,
+            "difference": 0.04452719193942048,
+            "difference_low": 0.04063477891857564,
+            "difference_high": 0.04883254099594409
+          },
+          "unknown": {
+            "n_words": 284,
+            "greedy_recall": 0.4894366197183099,
+            "greedy_low": 0.42275850223290967,
+            "greedy_high": 0.5578606018678658,
+            "lm_recall": 0.46126760563380287,
+            "lm_low": 0.4013234317955525,
+            "lm_high": 0.5275103519668737,
+            "difference": -0.028169014084507005,
+            "difference_low": -0.05961258278145692,
+            "difference_high": -0.0
+          }
+        },
+        "europarl-5": {
+          "known": {
+            "n_words": 31958,
+            "greedy_recall": 0.7938231428750235,
+            "greedy_low": 0.7720738454898702,
+            "greedy_high": 0.812143409354231,
+            "lm_recall": 0.838350334814444,
+            "lm_low": 0.8159640533076618,
+            "lm_high": 0.8573885839210873,
+            "difference": 0.04452719193942048,
+            "difference_low": 0.0407956297948141,
+            "difference_high": 0.04870412858436061
+          },
+          "unknown": {
+            "n_words": 284,
+            "greedy_recall": 0.4894366197183099,
+            "greedy_low": 0.42275850223290967,
+            "greedy_high": 0.5578606018678658,
+            "lm_recall": 0.46126760563380287,
+            "lm_low": 0.4013234317955525,
+            "lm_high": 0.5275103519668737,
+            "difference": -0.028169014084507005,
+            "difference_low": -0.05961258278145692,
+            "difference_high": -0.0
+          }
+        },
+        "opensubtitles-3": {
+          "known": {
+            "n_words": 31144,
+            "greedy_recall": 0.7981954790649884,
+            "greedy_low": 0.7762999877184928,
+            "greedy_high": 0.8165381943942982,
+            "lm_recall": 0.8206396095556127,
+            "lm_low": 0.7996034610616974,
+            "lm_high": 0.8393052806679007,
+            "difference": 0.022444130490624187,
+            "difference_low": 0.019722643666567077,
+            "difference_high": 0.025148217140824335
+          },
+          "unknown": {
+            "n_words": 1098,
+            "greedy_recall": 0.5910746812386156,
+            "greedy_low": 0.5567919701438633,
+            "greedy_high": 0.6265183290890026,
+            "lm_recall": 0.5837887067395264,
+            "lm_low": 0.5512064867696325,
+            "lm_high": 0.6182524797628548,
+            "difference": -0.007285974499089243,
+            "difference_low": -0.01671386927511819,
+            "difference_high": 0.0018969320971448478
+          }
+        },
+        "opensubtitles-5": {
+          "known": {
+            "n_words": 31144,
+            "greedy_recall": 0.7981954790649884,
+            "greedy_low": 0.7762999877184928,
+            "greedy_high": 0.8165381943942982,
+            "lm_recall": 0.8205432828153095,
+            "lm_low": 0.7995678860070126,
+            "lm_high": 0.8390932152382298,
+            "difference": 0.022347803750321082,
+            "difference_low": 0.019588057432540256,
+            "difference_high": 0.02502097404506025
+          },
+          "unknown": {
+            "n_words": 1098,
+            "greedy_recall": 0.5910746812386156,
+            "greedy_low": 0.5567919701438633,
+            "greedy_high": 0.6265183290890026,
+            "lm_recall": 0.5837887067395264,
+            "lm_low": 0.5512064867696325,
+            "lm_high": 0.6182524797628548,
+            "difference": -0.007285974499089243,
+            "difference_low": -0.01671386927511819,
+            "difference_high": 0.0018969320971448478
+          }
+        }
+      },
+      "changes": {
+        "europarl-3": {
+          "repaired": 1937,
+          "broken": 287,
+          "most_repaired": [
+            [
+              null,
+              "l",
+              140
+            ],
+            [
+              null,
+              "dell",
+              74
+            ],
+            [
+              null,
+              "e",
+              40
+            ],
+            [
+              null,
+              "all",
+              28
+            ],
+            [
+              "dellunione",
+              "unione",
+              19
+            ],
+            [
+              null,
+              "a",
+              17
+            ],
+            [
+              null,
+              "c",
+              17
+            ],
+            [
+              null,
+              "è",
+              15
+            ],
+            [
+              "cè",
+              "è",
+              14
+            ],
+            [
+              "è",
+              "e",
+              14
+            ]
+          ],
+          "most_broken": [
+            [
+              "e",
+              null,
+              5
+            ],
+            [
+              "di",
+              null,
+              4
+            ],
+            [
+              "che",
+              null,
+              3
+            ],
+            [
+              "single",
+              null,
+              3
+            ],
+            [
+              "è",
+              "e",
+              3
+            ],
+            [
+              "a",
+              null,
+              2
+            ],
+            [
+              "ad",
+              null,
+              2
+            ],
+            [
+              "di",
+              "dei",
+              2
+            ],
+            [
+              "e",
+              "è",
+              2
+            ],
+            [
+              "l",
+              "le",
+              2
+            ]
+          ]
+        },
+        "europarl-5": {
+          "repaired": 1940,
+          "broken": 288,
+          "most_repaired": [
+            [
+              null,
+              "l",
+              140
+            ],
+            [
+              null,
+              "dell",
+              74
+            ],
+            [
+              null,
+              "e",
+              42
+            ],
+            [
+              null,
+              "all",
+              28
+            ],
+            [
+              "dellunione",
+              "unione",
+              19
+            ],
+            [
+              null,
+              "a",
+              17
+            ],
+            [
+              null,
+              "c",
+              17
+            ],
+            [
+              null,
+              "è",
+              16
+            ],
+            [
+              "cè",
+              "è",
+              14
+            ],
+            [
+              null,
+              "dall",
+              14
+            ]
+          ],
+          "most_broken": [
+            [
+              "di",
+              null,
+              5
+            ],
+            [
+              "e",
+              null,
+              5
+            ],
+            [
+              "che",
+              null,
+              3
+            ],
+            [
+              "di",
+              "dei",
+              3
+            ],
+            [
+              "single",
+              null,
+              3
+            ],
+            [
+              "a",
+              null,
+              2
+            ],
+            [
+              "ad",
+              null,
+              2
+            ],
+            [
+              "il",
+              null,
+              2
+            ],
+            [
+              "l",
+              "le",
+              2
+            ],
+            [
+              "la",
+              null,
+              2
+            ]
+          ]
+        },
+        "opensubtitles-3": {
+          "repaired": 1060,
+          "broken": 256,
+          "most_repaired": [
+            [
+              null,
+              "l",
+              82
+            ],
+            [
+              null,
+              "dell",
+              32
+            ],
+            [
+              "dellunione",
+              "unione",
+              16
+            ],
+            [
+              null,
+              "c",
+              16
+            ],
+            [
+              null,
+              "e",
+              16
+            ],
+            [
+              "cè",
+              "è",
+              14
+            ],
+            [
+              null,
+              "all",
+              11
+            ],
+            [
+              "lunione",
+              "unione",
+              8
+            ],
+            [
+              null,
+              "di",
+              8
+            ],
+            [
+              "allinterno",
+              "interno",
+              7
+            ]
+          ],
+          "most_broken": [
+            [
+              "e",
+              null,
+              10
+            ],
+            [
+              "e",
+              "è",
+              3
+            ],
+            [
+              "ed",
+              "di",
+              2
+            ],
+            [
+              "migranti",
+              "emigranti",
+              2
+            ],
+            [
+              "pil",
+              null,
+              2
+            ],
+            [
+              "sì",
+              "si",
+              2
+            ],
+            [
+              "è",
+              "e",
+              2
+            ],
+            [
+              "acqua",
+              null,
+              1
+            ],
+            [
+              "ad",
+              "a",
+              1
+            ],
+            [
+              "ad",
+              null,
+              1
+            ]
+          ]
+        },
+        "opensubtitles-5": {
+          "repaired": 1058,
+          "broken": 258,
+          "most_repaired": [
+            [
+              null,
+              "l",
+              83
+            ],
+            [
+              null,
+              "dell",
+              32
+            ],
+            [
+              "dellunione",
+              "unione",
+              16
+            ],
+            [
+              null,
+              "c",
+              16
+            ],
+            [
+              null,
+              "e",
+              15
+            ],
+            [
+              "cè",
+              "è",
+              14
+            ],
+            [
+              null,
+              "all",
+              11
+            ],
+            [
+              "lunione",
+              "unione",
+              8
+            ],
+            [
+              null,
+              "di",
+              8
+            ],
+            [
+              null,
+              "è",
+              8
+            ]
+          ],
+          "most_broken": [
+            [
+              "e",
+              null,
+              10
+            ],
+            [
+              "e",
+              "è",
+              3
+            ],
+            [
+              "ad",
+              "a",
+              2
+            ],
+            [
+              "alle",
+              "le",
+              2
+            ],
+            [
+              "ed",
+              "di",
+              2
+            ],
+            [
+              "migranti",
+              "emigranti",
+              2
+            ],
+            [
+              "pil",
+              null,
+              2
+            ],
+            [
+              "sì",
+              "si",
+              2
+            ],
+            [
+              "è",
+              "e",
+              2
+            ],
+            [
+              "acqua",
+              null,
+              1
+            ]
+          ]
+        }
+      }
+    }
+  ],
+  "created": "2026-11-02T15:52:56+00:00",
+  "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362"
+}

@@ -1,0 +1,51 @@
+# Tables of the E4 chapter of RESULTS.md (rendered by: asr-lab render-results), from the results of
+# asr-lab lm-results and asr-lab lm-check-greedy
+
+[[table]]
+name = "e4-text"
+kind = "lm"
+file = "experiments/E4/results/results.json"
+section = "text"
+
+[[table]]
+name = "e4-greedy-check"
+kind = "lm"
+file = "experiments/E4/results/greedy_check.json"
+section = "greedy_check"
+
+[[table]]
+name = "e4-weights"
+kind = "lm"
+file = "experiments/E4/results/results.json"
+section = "weights"
+
+[[table]]
+name = "e4-wer"
+kind = "lm"
+file = "experiments/E4/results/results.json"
+section = "wer"
+
+[[table]]
+name = "e4-comparisons"
+kind = "lm"
+file = "experiments/E4/results/results.json"
+section = "comparisons"
+
+[[table]]
+name = "e4-no-digit"
+kind = "lm"
+file = "experiments/E4/results/results.json"
+section = "no_digit"
+
+[[table]]
+name = "e4-vocabulary"
+kind = "lm"
+file = "experiments/E4/results/results.json"
+section = "vocabulary"
+
+# Post hoc: added after seeing that the language models lower the WER far more than the CER
+[[table]]
+name = "e4-changes"
+kind = "lm"
+file = "experiments/E4/results/results.json"
+section = "changes"

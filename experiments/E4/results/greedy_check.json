@@ -1,0 +1,46 @@
+{
+  "test_sets": [
+    {
+      "name": "fleurs-it",
+      "n_utterances": 865,
+      "different": 6,
+      "different_beyond_spaces": 3,
+      "different_beyond_special_tokens": 0,
+      "wer_e1b": 0.07355846110431756,
+      "wer_log_probabilities": 0.07355846110431756,
+      "dev_wer": 0.07827050997782706
+    },
+    {
+      "name": "fleurs-de",
+      "n_utterances": 862,
+      "different": 7,
+      "different_beyond_spaces": 7,
+      "different_beyond_special_tokens": 0,
+      "wer_e1b": 0.11789552478212051,
+      "wer_log_probabilities": 0.11784205742394269,
+      "dev_wer": 0.11781376518218624
+    },
+    {
+      "name": "fleurs-en",
+      "n_utterances": 647,
+      "different": 5,
+      "different_beyond_spaces": 0,
+      "different_beyond_special_tokens": 0,
+      "wer_e1b": 0.14543443699453928,
+      "wer_log_probabilities": 0.14543443699453928,
+      "dev_wer": 0.15981070258463778
+    },
+    {
+      "name": "voxpopuli-it",
+      "n_utterances": 1177,
+      "different": 73,
+      "different_beyond_spaces": 4,
+      "different_beyond_special_tokens": 0,
+      "wer_e1b": 0.26194798953382814,
+      "wer_log_probabilities": 0.26194798953382814,
+      "dev_wer": 0.2361012297997764
+    }
+  ],
+  "created": "2026-11-02T15:37:32+00:00",
+  "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362"
+}
