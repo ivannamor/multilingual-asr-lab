@@ -1,0 +1,180 @@
+{
+  "created": "2026-10-30T21:30:44+00:00",
+  "kenlm_commit": "4cb443e60b7bf2c0ddf3c745378f76cb59e254e5",
+  "text": [
+    {
+      "corpus": "europarl",
+      "repo": "Helsinki-NLP/europarl",
+      "revision": "ab45e286aef3fb5780067100cb5a1132b52b7949",
+      "lang": "de",
+      "seed": 0,
+      "read": 1961119,
+      "not_writable": 243367,
+      "in_dev_or_test": 0,
+      "duplicates": 45990,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 1671762,
+      "available_words": 38416562,
+      "sentences": 217541,
+      "words": 5000010,
+      "forbidden_sentences": 401,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "40417c2e6a53e2d329ef349943b716a72ac25e2c76ef817f52b77dd89aa99fdc",
+          "bytes": 90257269
+        },
+        {
+          "order": 5,
+          "text_sha256": "40417c2e6a53e2d329ef349943b716a72ac25e2c76ef817f52b77dd89aa99fdc",
+          "bytes": 285495461
+        }
+      ]
+    },
+    {
+      "corpus": "opensubtitles",
+      "repo": "sentence-transformers/parallel-sentences-opensubtitles",
+      "revision": "d86a387587ab6f2fd9ec7453b2765cec68111c87",
+      "lang": "de",
+      "seed": 0,
+      "read": 10223850,
+      "not_writable": 322358,
+      "in_dev_or_test": 0,
+      "duplicates": 2140914,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 7760578,
+      "available_words": 54827002,
+      "sentences": 707963,
+      "words": 5000002,
+      "forbidden_sentences": 401,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "3c96b9f98583ff59d45f2aedd3b53d47cc2e2a4956563cd8770fb9b84f2afb4b",
+          "bytes": 92064732
+        },
+        {
+          "order": 5,
+          "text_sha256": "3c96b9f98583ff59d45f2aedd3b53d47cc2e2a4956563cd8770fb9b84f2afb4b",
+          "bytes": 258602216
+        }
+      ]
+    },
+    {
+      "corpus": "europarl",
+      "repo": "Helsinki-NLP/europarl",
+      "revision": "ab45e286aef3fb5780067100cb5a1132b52b7949",
+      "lang": "en",
+      "seed": 0,
+      "read": 1946253,
+      "not_writable": 256136,
+      "in_dev_or_test": 0,
+      "duplicates": 41415,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 1648702,
+      "available_words": 42523324,
+      "sentences": 194278,
+      "words": 5000005,
+      "forbidden_sentences": 406,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "c71d0cbb61e280e54cf8ff7917a0a2851d03b77cafa5ca04bb139fa9e8f65740",
+          "bytes": 63047128
+        },
+        {
+          "order": 5,
+          "text_sha256": "c71d0cbb61e280e54cf8ff7917a0a2851d03b77cafa5ca04bb139fa9e8f65740",
+          "bytes": 238594584
+        }
+      ]
+    },
+    {
+      "corpus": "opensubtitles",
+      "repo": "sentence-transformers/parallel-sentences-opensubtitles",
+      "revision": "d86a387587ab6f2fd9ec7453b2765cec68111c87",
+      "lang": "en",
+      "seed": 0,
+      "read": 1019920,
+      "not_writable": 25131,
+      "in_dev_or_test": 0,
+      "duplicates": 159273,
+      "distinct_in_dev_or_test": 0,
+      "available_sentences": 835516,
+      "available_words": 6116934,
+      "sentences": 682883,
+      "words": 5000001,
+      "forbidden_sentences": 406,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "48b42a81d1db34c447b30f8c579d74bab949e2c06887816992b0fb29a15e1ee7",
+          "bytes": 68032623
+        },
+        {
+          "order": 5,
+          "text_sha256": "48b42a81d1db34c447b30f8c579d74bab949e2c06887816992b0fb29a15e1ee7",
+          "bytes": 222863143
+        }
+      ]
+    },
+    {
+      "corpus": "europarl",
+      "repo": "Helsinki-NLP/europarl",
+      "revision": "ab45e286aef3fb5780067100cb5a1132b52b7949",
+      "lang": "it",
+      "seed": 0,
+      "read": 1946253,
+      "not_writable": 234706,
+      "in_dev_or_test": 4699,
+      "duplicates": 34527,
+      "distinct_in_dev_or_test": 11,
+      "available_sentences": 1672321,
+      "available_words": 41376531,
+      "sentences": 202289,
+      "words": 5000001,
+      "forbidden_sentences": 2498,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "207e0cf6e67531b689cb458b7379bb326e8c25b868032b4d7343210da7a60447",
+          "bytes": 79125309
+        },
+        {
+          "order": 5,
+          "text_sha256": "207e0cf6e67531b689cb458b7379bb326e8c25b868032b4d7343210da7a60447",
+          "bytes": 269007989
+        }
+      ]
+    },
+    {
+      "corpus": "opensubtitles",
+      "repo": "sentence-transformers/parallel-sentences-opensubtitles",
+      "revision": "d86a387587ab6f2fd9ec7453b2765cec68111c87",
+      "lang": "it",
+      "seed": 0,
+      "read": 1017631,
+      "not_writable": 22790,
+      "in_dev_or_test": 179,
+      "duplicates": 163545,
+      "distinct_in_dev_or_test": 6,
+      "available_sentences": 831117,
+      "available_words": 5327492,
+      "sentences": 779976,
+      "words": 5000004,
+      "forbidden_sentences": 2498,
+      "models": [
+        {
+          "order": 3,
+          "text_sha256": "0c47f930b94367e7ac01e8be9a8fc5c7976540cac74e9d725d8b66dc3a4effce",
+          "bytes": 85085394
+        },
+        {
+          "order": 5,
+          "text_sha256": "0c47f930b94367e7ac01e8be9a8fc5c7976540cac74e9d725d8b66dc3a4effce",
+          "bytes": 246954230
+        }
+      ]
+    }
+  ]
+}

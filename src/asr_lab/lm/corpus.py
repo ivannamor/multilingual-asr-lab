@@ -3,7 +3,8 @@
 An n-gram language model only helps with words a CTC model can spell, so its text must use the same
 alphabet: lowercase, no digits, no punctuation. A sentence with digits or foreign letters is
 dropped rather than repaired, since a changed sentence would teach the model word sequences nobody
-wrote.
+wrote. The exception is German "ß" for a model without it: "ss" is the same word in another
+spelling, the one the model writes and the normalizer scores.
 
 **No leakage.** A sentence that appears in a dev or test manifest, after the same cleaning, is
 removed from the text, and how many there were is reported. This catches identical sentences only,
@@ -27,6 +28,7 @@ from typing import Any
 import pyarrow.parquet as pq
 
 from asr_lab.data.manifest import read_manifest
+from asr_lab.evaluation.normalize import replace_eszett
 from asr_lab.provenance import file_sha256
 
 _PUNCTUATION = re.compile(r"[^\w\s']|_", re.UNICODE)
@@ -63,6 +65,8 @@ def clean_sentence(text: str, alphabet: frozenset[str]) -> str | None:
     True
     """
     text = unicodedata.normalize("NFC", text).translate(_APOSTROPHES).lower()
+    if "ß" not in alphabet:
+        text = replace_eszett(text)
     if _DIGIT.search(text):
         return None
     text = _SPACES.sub(" ", _PUNCTUATION.sub(" ", text)).strip()
