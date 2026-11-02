@@ -25,6 +25,35 @@ def test_clean_sentence_matches_the_ctc_alphabet() -> None:
     assert clean_sentence("là-bas", ALPHABET) == "là bas"
 
 
+def test_eszett_is_spelled_as_the_model_writes_it() -> None:
+    assert clean_sentence("Die große Straße", ALPHABET) == "die grosse strasse"
+    assert clean_sentence("Die große Straße", ALPHABET | {"ß"}) == "die große straße"
+
+
+def test_a_reference_with_eszett_is_kept_out_of_the_text(tmp_path: Path) -> None:
+    manifest = tmp_path / "test.jsonl"
+    write_manifest(
+        manifest,
+        [
+            ManifestEntry(
+                utterance_id="u1",
+                audio_filepath="u1.wav",
+                duration=1.0,
+                text="Die große Straße",
+                lang="de",
+                speaker_id="s1",
+                source="test",
+            )
+        ],
+    )
+    forbidden = forbidden_sentences([manifest], ALPHABET)
+    sentences, counts = select_sentences(
+        ["Die grosse Strasse", "Eine andere Strasse"], ALPHABET, forbidden, n_words=3, seed=0
+    )
+    assert sentences == ["eine andere strasse"]
+    assert counts["in_dev_or_test"] == 1
+
+
 @pytest.mark.parametrize("text", ["Nel 1999", "", "   ", "!!!", "Москва e Roma", "naïve"])
 def test_sentences_the_model_cannot_write_are_dropped(text: str) -> None:
     assert clean_sentence(text, ALPHABET) is None

@@ -785,13 +785,20 @@ language model during the search, with weights chosen on dev sets.
   sentences would compare sizes as well as domains, because parliamentary sentences are about four
   times longer than subtitles.
 - **Leakage filter**: sentences identical to any dev or test sentence are removed and counted.
+- **`ß` becomes `ss` in the text**, for a checkpoint without it. Sentences the model cannot write are
+  otherwise dropped, but this is the same word in the spelling the model writes and the normalizer
+  scores. The first build dropped them, 26% of the first 200,000 sentences of German Europarl, which
+  left `gross` and `strasse` almost unknown to the language model. It was found in the description
+  of the text and changed before any language model was scored on German data.
 - **Our own beam search** (`asr_lab.lm.decoder`): pyctcdecode requires `numpy<2`, which the project
   does not use. The search is short, is tested against brute force on small cases without a language
   model, and needs KenLM only for scores, so it runs in the CI with a fake language model.
 - **Log probabilities are saved once**, in half precision, so that the grid and the test decoding never
   repeat the acoustic model, which is the only part that needs a GPU.
-- **Selection**: for each test set and language model, the lowest dev WER on a grid of 42 cells. Each
-  test set has its own dev set; VoxPopuli uses its validation split, which E7 did not have.
+- **Selection**: for each test set and language model, the lowest dev WER on a grid of 63 cells. Each
+  test set has its own dev set; VoxPopuli uses its validation split, which E7 did not have. The first
+  grid had 42 cells and stopped at beta = 3, where 12 of its 16 choices fell; beta 4, 5 and 6 were
+  added before any language model decoded a test set.
 
 **Alternatives rejected.** pyctcdecode (above) and a separate environment for it (a second lock file
 for one step); the language models shipped with the XLS-R checkpoints (no source documented that we

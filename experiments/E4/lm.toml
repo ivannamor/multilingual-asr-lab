@@ -23,6 +23,9 @@ files.it = { config = "en-it", field = "non_english" }
 files.de = { config = "en-de", field = "non_english" }
 files.en = { config = "en-it", field = "english" }
 
+# Changed after the first build, before any language model was scored on a German dev or test set:
+# "ß" becomes "ss" in the text. The German checkpoint has no "ß", so every sentence with one was
+# dropped: 26% of the first 200,000 sentences of Europarl, including all those with the old "daß".
 [text]
 # The same number of words for every source and language, close to the smallest source
 n_words = 5_000_000
@@ -38,9 +41,11 @@ beam_width = 100
 token_min_logp = -10.0
 beam_prune_logp = -20.0
 
+# Beta 4, 5 and 6 were added after the first grid, before any language model decoded a test set: 12
+# of its 16 choices fell on the largest beta, 3, so the best weights could lie beyond it.
 [grid]
 alpha = [0.1, 0.2, 0.3, 0.4, 0.5, 0.7, 1.0]
-beta = [0.0, 0.5, 1.0, 1.5, 2.0, 3.0]
+beta = [0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 4.0, 5.0, 6.0]
 
 # Each test set has its own dev set, on which alpha and beta are chosen for each language model: the
 # lowest corpus WER, the smaller alpha and then the smaller beta in a tie. A language model of the
