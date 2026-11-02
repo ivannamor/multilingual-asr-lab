@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 import time
+from collections.abc import Mapping
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import replace
 from pathlib import Path
@@ -118,10 +119,13 @@ def decode_test_set(
     logprobs: Path,
     weights: dict[str, float],
     output: Path,
+    word_bonuses: Mapping[str, Mapping[str, float]] | None = None,
+    extra_config: dict[str, Any] | None = None,
 ) -> Path:
     """Decode a test set with the chosen weights and write a run directory.
 
-    A complete run with the same language model and weights is left as it is.
+    A complete run with the same language model and weights is left as it is. ``word_bonuses`` gives
+    the hotwords of each utterance, described in the run by ``extra_config``.
 
     Raises:
         ValueError: if the log probabilities are not those of the test manifest.
@@ -137,6 +141,7 @@ def decode_test_set(
         "language_model": name,
         "language_model_sha256": file_sha256(lm_path),
         "decoding": options.__dict__,
+        **(extra_config or {}),
     }
     run_path = output / "run.json"
     if (
@@ -148,7 +153,10 @@ def decode_test_set(
     lm = KenLMModel(str(lm_path))
     started = time.perf_counter()
     hypotheses = [
-        Hypothesis(key, beam_search(values, metadata["tokens"], lm, options))
+        Hypothesis(
+            key,
+            beam_search(values, metadata["tokens"], lm, options, (word_bonuses or {}).get(key)),
+        )
         for key, values in iter_log_probs(logprobs)
     ]
     seconds = time.perf_counter() - started

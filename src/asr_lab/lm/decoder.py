@@ -13,12 +13,15 @@ Several alignments give the same text ("aa-b", "a-bb", where "-" is the blank), 
 the same text and the same last token are merged by adding their probabilities. The blank and the
 last token stay in the hypothesis because they decide what the next token means: a repeated
 character adds nothing unless a blank separates the two.
+
+A ``word_bonus`` adds to the score of chosen words when they end, which is hotword boosting: it
+tells the search which names to expect, without changing the language model.
 """
 
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol
 
@@ -103,6 +106,7 @@ def beam_search(
     tokens: Sequence[str],
     lm: LanguageModel | None = None,
     options: DecodingOptions | None = None,
+    word_bonus: Mapping[str, float] | None = None,
 ) -> str:
     """The most probable transcript of one utterance; see the module docstring.
 
@@ -110,8 +114,10 @@ def beam_search(
         log_probs: natural log probabilities, frames x tokens.
         tokens: the token of each column.
         lm: without one, the search only merges the alignments of the acoustic model.
+        word_bonus: added to the score of each of these words when it ends.
     """
     options = options or DecodingOptions()
+    word_bonus = word_bonus or {}
     usable = [i for i, token in enumerate(tokens) if token not in SPECIAL_TOKENS]
     begin = lm.begin() if lm else None
     # (written words, current word, last token) -> [acoustic score, language score, LM state]
@@ -122,7 +128,7 @@ def beam_search(
         for (text, word, last), (acoustic, language, state) in beams.items():
             for token, logp in candidates:
                 key, new_language, new_state = _extend(
-                    text, word, last, token, language, state, lm, options
+                    text, word, last, token, language, state, lm, options, word_bonus
                 )
                 score = acoustic + logp
                 found = extended.get(key)
@@ -131,7 +137,7 @@ def beam_search(
                 else:
                     found[0] = _log_add(found[0], score)
         beams = _prune(extended, options)
-    return _best_transcript(beams, lm, options)
+    return _best_transcript(beams, lm, options, word_bonus)
 
 
 def _candidates(
@@ -152,6 +158,7 @@ def _extend(
     state: Any,
     lm: LanguageModel | None,
     options: DecodingOptions,
+    word_bonus: Mapping[str, float],
 ) -> tuple[tuple[str, str, str | None], float, Any]:
     if token == BLANK:
         return (text, word, None), language, state
@@ -161,13 +168,19 @@ def _extend(
         return (text, word + token, token), language, state
     if not word:
         return (text, "", token), language, state
-    new_language, new_state = _add_word(word, language, state, lm, options)
+    new_language, new_state = _add_word(word, language, state, lm, options, word_bonus)
     return (f"{text} {word}" if text else word, "", token), new_language, new_state
 
 
 def _add_word(
-    word: str, language: float, state: Any, lm: LanguageModel | None, options: DecodingOptions
+    word: str,
+    language: float,
+    state: Any,
+    lm: LanguageModel | None,
+    options: DecodingOptions,
+    word_bonus: Mapping[str, float],
 ) -> tuple[float, Any]:
+    language += word_bonus.get(word, 0.0)
     if lm is None:
         return language, state
     logp, new_state = lm.score(state, word)
@@ -197,13 +210,14 @@ def _best_transcript(
     beams: dict[tuple[str, str, str | None], list[Any]],
     lm: LanguageModel | None,
     options: DecodingOptions,
+    word_bonus: Mapping[str, float],
 ) -> str:
     """Close the last word of each hypothesis, merge equal texts and take the best one."""
     finished: dict[str, list[float]] = {}
     for (text, word, _), (acoustic, language, state) in beams.items():
         full = f"{text} {word}".strip() if word else text
         if word:
-            language, state = _add_word(word, language, state, lm, options)
+            language, state = _add_word(word, language, state, lm, options, word_bonus)
         if lm is not None:
             language += options.alpha * lm.end(state)
         found = finished.get(full)

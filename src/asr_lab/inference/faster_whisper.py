@@ -7,7 +7,9 @@ faster than the PyTorch implementation; more threads were measured to be slower.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+import hashlib
+import json
+from collections.abc import Mapping, Sequence
 from importlib.metadata import version
 from typing import Any
 
@@ -68,6 +70,8 @@ class FasterWhisperModel(ASRModel):
         vad_filter: remove non-speech audio with Silero VAD before decoding.
         hallucination_silence_threshold: skip silences longer than this many seconds
             around a likely hallucination; needs word timestamps, which it enables.
+        initial_prompts: text for Whisper to treat as already written before each utterance, by
+            utterance id. Recorded in ``config`` by its hash.
         model: an already built model, to share loaded weights (see ``with_decoding``)
             or, in tests, to avoid downloading them.
     """
@@ -86,6 +90,7 @@ class FasterWhisperModel(ASRModel):
         no_speech_threshold: float | None = 0.6,
         vad_filter: bool = False,
         hallucination_silence_threshold: float | None = None,
+        initial_prompts: Mapping[str, str] | None = None,
         model: Any | None = None,
     ) -> None:
         if device not in DEFAULT_COMPUTE_TYPES:
@@ -111,6 +116,7 @@ class FasterWhisperModel(ASRModel):
             "word_timestamps": hallucination_silence_threshold is not None,
             **_FIXED_OPTIONS,
         }
+        self.initial_prompts = initial_prompts
         if model is None:
             model = WhisperModel(
                 model_size,
@@ -127,6 +133,10 @@ class FasterWhisperModel(ASRModel):
     @property
     def config(self) -> dict[str, Any]:
         """Every setting that can change the output, to be stored with the results."""
+        prompts = {}
+        if self.initial_prompts is not None:
+            text = json.dumps(self.initial_prompts, ensure_ascii=False, sort_keys=True)
+            prompts["initial_prompts_sha256"] = hashlib.sha256(text.encode("utf-8")).hexdigest()
         return {
             "library": "faster-whisper",
             "library_version": version("faster-whisper"),
@@ -136,6 +146,7 @@ class FasterWhisperModel(ASRModel):
             "cpu_threads": self.cpu_threads,
             "beam_size": self.beam_size,
             **self.decoding,
+            **prompts,
         }
 
     @property
@@ -162,10 +173,12 @@ class FasterWhisperModel(ASRModel):
         return [self._transcribe_one(sample) for sample in samples]
 
     def _transcribe_one(self, sample: AudioSample) -> Hypothesis:
+        prompt = (self.initial_prompts or {}).get(sample.utterance_id)
         segments, _info = self._model.transcribe(
             sample.waveform,
             language=sample.lang,
             beam_size=self.beam_size,
+            **({"initial_prompt": prompt} if prompt else {}),
             **self.decoding,
         )
         # ``segments`` is a generator: decoding actually runs while it is consumed.

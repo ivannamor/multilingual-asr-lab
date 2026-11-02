@@ -231,6 +231,26 @@ uv run asr-lab lm-tune --spec experiments/E4/lm.toml --output experiments/E4/res
 uv run asr-lab lm-decode --spec experiments/E4/lm.toml --selection experiments/E4/results/grid.json
 ```
 
+### Lists of entities for Whisper and CTC (experiment E9)
+
+The lists are committed, so `uv sync --extra entities` (spaCy and its models, about 1.5 GB) is needed
+only to make them again. Whisper runs on a GPU, in
+[`notebooks/e9_whisper_colab.ipynb`](notebooks/e9_whisper_colab.ipynb), and CTC on a CPU, from the
+frame probabilities of experiment E4:
+
+```bash
+uv run --extra entities asr-lab bias-entities --spec experiments/E9/biasing.toml \
+    --output experiments/E9/results/entities.json
+uv run --extra lm asr-lab bias-ctc-tune --spec experiments/E9/biasing.toml \
+    --entities experiments/E9/results/entities.json --output experiments/E9/results/ctc_grid.json
+uv run asr-lab bias-select --spec experiments/E9/biasing.toml \
+    --entities experiments/E9/results/entities.json \
+    --ctc-grid experiments/E9/results/ctc_grid.json --output experiments/E9/results/selection.json
+uv run --extra lm asr-lab bias-ctc-decode --spec experiments/E9/biasing.toml \
+    --entities experiments/E9/results/entities.json \
+    --selection experiments/E9/results/selection.json
+```
+
 ### Experiment tracking (MLflow)
 
 Scores and comparisons can also be logged to [MLflow](https://mlflow.org), to browse, filter and

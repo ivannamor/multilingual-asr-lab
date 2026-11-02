@@ -1,0 +1,74 @@
+# Experiment E9: telling a model which names to expect. Everything here is fixed before any list is
+# given to a model on a dev or test set: entities, lists, settings, selection and comparisons.
+
+[entities]
+# The named-entity models, pinned in pyproject.toml (extra "entities"), and the kinds of entity kept:
+# people, places and organizations, without the "miscellaneous" class
+labels = ["PER", "PERSON", "LOC", "GPE", "FAC", "ORG"]
+models = { it = "it_core_news_lg", de = "de_core_news_lg", en = "en_core_web_lg" }
+# The realistic list comes from the training pool of E6: never from a dev or test set
+domain_manifest = "data/voxpopuli_it/train.jsonl"
+domain_lang = "it"
+seed = 0
+
+[whisper]
+# Initial prompt. Decoding keeps its last 223 tokens, so the commonest entities go last; 50 entities
+# of the domain list take 171. With condition_on_previous_text off, it only affects the first 30 s.
+model_size = "large-v3-turbo"
+domain_sizes = [25, 50]
+
+[ctc]
+# Hotwords on top of the language model of E4 with its weights, fixed for all test sets
+language_model = "europarl"
+order = 5
+lm_spec = "experiments/E4/lm.toml"
+grid = "experiments/E4/results/grid.json"
+weights = [1.0, 2.0, 3.0, 5.0, 8.0]
+domain_sizes = [50, 200, 800]
+
+[selection]
+# On the dev set: the highest entity recall among the settings whose WER is at most this far above the
+# run without a list; in a tie, the smaller list and then the smaller weight. Without any such
+# setting, no list. CTC chooses one weight per test set for its oracle and distractor lists.
+wer_margin = 0.002
+
+# Only the test set with a domain list has a setting to choose for Whisper, and so a run on dev
+[[test_sets]]
+name = "fleurs-it"
+lang = "it"
+normalizer = "it-v2"
+dev = "data/fleurs_it/dev.jsonl"
+test = "data/fleurs_it/test.jsonl"
+whisper_baseline = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-it"
+
+[[test_sets]]
+name = "fleurs-de"
+lang = "de"
+normalizer = "de-v1"
+dev = "data/fleurs_de/dev.jsonl"
+test = "data/fleurs_de/test.jsonl"
+whisper_baseline = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-de"
+
+[[test_sets]]
+name = "fleurs-en"
+lang = "en"
+normalizer = "en-v1"
+dev = "data/fleurs_en/dev.jsonl"
+test = "data/fleurs_en/test.jsonl"
+whisper_baseline = "experiments/runs/whisper-large-v3-turbo-float16-fleurs-en"
+
+[[test_sets]]
+name = "voxpopuli-it"
+lang = "it"
+normalizer = "it-v2"
+dev = "data/voxpopuli_it/validation.jsonl"
+test = "data/voxpopuli_it/test.jsonl"
+whisper_baseline = "experiments/runs/e1b-whisper-turbo-voxpopuli-it"
+hallucination_silence_threshold = 2.0  # the decoding selected in E2, as in E1b
+has_domain_list = true
+
+[analysis]
+# Per test set and model: entity recall and WER against no list, by paired bootstrap on the widest
+# resampling unit, with Holm's correction over those comparisons. Reported besides: entities of the
+# list written though not in the reference, and the CER.
+conditions = ["oracle", "distractors", "domain"]
