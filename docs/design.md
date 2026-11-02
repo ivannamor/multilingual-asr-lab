@@ -811,3 +811,10 @@ matches is the choice of sources. Neither source is a domain model for FLEURS, s
 cannot say how much a truly encyclopedic language model would help. KenLM's tools are compiled
 outside the project from a pinned commit, with one line removed from its build file for Boost 1.90,
 and the Python package is an optional extra left out of the CI.
+
+**After E4.** The language model helps most when its text comes from the domain of the speech, and a
+5-gram adds almost nothing to a 3-gram at this size. The weights were merged in their own pull request
+before any test decoding, so the history shows that they were not chosen on the test sets. Recall
+outside the vocabulary and the words repaired or broken are computed from the same alignments as the
+WER, and the check against the greedy transcripts of E1b is a separate command because it needs the
+log probabilities, which are not committed.

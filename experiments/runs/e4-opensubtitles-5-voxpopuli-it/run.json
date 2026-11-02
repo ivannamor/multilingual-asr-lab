@@ -1,0 +1,39 @@
+{
+  "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+opensubtitles-5",
+  "model_config": {
+    "acoustic_model": {
+      "library": "transformers",
+      "library_version": "5.21.0",
+      "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+      "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+      "dtype": "float16",
+      "device": "cuda",
+      "decoding": "ctc-greedy"
+    },
+    "language_model": "opensubtitles-5",
+    "language_model_sha256": "24bde944258e6fc79ce364704aa6b2508d21a8d8e548b65cb7ed1705df559575",
+    "decoding": {
+      "alpha": 0.5,
+      "beta": 2.0,
+      "beam_width": 100,
+      "token_min_logp": -10.0,
+      "beam_prune_logp": -20.0
+    }
+  },
+  "manifest": "data/voxpopuli_it/test.jsonl",
+  "manifest_sha256": "54f0cda1e23e8236ee66f1cd6e008b6cf86d7672c4005bc3eae5faba012dc3a0",
+  "limit": null,
+  "n_utterances": 1177,
+  "audio_seconds": 15592.556687500002,
+  "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.11.17",
+    "platform": "Linux aarch64",
+    "executable_is_venv": true
+  },
+  "started_at": null,
+  "finished_at": "2026-11-02T15:33:58+00:00",
+  "processing_seconds": 129.25035255200055,
+  "rtf": 0.0082892340969083
+}

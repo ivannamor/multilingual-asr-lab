@@ -27,6 +27,10 @@ Usage::
     uv run asr-lab lm-prepare --spec experiments/E4/lm.toml --kenlm-bin ~/tools/kenlm/build/bin
     uv run asr-lab lm-logprobs --spec experiments/E4/lm.toml
     uv run asr-lab lm-tune --spec experiments/E4/lm.toml --output grid.json
+    uv run asr-lab lm-results --spec experiments/E4/lm.toml --selection grid.json \
+        --text text.json --output results.json
+    uv run asr-lab lm-check-greedy --spec experiments/E4/lm.toml --output greedy_check.json
+    uv run asr-lab plot-lm-grid --grid grid.json --output e4_grid.png
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -70,7 +74,8 @@ from asr_lab.inference.faster_whisper import DEFAULT_TEMPERATURES, FasterWhisper
 from asr_lab.inference.run import transcribe_manifest
 from asr_lab.inference.transformers_models import FAMILIES
 from asr_lab.lm.experiment import run_lm_decode, run_lm_logprobs, run_lm_prepare, run_lm_tune
-from asr_lab.plots import plot_selection, plot_usage
+from asr_lab.lm.results import greedy_check, lm_results
+from asr_lab.plots import plot_lm_grid, plot_selection, plot_usage
 from asr_lab.reporting import render_results
 from asr_lab.sweep import format_selection, load_spec, save_selection, select_configuration
 from asr_lab.tracking import log_comparison, log_scores
@@ -349,6 +354,29 @@ def main(argv: Sequence[str] | None = None) -> None:
     lm_decode.add_argument(
         "--runs", type=Path, default=Path("experiments/runs"), help="folder of the run directories"
     )
+    lm_res = commands.add_parser(
+        "lm-results", help="WER, comparisons and recall with the language models (E4)"
+    )
+    lm_res.add_argument("--spec", required=True, type=Path, help="TOML language-model spec")
+    lm_res.add_argument("--selection", required=True, type=Path, help="output of lm-tune")
+    lm_res.add_argument("--text", required=True, type=Path, help="report of lm-prepare")
+    lm_res.add_argument("--models", type=Path, default=Path("models/e4"))
+    lm_res.add_argument(
+        "--runs", type=Path, default=Path("experiments/runs"), help="folder of the run directories"
+    )
+    lm_res.add_argument("--output", required=True, type=Path, help="results JSON")
+    lm_check = commands.add_parser(
+        "lm-check-greedy", help="compare greedy decoding of the log probabilities with E1b (E4)"
+    )
+    lm_check.add_argument("--spec", required=True, type=Path, help="TOML language-model spec")
+    lm_check.add_argument("--logprobs", type=Path, default=Path("data/e4_logprobs"))
+    lm_check.add_argument("--output", required=True, type=Path, help="results JSON")
+    lm_plot = commands.add_parser(
+        "plot-lm-grid", help="plot the dev WER of a language model over its weights (E4)"
+    )
+    lm_plot.add_argument("--grid", required=True, type=Path, help="output of lm-tune")
+    lm_plot.add_argument("--language-model", default="europarl-5", help="e.g. europarl-5")
+    lm_plot.add_argument("--output", required=True, type=Path, help="PNG file")
 
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
@@ -549,6 +577,21 @@ def main(argv: Sequence[str] | None = None) -> None:
     elif args.command == "lm-tune":
         grid = run_lm_tune(args.spec, args.models, args.logprobs, args.output, args.workers)
         print(f"Grid and chosen weights: {grid}")
+    elif args.command == "lm-results":
+        report = lm_results(args.spec, args.selection, args.text, args.models, args.runs)
+        save_results(report, args.output)
+        for test_set in report["test_sets"]:
+            systems = ", ".join(
+                f"{name} {result['wer']:.2%}" for name, result in test_set["all"]["systems"].items()
+            )
+            print(f"{test_set['name']}: {systems}")
+        print(f"Language-model results: {args.output}")
+    elif args.command == "plot-lm-grid":
+        grid = json.loads(args.grid.read_text(encoding="utf-8"))
+        print(f"Figure: {plot_lm_grid(grid, args.language_model, args.output)}")
+    elif args.command == "lm-check-greedy":
+        save_results(greedy_check(args.spec, args.logprobs), args.output)
+        print(f"Greedy check: {args.output}")
     elif args.command == "lm-decode":
         for path in run_lm_decode(args.spec, args.models, args.logprobs, args.selection, args.runs):
             print(path)
