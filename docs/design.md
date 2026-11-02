@@ -818,3 +818,32 @@ before any test decoding, so the history shows that they were not chosen on the 
 outside the vocabulary and the words repaired or broken are computed from the same alignments as the
 WER, and the check against the greedy transcripts of E1b is a separate command because it needs the
 log probabilities, which are not committed.
+
+## 30. Lists of entities for Whisper and CTC, with the metric on the entities
+
+**Context.** A model often gets a name wrong and the rest right, which global WER barely shows. E9
+tells the model which names to expect: an initial prompt for Whisper, hotwords for CTC.
+
+**Decision.**
+- **Metric**: entity recall, where an entity counts only if all its words are right in their position,
+  next to the WER and the entities of the list written without being said.
+- **Entities**: spaCy's large models on the references, with a filter, and committed. Capital letters
+  do not work in German, and the small models mistook ordinary words for names.
+- **Four conditions**: no list; the entities of the utterance (an upper bound, using the reference);
+  those of another utterance (the harm of a wrong list); and, on VoxPopuli only, the commonest ones
+  of the training pool (the realistic case). FLEURS has no credible domain list: its topics change at
+  every sentence.
+- **Settings on dev**: the highest entity recall among the settings whose dev WER is at most 0.2 points
+  above no list. They are merged before any list is used on a test set.
+- **Models**: large-v3-turbo, and the CTC models with the Europarl 5-gram of E4 and its weights. The
+  hotword is a bonus at the end of the word in our own beam search.
+
+**Alternatives rejected.** Lists from the test set for the realistic case (leakage); Whisper-small too
+(more comparisons for a model no product would choose); faster-whisper's `hotwords` option (the plan
+and the literature measure the initial prompt, and two forms would double the runs); a bonus on every
+letter of a hotword (more code, to be added only if the word-end bonus shows it is needed).
+
+**Consequences.** The recognizer makes mistakes, so some "entities" are ordinary words and some names
+are missed, and the filter drops single words at the start of a sentence. Oracle lists cannot be used
+by a product. With `condition_on_previous_text` off, a prompt affects only the first 30 seconds of an
+utterance.

@@ -31,6 +31,15 @@ Usage::
         --text text.json --output results.json
     uv run asr-lab lm-check-greedy --spec experiments/E4/lm.toml --output greedy_check.json
     uv run asr-lab plot-lm-grid --grid grid.json --output e4_grid.png
+    uv run asr-lab bias-entities --spec experiments/E9/biasing.toml --output entities.json
+    uv run asr-lab bias-whisper --spec experiments/E9/biasing.toml --entities entities.json \
+        --split dev
+    uv run asr-lab bias-ctc-tune --spec experiments/E9/biasing.toml --entities entities.json \
+        --output ctc_grid.json
+    uv run asr-lab bias-select --spec experiments/E9/biasing.toml --entities entities.json \
+        --ctc-grid ctc_grid.json --output selection.json
+    uv run asr-lab bias-ctc-decode --spec experiments/E9/biasing.toml --entities entities.json \
+        --selection selection.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -44,6 +53,13 @@ from pathlib import Path
 
 from asr_lab.analytics.sessions import load_simulation_spec, plan_sessions, render_sessions
 from asr_lab.analytics.usage import analyze_usage, load_user_model, save_usage
+from asr_lab.biasing.experiment import (
+    run_ctc_decode,
+    run_ctc_tune,
+    run_entities,
+    run_selection,
+    run_whisper,
+)
 from asr_lab.data.manifest import write_manifest
 from asr_lab.data.quality import (
     analyze_quality,
@@ -378,6 +394,41 @@ def main(argv: Sequence[str] | None = None) -> None:
     lm_plot.add_argument("--language-model", default="europarl-5", help="e.g. europarl-5")
     lm_plot.add_argument("--output", required=True, type=Path, help="PNG file")
 
+    bias_entities = commands.add_parser(
+        "bias-entities", help="find the named entities of the references (E9)"
+    )
+    bias_whisper = commands.add_parser(
+        "bias-whisper", help="transcribe with Whisper under every list of entities (E9)"
+    )
+    bias_tune = commands.add_parser(
+        "bias-ctc-tune", help="try the hotword settings of CTC on the dev sets (E9)"
+    )
+    bias_select = commands.add_parser(
+        "bias-select", help="choose the settings of the test runs from the dev results (E9)"
+    )
+    bias_decode = commands.add_parser(
+        "bias-ctc-decode", help="decode the test sets once with the chosen hotwords (E9)"
+    )
+    for command in (bias_entities, bias_whisper, bias_tune, bias_select, bias_decode):
+        command.add_argument("--spec", required=True, type=Path, help="TOML biasing spec")
+    for command in (bias_whisper, bias_tune, bias_select, bias_decode):
+        command.add_argument("--entities", required=True, type=Path, help="output of bias-entities")
+    runs_default = Path("experiments/runs")
+    for command in (bias_whisper, bias_select, bias_decode):
+        command.add_argument("--runs", type=Path, default=runs_default)
+    for command in (bias_tune, bias_decode):
+        command.add_argument("--models", type=Path, default=Path("models/e4"))
+        command.add_argument("--logprobs", type=Path, default=Path("data/e4_logprobs"))
+    bias_entities.add_argument("--output", required=True, type=Path, help="entities JSON")
+    bias_whisper.add_argument("--split", required=True, choices=["dev", "test"])
+    bias_whisper.add_argument("--selection", type=Path, default=None, help="for --split test")
+    bias_whisper.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
+    bias_tune.add_argument("--output", required=True, type=Path, help="grid JSON")
+    bias_tune.add_argument("--workers", type=int, default=8)
+    bias_select.add_argument("--ctc-grid", required=True, type=Path, help="output of bias-ctc-tune")
+    bias_select.add_argument("--output", required=True, type=Path, help="selection JSON")
+    bias_decode.add_argument("--selection", required=True, type=Path, help="output of bias-select")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -577,6 +628,25 @@ def main(argv: Sequence[str] | None = None) -> None:
     elif args.command == "lm-tune":
         grid = run_lm_tune(args.spec, args.models, args.logprobs, args.output, args.workers)
         print(f"Grid and chosen weights: {grid}")
+    elif args.command == "bias-entities":
+        print(f"Entities: {run_entities(args.spec, args.output)}")
+    elif args.command == "bias-whisper":
+        if args.split == "test" and args.selection is None:
+            parser.error("--split test needs --selection")
+        run_whisper(args.spec, args.entities, args.split, args.runs, args.selection, args.device)
+    elif args.command == "bias-ctc-tune":
+        path = run_ctc_tune(
+            args.spec, args.entities, args.models, args.logprobs, args.output, args.workers
+        )
+        print(f"Hotword grid: {path}")
+    elif args.command == "bias-select":
+        path = run_selection(args.spec, args.entities, args.ctc_grid, args.runs, args.output)
+        print(f"Selection: {path}")
+    elif args.command == "bias-ctc-decode":
+        for path in run_ctc_decode(
+            args.spec, args.entities, args.selection, args.models, args.logprobs, args.runs
+        ):
+            print(path)
     elif args.command == "lm-results":
         report = lm_results(args.spec, args.selection, args.text, args.models, args.runs)
         save_results(report, args.output)
