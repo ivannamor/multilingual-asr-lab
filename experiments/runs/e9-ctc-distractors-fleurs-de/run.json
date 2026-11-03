@@ -1,0 +1,42 @@
+{
+  "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+europarl-5",
+  "model_config": {
+    "acoustic_model": {
+      "library": "transformers",
+      "library_version": "5.21.0",
+      "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+      "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+      "dtype": "float16",
+      "device": "cuda",
+      "decoding": "ctc-greedy"
+    },
+    "language_model": "europarl-5",
+    "language_model_sha256": "75d10572ca8894d6509498e056e5a210df8b0deff994908c56a793cc452a87c0",
+    "decoding": {
+      "alpha": 0.5,
+      "beta": 3.0,
+      "beam_width": 100,
+      "token_min_logp": -10.0,
+      "beam_prune_logp": -20.0
+    },
+    "condition": "distractors",
+    "hotword_weight": 21.0,
+    "entities_sha256": "26f108d825ee21dad3f458bf0093cb309b0e40622ae739fa6e6d16212c1d4c1a"
+  },
+  "manifest": "data/fleurs_de/test.jsonl",
+  "manifest_sha256": "3f43aa24a12eb9e5768dbcc1ec0615ea28aa164cbf973f4b1febc350287c0719",
+  "limit": null,
+  "n_utterances": 862,
+  "audio_seconds": 11349.300000000014,
+  "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.11.17",
+    "platform": "Linux aarch64",
+    "executable_is_venv": true
+  },
+  "started_at": null,
+  "finished_at": "2026-11-03T14:21:52+00:00",
+  "processing_seconds": 27.966660482001316,
+  "rtf": 0.0024641749255021263
+}

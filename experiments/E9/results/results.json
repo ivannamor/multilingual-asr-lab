@@ -1,0 +1,2331 @@
+{
+  "spec": "experiments/E9/biasing.toml",
+  "models": [
+    "whisper",
+    "ctc"
+  ],
+  "level": 0.95,
+  "n_resamples": 1000,
+  "seed": 0,
+  "selection": [
+    {
+      "model": "whisper",
+      "test_set": "voxpopuli-it",
+      "list": "domain",
+      "setting": "50 entities",
+      "baseline": {
+        "wer": 0.16327878849476574,
+        "recall": 0.8499025341130604,
+        "n_entities": 1026
+      },
+      "chosen": {
+        "size": 50,
+        "wer": 0.1492275637768066,
+        "recall": 0.868421052631579,
+        "n_entities": 1026
+      }
+    },
+    {
+      "model": "ctc",
+      "test_set": "fleurs-it",
+      "list": "oracle and distractors",
+      "setting": "weight 21",
+      "baseline": {
+        "list": "none",
+        "wer": 0.06441241685144124,
+        "recall": 0.6883561643835616,
+        "n_entities": 292
+      },
+      "chosen": {
+        "weight": 21.0,
+        "wer": 0.056651884700665185,
+        "recall": 0.8732876712328768,
+        "n_entities": 292
+      }
+    },
+    {
+      "model": "ctc",
+      "test_set": "fleurs-de",
+      "list": "oracle and distractors",
+      "setting": "weight 21",
+      "baseline": {
+        "list": "none",
+        "wer": 0.10890688259109312,
+        "recall": 0.5518518518518518,
+        "n_entities": 270
+      },
+      "chosen": {
+        "weight": 21.0,
+        "wer": 0.09716599190283401,
+        "recall": 0.7740740740740741,
+        "n_entities": 270
+      }
+    },
+    {
+      "model": "ctc",
+      "test_set": "fleurs-en",
+      "list": "oracle and distractors",
+      "setting": "weight 21",
+      "baseline": {
+        "list": "none",
+        "wer": 0.14609877442058003,
+        "recall": 0.4652014652014652,
+        "n_entities": 273
+      },
+      "chosen": {
+        "weight": 21.0,
+        "wer": 0.14197306152166,
+        "recall": 0.6813186813186813,
+        "n_entities": 273
+      }
+    },
+    {
+      "model": "ctc",
+      "test_set": "voxpopuli-it",
+      "list": "oracle and distractors",
+      "setting": "weight 21",
+      "baseline": {
+        "list": "none",
+        "wer": 0.19511637361520479,
+        "recall": 0.7738791423001949,
+        "n_entities": 1026
+      },
+      "chosen": {
+        "weight": 21.0,
+        "wer": 0.1952942372192296,
+        "recall": 0.8421052631578947,
+        "n_entities": 1026
+      }
+    },
+    {
+      "model": "ctc",
+      "test_set": "voxpopuli-it",
+      "list": "domain",
+      "setting": "50 entities, weight 8",
+      "baseline": {
+        "list": "none",
+        "wer": 0.19511637361520479,
+        "recall": 0.7738791423001949,
+        "n_entities": 1026
+      },
+      "chosen": {
+        "size": 50,
+        "weight": 8.0,
+        "wer": 0.19620896432564286,
+        "recall": 0.7787524366471735,
+        "n_entities": 1026
+      }
+    }
+  ],
+  "check": [
+    {
+      "test_set": "fleurs-it",
+      "e4_dev_wer": 0.06441241685144124,
+      "e9_dev_wer": 0.06441241685144124
+    },
+    {
+      "test_set": "fleurs-de",
+      "e4_dev_wer": 0.10890688259109312,
+      "e9_dev_wer": 0.10890688259109312
+    },
+    {
+      "test_set": "fleurs-en",
+      "e4_dev_wer": 0.14609877442058003,
+      "e9_dev_wer": 0.14609877442058003
+    },
+    {
+      "test_set": "voxpopuli-it",
+      "e4_dev_wer": 0.19511637361520479,
+      "e9_dev_wer": 0.19511637361520479
+    }
+  ],
+  "test_sets": [
+    {
+      "name": "fleurs-it",
+      "lang": "it",
+      "normalizer": "it-v2",
+      "n_utterances": 865,
+      "n_words": 21262,
+      "n_entities": 578,
+      "n_speakers": 865,
+      "models": {
+        "whisper": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/whisper-large-v3-turbo-float16-fleurs-it",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "condition_on_previous_text": false,
+                "vad_filter": false
+              },
+              "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+              "rtf": 0.03357517049074412
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-turbo-oracle-fleurs-it",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": null,
+                "word_timestamps": false,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "53bc2faed9fba167bd0a2e5106cdb11f073e740e8c9489ce09c301dbf2b11f8b"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.0341206636758003
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-turbo-distractors-fleurs-it",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": null,
+                "word_timestamps": false,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "70dae29c73bb930c98aa81e2f4e041cda94e7b7e238ddbd2bfa8baa693ae63ac"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.0341603188944531
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.814878892733564,
+              "recall_low": 0.7671805446451951,
+              "recall_high": 0.863463785046729,
+              "wer": 0.02398645470792964,
+              "low": 0.02035014443367341,
+              "high": 0.027980700923306304,
+              "unit": "sentence_id",
+              "cer": 0.006535597988105976,
+              "substitutions": 404,
+              "deletions": 44,
+              "insertions": 62,
+              "errors": 510,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 107,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.986159169550173,
+              "recall_low": 0.9745134792112252,
+              "recall_high": 0.9951221491922712,
+              "wer": 0.018718841125011758,
+              "low": 0.01586289519749556,
+              "high": 0.021699062656355364,
+              "unit": "sentence_id",
+              "cer": 0.005641253000259895,
+              "substitutions": 307,
+              "deletions": 44,
+              "insertions": 47,
+              "errors": 398,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 8,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "distractors": {
+              "recall": 0.8114186851211073,
+              "recall_low": 0.765327033340412,
+              "recall_high": 0.8604250554688142,
+              "wer": 0.025068196782993133,
+              "low": 0.021343216877643203,
+              "high": 0.029074008383734844,
+              "unit": "sentence_id",
+              "cer": 0.006803137087034291,
+              "substitutions": 424,
+              "deletions": 45,
+              "insertions": 64,
+              "errors": 533,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 109,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            }
+          }
+        },
+        "ctc": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/e4-europarl-5-fleurs-it",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+                  "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+                "decoding": {
+                  "alpha": 0.7,
+                  "beta": 5.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                }
+              },
+              "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+              "rtf": 0.0025196443347647608
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-ctc-oracle-fleurs-it",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+                  "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+                "decoding": {
+                  "alpha": 0.7,
+                  "beta": 5.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "oracle",
+                "hotword_weight": 21.0,
+                "entities_sha256": "d2e75426caa015b118e42fab733c004bf56f118fd28f5226d580cc156ebce954"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.001446558173309853
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-ctc-distractors-fleurs-it",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+                  "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+                "decoding": {
+                  "alpha": 0.7,
+                  "beta": 5.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "distractors",
+                "hotword_weight": 21.0,
+                "entities_sha256": "2598bced4da106dc6e92e3a623e2370c9f8534f3a290b697dd603ca422cc9c6c"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.001522386308895525
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.643598615916955,
+              "recall_low": 0.585306717462292,
+              "recall_high": 0.7035942587529285,
+              "wer": 0.0641049760135453,
+              "low": 0.05761938358591543,
+              "high": 0.07068789472654433,
+              "unit": "sentence_id",
+              "cer": 0.015394964149760744,
+              "substitutions": 974,
+              "deletions": 191,
+              "insertions": 198,
+              "errors": 1363,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 206,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.8252595155709342,
+              "recall_low": 0.779284583968654,
+              "recall_high": 0.8675139781100012,
+              "wer": 0.058414072053428655,
+              "low": 0.0524304537332304,
+              "high": 0.06473981595564905,
+              "unit": "sentence_id",
+              "cer": 0.014447111342128999,
+              "substitutions": 865,
+              "deletions": 166,
+              "insertions": 211,
+              "errors": 1242,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 101,
+              "short_missed_entities": 0,
+              "invented": 12,
+              "invented_without_list": 0,
+              "most_invented": [
+                [
+                  "h",
+                  12
+                ]
+              ]
+            },
+            "distractors": {
+              "recall": 0.643598615916955,
+              "recall_low": 0.585306717462292,
+              "recall_high": 0.7035942587529285,
+              "wer": 0.0650926535603424,
+              "low": 0.058599149835458435,
+              "high": 0.07166342782977646,
+              "unit": "sentence_id",
+              "cer": 0.015578419531883016,
+              "substitutions": 992,
+              "deletions": 191,
+              "insertions": 201,
+              "errors": 1384,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 206,
+              "short_missed_entities": 0,
+              "invented": 2,
+              "invented_without_list": 0,
+              "most_invented": [
+                [
+                  "stato",
+                  2
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "comparisons": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.171280276816609,
+          "low": 0.12612572608132114,
+          "high": 0.21819219931781106
+        },
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": -0.0052676135829178815,
+          "low": -0.007460817372900751,
+          "high": -0.003223191713113502
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 0.5760000000000001,
+          "p_holm": 1.0,
+          "significant": false,
+          "unit": "utterance",
+          "delta": -0.003460207612456745,
+          "low": -0.01317957166392092,
+          "high": 0.005455544455544462
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.12200000000000011,
+          "p_holm": 0.3660000000000003,
+          "significant": false,
+          "unit": "sentence_id",
+          "delta": 0.0010817420750634937,
+          "low": -0.00023203042889018334,
+          "high": 0.0023847927811214077
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.18166089965397925,
+          "low": 0.14235469212622112,
+          "high": 0.22518877923976605
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": -0.005690903960116643,
+          "low": -0.008315328098247778,
+          "high": -0.003243098179365783
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 1.0,
+          "p_holm": 1.0,
+          "significant": false,
+          "unit": "utterance",
+          "delta": 0.0,
+          "low": 0.0,
+          "high": 0.0
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.0009876775467971,
+          "low": 0.0005153583405616347,
+          "high": 0.0015272422756208886
+        }
+      ],
+      "without_short": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "n_utterances": 865,
+          "wer_without_list": 0.02398645470792964,
+          "wer_with_list": 0.018718841125011758,
+          "delta": -0.0052676135829178815,
+          "low": -0.007460817372900751,
+          "high": -0.003223191713113502
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "n_utterances": 865,
+          "wer_without_list": 0.02398645470792964,
+          "wer_with_list": 0.025068196782993133,
+          "delta": 0.0010817420750634937,
+          "low": -0.00023203042889018334,
+          "high": 0.0023847927811214077
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "n_utterances": 865,
+          "wer_without_list": 0.0641049760135453,
+          "wer_with_list": 0.058414072053428655,
+          "delta": -0.005690903960116643,
+          "low": -0.008315328098247778,
+          "high": -0.003243098179365783
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "n_utterances": 865,
+          "wer_without_list": 0.0641049760135453,
+          "wer_with_list": 0.0650926535603424,
+          "delta": 0.0009876775467971,
+          "low": 0.0005153583405616347,
+          "high": 0.0015272422756208886
+        }
+      ]
+    },
+    {
+      "name": "fleurs-de",
+      "lang": "de",
+      "normalizer": "de-v1",
+      "n_utterances": 862,
+      "n_words": 18703,
+      "n_entities": 639,
+      "n_speakers": 862,
+      "models": {
+        "whisper": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/whisper-large-v3-turbo-float16-fleurs-de",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "condition_on_previous_text": false,
+                "vad_filter": false
+              },
+              "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+              "rtf": 0.03690197182072903
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-turbo-oracle-fleurs-de",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": null,
+                "word_timestamps": false,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "ca81635e71d4fa96df9d19995158ce42eaec8a18a3ccfdb3e922a4f9fbdda363"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.03756858718846096
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-turbo-distractors-fleurs-de",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": null,
+                "word_timestamps": false,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "fcbf86173fc62051bb845d18300f138ef97aa27b4e01286d751c2b94d70bd3ca"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.03743904011692349
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.8012519561815337,
+              "recall_low": 0.7552718283384517,
+              "recall_high": 0.8398976437561114,
+              "wer": 0.04448484200395658,
+              "low": 0.039142101678136705,
+              "high": 0.05005265953276778,
+              "unit": "sentence_id",
+              "cer": 0.01435481476271968,
+              "substitutions": 612,
+              "deletions": 89,
+              "insertions": 131,
+              "errors": 832,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 127,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.9546165884194053,
+              "recall_low": 0.930903325288281,
+              "recall_high": 0.9729394693200664,
+              "wer": 0.036625140351815216,
+              "low": 0.03213222617138801,
+              "high": 0.041518461474095644,
+              "unit": "sentence_id",
+              "cer": 0.01245594705050363,
+              "substitutions": 484,
+              "deletions": 79,
+              "insertions": 122,
+              "errors": 685,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 29,
+              "short_missed_entities": 0,
+              "invented": 5,
+              "invented_without_list": 1,
+              "most_invented": [
+                [
+                  "hongkong",
+                  3
+                ],
+                [
+                  "addenbrooke",
+                  2
+                ]
+              ]
+            },
+            "distractors": {
+              "recall": 0.7934272300469484,
+              "recall_low": 0.7460630074573104,
+              "recall_high": 0.8355954086098512,
+              "wer": 0.043896701064000426,
+              "low": 0.03868438776288855,
+              "high": 0.049497916230724734,
+              "unit": "sentence_id",
+              "cer": 0.014120386650100413,
+              "substitutions": 604,
+              "deletions": 97,
+              "insertions": 120,
+              "errors": 821,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 132,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            }
+          }
+        },
+        "ctc": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/e4-europarl-5-fleurs-de",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+                  "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "75d10572ca8894d6509498e056e5a210df8b0deff994908c56a793cc452a87c0",
+                "decoding": {
+                  "alpha": 0.5,
+                  "beta": 3.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                }
+              },
+              "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+              "rtf": 0.004020754862591037
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-ctc-oracle-fleurs-de",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+                  "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "75d10572ca8894d6509498e056e5a210df8b0deff994908c56a793cc452a87c0",
+                "decoding": {
+                  "alpha": 0.5,
+                  "beta": 3.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "oracle",
+                "hotword_weight": 21.0,
+                "entities_sha256": "257239efac346b06b94d7e3fa89f0f71ecd4280f3b743060ee1c0f358f8670b2"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.002424266096675489
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-ctc-distractors-fleurs-de",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-german-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-german",
+                  "revision": "4b8a02957378d0f2da2ef74091156b032c485a89",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "75d10572ca8894d6509498e056e5a210df8b0deff994908c56a793cc452a87c0",
+                "decoding": {
+                  "alpha": 0.5,
+                  "beta": 3.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "distractors",
+                "hotword_weight": 21.0,
+                "entities_sha256": "26f108d825ee21dad3f458bf0093cb309b0e40622ae739fa6e6d16212c1d4c1a"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.0024641749255021263
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.5446009389671361,
+              "recall_low": 0.49243624518850104,
+              "recall_high": 0.5993815676337876,
+              "wer": 0.11099823557718014,
+              "low": 0.1012918230982794,
+              "high": 0.12168364990463158,
+              "unit": "sentence_id",
+              "cer": 0.047870220596853974,
+              "substitutions": 1604,
+              "deletions": 259,
+              "insertions": 213,
+              "errors": 2076,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 291,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.7949921752738655,
+              "recall_low": 0.7526142000812879,
+              "recall_high": 0.8354208891794703,
+              "wer": 0.09843340640538951,
+              "low": 0.08973215063107731,
+              "high": 0.10829984526035734,
+              "unit": "sentence_id",
+              "cer": 0.04589321018043151,
+              "substitutions": 1431,
+              "deletions": 212,
+              "insertions": 198,
+              "errors": 1841,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 131,
+              "short_missed_entities": 0,
+              "invented": 2,
+              "invented_without_list": 3,
+              "most_invented": [
+                [
+                  "goma",
+                  1
+                ],
+                [
+                  "h",
+                  1
+                ]
+              ]
+            },
+            "distractors": {
+              "recall": 0.5446009389671361,
+              "recall_low": 0.49243624518850104,
+              "recall_high": 0.5993815676337876,
+              "wer": 0.11217451745709245,
+              "low": 0.10254412862606846,
+              "high": 0.12324727386376291,
+              "unit": "sentence_id",
+              "cer": 0.04801869173484618,
+              "substitutions": 1627,
+              "deletions": 257,
+              "insertions": 214,
+              "errors": 2098,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 291,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            }
+          }
+        }
+      },
+      "comparisons": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.15336463223787167,
+          "low": 0.11308924512790756,
+          "high": 0.19460348633999727
+        },
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": -0.007859701652141365,
+          "low": -0.010756439323374577,
+          "high": -0.005227109151472606
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 0.248,
+          "p_holm": 0.744,
+          "significant": false,
+          "unit": "sentence_id",
+          "delta": -0.007824726134585291,
+          "low": -0.020168916051269005,
+          "high": 0.004273656680931986
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.45199999999999996,
+          "p_holm": 0.9039999999999999,
+          "significant": false,
+          "unit": "utterance",
+          "delta": -0.0005881409399561555,
+          "low": -0.002050661274813554,
+          "high": 0.0007456674260119658
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.2503912363067293,
+          "low": 0.20262854490255822,
+          "high": 0.2983054726955905
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": -0.012564829171790623,
+          "low": -0.0158781953027624,
+          "high": -0.009072696456063388
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 1.0,
+          "p_holm": 1.0,
+          "significant": false,
+          "unit": "utterance",
+          "delta": 0.0,
+          "low": 0.0,
+          "high": 0.0
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.001176281879912311,
+          "low": 0.0004880509148262286,
+          "high": 0.0020186814274375793
+        }
+      ],
+      "without_short": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "n_utterances": 862,
+          "wer_without_list": 0.04448484200395658,
+          "wer_with_list": 0.036625140351815216,
+          "delta": -0.007859701652141365,
+          "low": -0.010756439323374577,
+          "high": -0.005227109151472606
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "n_utterances": 862,
+          "wer_without_list": 0.04448484200395658,
+          "wer_with_list": 0.043896701064000426,
+          "delta": -0.0005881409399561555,
+          "low": -0.002050661274813554,
+          "high": 0.0007456674260119658
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "n_utterances": 862,
+          "wer_without_list": 0.11099823557718014,
+          "wer_with_list": 0.09843340640538951,
+          "delta": -0.012564829171790623,
+          "low": -0.0158781953027624,
+          "high": -0.009072696456063388
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "n_utterances": 862,
+          "wer_without_list": 0.11099823557718014,
+          "wer_with_list": 0.11217451745709245,
+          "delta": 0.001176281879912311,
+          "low": 0.0004880509148262286,
+          "high": 0.0020186814274375793
+        }
+      ]
+    },
+    {
+      "name": "fleurs-en",
+      "lang": "en",
+      "normalizer": "en-v1",
+      "n_utterances": 647,
+      "n_words": 14467,
+      "n_entities": 451,
+      "n_speakers": 647,
+      "models": {
+        "whisper": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/whisper-large-v3-turbo-float16-fleurs-en",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "condition_on_previous_text": false,
+                "vad_filter": false
+              },
+              "git_commit": "1865530860f85c65447a7cc45fbffcba30781d7b",
+              "rtf": 0.04391865583885156
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-turbo-oracle-fleurs-en",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": null,
+                "word_timestamps": false,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "4d081ac6bdd97f58592c6b9e08ca4d02af0b56f69adc0dfa27861ca13fbb20a5"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.04504155148890868
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-turbo-distractors-fleurs-en",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": null,
+                "word_timestamps": false,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "210969d82846d64685b7b5631e7693362eb4762c7c33dcf51a7ba8194bbd7209"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.04449183110724966
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.7760532150776054,
+              "recall_low": 0.726094774895647,
+              "recall_high": 0.8284192757735864,
+              "wer": 0.05004492984032626,
+              "low": 0.04448529460992487,
+              "high": 0.05552599176903224,
+              "unit": "sentence_id",
+              "cer": 0.0213126087682075,
+              "substitutions": 517,
+              "deletions": 110,
+              "insertions": 97,
+              "errors": 724,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 101,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.9556541019955654,
+              "recall_low": 0.9293780633815991,
+              "recall_high": 0.9795473725576092,
+              "wer": 0.04257966406304002,
+              "low": 0.03741115338548179,
+              "high": 0.04754700764380956,
+              "unit": "sentence_id",
+              "cer": 0.018904808448756763,
+              "substitutions": 427,
+              "deletions": 109,
+              "insertions": 80,
+              "errors": 616,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 20,
+              "short_missed_entities": 0,
+              "invented": 2,
+              "invented_without_list": 2,
+              "most_invented": [
+                [
+                  "vatican city",
+                  2
+                ]
+              ]
+            },
+            "distractors": {
+              "recall": 0.7694013303769401,
+              "recall_low": 0.7175251288659794,
+              "recall_high": 0.8222862681085492,
+              "wer": 0.04963019285269925,
+              "low": 0.044133364814927814,
+              "high": 0.05552311928641963,
+              "unit": "sentence_id",
+              "cer": 0.021050373089851478,
+              "substitutions": 521,
+              "deletions": 102,
+              "insertions": 95,
+              "errors": 718,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 104,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            }
+          }
+        },
+        "ctc": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/e4-europarl-5-fleurs-en",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+                  "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "feb414330ca4b5806893f61e532e50a81a04d50aed03e2368c4e1d8b13647fdb",
+                "decoding": {
+                  "alpha": 0.3,
+                  "beta": 2.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                }
+              },
+              "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+              "rtf": 0.009327257926548873
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-ctc-oracle-fleurs-en",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+                  "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "feb414330ca4b5806893f61e532e50a81a04d50aed03e2368c4e1d8b13647fdb",
+                "decoding": {
+                  "alpha": 0.3,
+                  "beta": 2.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "oracle",
+                "hotword_weight": 21.0,
+                "entities_sha256": "a7156f74dc4322ad44d60660e5ef754a977d68a1b8000b99ab78173b2072c166"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.004617972936489302
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-ctc-distractors-fleurs-en",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+                  "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "feb414330ca4b5806893f61e532e50a81a04d50aed03e2368c4e1d8b13647fdb",
+                "decoding": {
+                  "alpha": 0.3,
+                  "beta": 2.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "distractors",
+                "hotword_weight": 21.0,
+                "entities_sha256": "b04e85682699889968036101cf0ad6dbef7d257d4ea87ed9ae8eaa469dd26bd6"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.004852567777673343
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.5254988913525499,
+              "recall_low": 0.4615338164251208,
+              "recall_high": 0.5862941270220735,
+              "wer": 0.13548074929149098,
+              "low": 0.12456181868687767,
+              "high": 0.14754769944598217,
+              "unit": "sentence_id",
+              "cer": 0.06541588194626552,
+              "substitutions": 1478,
+              "deletions": 241,
+              "insertions": 241,
+              "errors": 1960,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 214,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.7427937915742794,
+              "recall_low": 0.6890722417999458,
+              "recall_high": 0.7941768476796581,
+              "wer": 0.12843022050183175,
+              "low": 0.11842782145103545,
+              "high": 0.139722322094228,
+              "unit": "sentence_id",
+              "cer": 0.06352063317996519,
+              "substitutions": 1380,
+              "deletions": 208,
+              "insertions": 270,
+              "errors": 1858,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 116,
+              "short_missed_entities": 0,
+              "invented": 36,
+              "invented_without_list": 6,
+              "most_invented": [
+                [
+                  "south africa",
+                  3
+                ],
+                [
+                  "un",
+                  3
+                ],
+                [
+                  "ai",
+                  2
+                ],
+                [
+                  "aristotle",
+                  2
+                ],
+                [
+                  "canada",
+                  2
+                ]
+              ]
+            },
+            "distractors": {
+              "recall": 0.5232815964523281,
+              "recall_low": 0.46027589436867844,
+              "recall_high": 0.5855661124542954,
+              "wer": 0.1365175917605585,
+              "low": 0.12562691918180946,
+              "high": 0.1486087753781724,
+              "unit": "sentence_id",
+              "cer": 0.06558275919612845,
+              "substitutions": 1484,
+              "deletions": 242,
+              "insertions": 249,
+              "errors": 1975,
+              "short": 0,
+              "short_errors": 0,
+              "missed_entities": 215,
+              "short_missed_entities": 0,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            }
+          }
+        }
+      },
+      "comparisons": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.17960088691796008,
+          "low": 0.13655421784098254,
+          "high": 0.22495148033813966
+        },
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": -0.007465265777286241,
+          "low": -0.010509829435861888,
+          "high": -0.0044290784551989275
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 0.32800000000000007,
+          "p_holm": 0.9840000000000002,
+          "significant": false,
+          "unit": "sentence_id",
+          "delta": -0.006651884700665189,
+          "low": -0.019089702847033384,
+          "high": 0.00413309228650139
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.6519999999999999,
+          "p_holm": 1.0,
+          "significant": false,
+          "unit": "utterance",
+          "delta": -0.0004147369876270138,
+          "low": -0.0019498005128140241,
+          "high": 0.0011177659436956836
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.21729490022172948,
+          "low": 0.17919661236123086,
+          "high": 0.2599715139175519
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": -0.007050528789659227,
+          "low": -0.010197782416337828,
+          "high": -0.004252913108957039
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 0.8240000000000001,
+          "p_holm": 1.0,
+          "significant": false,
+          "unit": "utterance",
+          "delta": -0.002217294900221767,
+          "low": -0.007446506727184322,
+          "high": 0.0
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.0020000000000000018,
+          "p_holm": 0.008000000000000007,
+          "significant": true,
+          "unit": "sentence_id",
+          "delta": 0.001036842469067517,
+          "low": 0.0003412189097474788,
+          "high": 0.0019373324998835973
+        }
+      ],
+      "without_short": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "n_utterances": 647,
+          "wer_without_list": 0.05004492984032626,
+          "wer_with_list": 0.04257966406304002,
+          "delta": -0.007465265777286241,
+          "low": -0.010509829435861888,
+          "high": -0.0044290784551989275
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "n_utterances": 647,
+          "wer_without_list": 0.05004492984032626,
+          "wer_with_list": 0.04963019285269925,
+          "delta": -0.0004147369876270138,
+          "low": -0.0019498005128140241,
+          "high": 0.0011177659436956836
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "n_utterances": 647,
+          "wer_without_list": 0.13548074929149098,
+          "wer_with_list": 0.12843022050183175,
+          "delta": -0.007050528789659227,
+          "low": -0.010197782416337828,
+          "high": -0.004252913108957039
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "n_utterances": 647,
+          "wer_without_list": 0.13548074929149098,
+          "wer_with_list": 0.1365175917605585,
+          "delta": 0.001036842469067517,
+          "low": 0.0003412189097474788,
+          "high": 0.0019373324998835973
+        }
+      ]
+    },
+    {
+      "name": "voxpopuli-it",
+      "lang": "it",
+      "normalizer": "it-v2",
+      "n_utterances": 1177,
+      "n_words": 37454,
+      "n_entities": 956,
+      "n_speakers": 81,
+      "models": {
+        "whisper": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/e1b-whisper-turbo-voxpopuli-it",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": 2.0,
+                "word_timestamps": true,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0
+              },
+              "git_commit": "5e276fa7dce812c94964413f5f8a515f9ad24dea",
+              "rtf": 0.041520851129244904
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-turbo-oracle-voxpopuli-it",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": 2.0,
+                "word_timestamps": true,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "a3204ac5314458e547c58853dfb960b39ea9facba1a3fb586844e9d63a9837c2"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.042422396707480305
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-turbo-distractors-voxpopuli-it",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": 2.0,
+                "word_timestamps": true,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "28e0549d1f82c442d42bfb7386e5bec84e1e11502ee88cfef754c09788a805d8"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.0416458152302613
+            },
+            "domain-50": {
+              "run_dir": "experiments/runs/e9-turbo-domain-50-voxpopuli-it",
+              "model": "faster-whisper/large-v3-turbo-float16",
+              "model_config": {
+                "library": "faster-whisper",
+                "library_version": "1.2.1",
+                "model_size": "large-v3-turbo",
+                "compute_type": "float16",
+                "device": "cuda",
+                "cpu_threads": 4,
+                "beam_size": 5,
+                "temperature": [
+                  0.0,
+                  0.2,
+                  0.4,
+                  0.6,
+                  0.8,
+                  1.0
+                ],
+                "compression_ratio_threshold": 2.4,
+                "log_prob_threshold": -1.0,
+                "no_speech_threshold": 0.6,
+                "vad_filter": false,
+                "hallucination_silence_threshold": 2.0,
+                "word_timestamps": true,
+                "condition_on_previous_text": false,
+                "best_of": 5,
+                "patience": 1.0,
+                "length_penalty": 1.0,
+                "initial_prompts_sha256": "d4a99d0fef6a5123fa8128c8d8c36a65050cb0d007f5291daaef7afe789d9249"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.04349324693638378
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.8305439330543933,
+              "recall_low": 0.7885067836179872,
+              "recall_high": 0.8639213554407901,
+              "wer": 0.19111443370534523,
+              "low": 0.16119837368451692,
+              "high": 0.22182917146083977,
+              "unit": "speaker",
+              "cer": 0.15593416235004304,
+              "substitutions": 1782,
+              "deletions": 3964,
+              "insertions": 1412,
+              "errors": 7158,
+              "short": 81,
+              "short_errors": 1970,
+              "missed_entities": 162,
+              "short_missed_entities": 53,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.8692468619246863,
+              "recall_low": 0.832867294520548,
+              "recall_high": 0.898750394352867,
+              "wer": 0.18729641693811075,
+              "low": 0.15944654804880548,
+              "high": 0.21830582578196983,
+              "unit": "speaker",
+              "cer": 0.1519648370931547,
+              "substitutions": 1742,
+              "deletions": 3905,
+              "insertions": 1368,
+              "errors": 7015,
+              "short": 80,
+              "short_errors": 1877,
+              "missed_entities": 125,
+              "short_missed_entities": 49,
+              "invented": 1,
+              "invented_without_list": 1,
+              "most_invented": [
+                [
+                  "europa",
+                  1
+                ]
+              ]
+            },
+            "distractors": {
+              "recall": 0.8138075313807531,
+              "recall_low": 0.771536086970381,
+              "recall_high": 0.8496548366415155,
+              "wer": 0.2024349869172852,
+              "low": 0.1724409586468316,
+              "high": 0.23579517744835196,
+              "unit": "speaker",
+              "cer": 0.16663995140634755,
+              "substitutions": 1807,
+              "deletions": 4454,
+              "insertions": 1321,
+              "errors": 7582,
+              "short": 106,
+              "short_errors": 2597,
+              "missed_entities": 178,
+              "short_missed_entities": 71,
+              "invented": 26,
+              "invented_without_list": 2,
+              "most_invented": [
+                [
+                  "unione europea",
+                  22
+                ],
+                [
+                  "commissario",
+                  1
+                ],
+                [
+                  "commissario barnier",
+                  1
+                ],
+                [
+                  "consiglio",
+                  1
+                ],
+                [
+                  "unione",
+                  1
+                ]
+              ]
+            },
+            "domain-50": {
+              "recall": 0.8577405857740585,
+              "recall_low": 0.8225781626563118,
+              "recall_high": 0.8865005090864934,
+              "wer": 0.1704490842099642,
+              "low": 0.14719187036824838,
+              "high": 0.19723358398820434,
+              "unit": "speaker",
+              "cer": 0.13473349418732178,
+              "substitutions": 1859,
+              "deletions": 2952,
+              "insertions": 1573,
+              "errors": 6384,
+              "short": 42,
+              "short_errors": 786,
+              "missed_entities": 136,
+              "short_missed_entities": 24,
+              "invented": 68,
+              "invented_without_list": 51,
+              "most_invented": [
+                [
+                  "presidente",
+                  10
+                ],
+                [
+                  "europa",
+                  7
+                ],
+                [
+                  "stati",
+                  7
+                ],
+                [
+                  "stato",
+                  7
+                ],
+                [
+                  "unione",
+                  6
+                ]
+              ]
+            }
+          }
+        },
+        "ctc": {
+          "runs": {
+            "none": {
+              "run_dir": "experiments/runs/e4-europarl-5-voxpopuli-it",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+                  "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+                "decoding": {
+                  "alpha": 0.7,
+                  "beta": 3.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                }
+              },
+              "git_commit": "0058f457dc3f9ecd8aa51cec4f9ae5174de7e362",
+              "rtf": 0.007177425053116715
+            },
+            "oracle": {
+              "run_dir": "experiments/runs/e9-ctc-oracle-voxpopuli-it",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+                  "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+                "decoding": {
+                  "alpha": 0.7,
+                  "beta": 3.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "oracle",
+                "hotword_weight": 21.0,
+                "entities_sha256": "6f60414e23ab89a90346b27e75e0628dea67ba8cbea2d9398d2b6ec574d70ba5"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.004414835535738975
+            },
+            "distractors": {
+              "run_dir": "experiments/runs/e9-ctc-distractors-voxpopuli-it",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+                  "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+                "decoding": {
+                  "alpha": 0.7,
+                  "beta": 3.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "distractors",
+                "hotword_weight": 21.0,
+                "entities_sha256": "25f3b74409d9e0da4076b63dfaaa1479212d53f61de02954c0126556db5eb49a"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.004371649846086198
+            },
+            "domain-50": {
+              "run_dir": "experiments/runs/e9-ctc-domain-50-voxpopuli-it",
+              "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-italian-float16+europarl-5",
+              "model_config": {
+                "acoustic_model": {
+                  "library": "transformers",
+                  "library_version": "5.21.0",
+                  "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-italian",
+                  "revision": "dab04a3e00d8326052f3fb22a6ff276b822f6131",
+                  "dtype": "float16",
+                  "device": "cuda",
+                  "decoding": "ctc-greedy"
+                },
+                "language_model": "europarl-5",
+                "language_model_sha256": "78d20cb2f0de299206525c424a26a3c05a6f4640c4c09795d6eccedd342bab85",
+                "decoding": {
+                  "alpha": 0.7,
+                  "beta": 3.0,
+                  "beam_width": 100,
+                  "token_min_logp": -10.0,
+                  "beam_prune_logp": -20.0
+                },
+                "condition": "domain-50",
+                "hotword_weight": 8.0,
+                "entities_sha256": "fc3170839a4625a706b0e6f9f7a6b7e4c05a8d013b18624feaa2a4847a0714e3"
+              },
+              "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+              "rtf": 0.00436951687292032
+            }
+          },
+          "systems": {
+            "none": {
+              "recall": 0.7688284518828452,
+              "recall_low": 0.7285799907058235,
+              "recall_high": 0.8035738364925258,
+              "wer": 0.2179473487477973,
+              "low": 0.19500630177521106,
+              "high": 0.24374059131867448,
+              "unit": "speaker",
+              "cer": 0.1442328783302681,
+              "substitutions": 3163,
+              "deletions": 2836,
+              "insertions": 2164,
+              "errors": 8163,
+              "short": 7,
+              "short_errors": 75,
+              "missed_entities": 221,
+              "short_missed_entities": 2,
+              "invented": 0,
+              "invented_without_list": 0,
+              "most_invented": []
+            },
+            "oracle": {
+              "recall": 0.8284518828451883,
+              "recall_low": 0.7933123669960336,
+              "recall_high": 0.8562659079874648,
+              "wer": 0.2186415336145672,
+              "low": 0.19577867381267533,
+              "high": 0.244858458071112,
+              "unit": "speaker",
+              "cer": 0.14457033425008858,
+              "substitutions": 3167,
+              "deletions": 2810,
+              "insertions": 2212,
+              "errors": 8189,
+              "short": 7,
+              "short_errors": 75,
+              "missed_entities": 164,
+              "short_missed_entities": 2,
+              "invented": 55,
+              "invented_without_list": 4,
+              "most_invented": [
+                [
+                  "n",
+                  36
+                ],
+                [
+                  "italia",
+                  4
+                ],
+                [
+                  "europa",
+                  3
+                ],
+                [
+                  "iran",
+                  2
+                ],
+                [
+                  "consiglio",
+                  1
+                ]
+              ]
+            },
+            "distractors": {
+              "recall": 0.7656903765690377,
+              "recall_low": 0.7242047117502881,
+              "recall_high": 0.8008379470745095,
+              "wer": 0.21968281091472205,
+              "low": 0.19688585314068385,
+              "high": 0.24552551201990808,
+              "unit": "speaker",
+              "cer": 0.1445028430661245,
+              "substitutions": 3221,
+              "deletions": 2835,
+              "insertions": 2172,
+              "errors": 8228,
+              "short": 7,
+              "short_errors": 75,
+              "missed_entities": 224,
+              "short_missed_entities": 2,
+              "invented": 14,
+              "invented_without_list": 4,
+              "most_invented": [
+                [
+                  "n",
+                  3
+                ],
+                [
+                  "lei",
+                  2
+                ],
+                [
+                  "stato",
+                  2
+                ],
+                [
+                  "unione europea",
+                  2
+                ],
+                [
+                  "commissario",
+                  1
+                ]
+              ]
+            },
+            "domain-50": {
+              "recall": 0.7813807531380753,
+              "recall_low": 0.7406632568501774,
+              "recall_high": 0.8160086535590417,
+              "wer": 0.2184546376888984,
+              "low": 0.19539318774441164,
+              "high": 0.24438361939183606,
+              "unit": "speaker",
+              "cer": 0.1442624057232524,
+              "substitutions": 3171,
+              "deletions": 2814,
+              "insertions": 2197,
+              "errors": 8182,
+              "short": 7,
+              "short_errors": 75,
+              "missed_entities": 209,
+              "short_missed_entities": 2,
+              "invented": 136,
+              "invented_without_list": 76,
+              "most_invented": [
+                [
+                  "lei",
+                  22
+                ],
+                [
+                  "ue",
+                  22
+                ],
+                [
+                  "europa",
+                  15
+                ],
+                [
+                  "stato",
+                  14
+                ],
+                [
+                  "stati",
+                  13
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "comparisons": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "speaker",
+          "delta": 0.03870292887029289,
+          "low": 0.017029568229617726,
+          "high": 0.06261526031409381
+        },
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.29200000000000004,
+          "p_holm": 0.5840000000000001,
+          "significant": false,
+          "unit": "speaker",
+          "delta": -0.003818016767234478,
+          "low": -0.011330175496611687,
+          "high": 0.0031964641502252047
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 0.09200000000000008,
+          "p_holm": 0.3680000000000003,
+          "significant": false,
+          "unit": "utterance",
+          "delta": -0.016736401673640156,
+          "low": -0.03703889446116126,
+          "high": 0.0010993927772451218
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.03200000000000003,
+          "p_holm": 0.19200000000000017,
+          "significant": false,
+          "unit": "utterance",
+          "delta": 0.011320553211939977,
+          "low": 0.0012742901117723034,
+          "high": 0.022095438937686847
+        },
+        {
+          "model": "whisper",
+          "list": "domain-50",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "speaker",
+          "delta": 0.02719665271966526,
+          "low": 0.010963847726111402,
+          "high": 0.04499003067484661
+        },
+        {
+          "model": "whisper",
+          "list": "domain-50",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "speaker",
+          "delta": -0.020665349495381014,
+          "low": -0.03108109353120022,
+          "high": -0.009950400210845737
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "speaker",
+          "delta": 0.0596234309623431,
+          "low": 0.0406712516087516,
+          "high": 0.08225554272192012
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "metric": "wer",
+          "p_value": 0.48,
+          "p_holm": 0.5840000000000001,
+          "significant": false,
+          "unit": "utterance",
+          "delta": 0.0006941848667698924,
+          "low": -0.0008899803993193678,
+          "high": 0.0027225670075659673
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "recall",
+          "p_value": 0.06400000000000006,
+          "p_holm": 0.3200000000000003,
+          "significant": false,
+          "unit": "utterance",
+          "delta": -0.0031380753138075257,
+          "low": -0.007196490466315794,
+          "high": 0.0
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "metric": "wer",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "speaker",
+          "delta": 0.001735462166924745,
+          "low": 0.0010651967025885702,
+          "high": 0.0026076796446348363
+        },
+        {
+          "model": "ctc",
+          "list": "domain-50",
+          "metric": "recall",
+          "p_value": 0.0,
+          "p_holm": 0.0,
+          "significant": true,
+          "unit": "speaker",
+          "delta": 0.01255230125523013,
+          "low": 0.005033620032073426,
+          "high": 0.02214032892077173
+        },
+        {
+          "model": "ctc",
+          "list": "domain-50",
+          "metric": "wer",
+          "p_value": 0.15399999999999991,
+          "p_holm": 0.46199999999999974,
+          "significant": false,
+          "unit": "speaker",
+          "delta": 0.0005072889411010806,
+          "low": -0.00021392394863145727,
+          "high": 0.0012093917614719619
+        }
+      ],
+      "without_short": [
+        {
+          "model": "whisper",
+          "list": "oracle",
+          "n_utterances": 1082,
+          "wer_without_list": 0.14386987965583284,
+          "wer_with_list": 0.14249778463825286,
+          "delta": -0.0013720950175799829,
+          "low": -0.003029754659009211,
+          "high": 0.0004722614413496959
+        },
+        {
+          "model": "whisper",
+          "list": "distractors",
+          "n_utterances": 1045,
+          "wer_without_list": 0.1397925506836398,
+          "wer_with_list": 0.1381129184347006,
+          "delta": -0.001679632248939189,
+          "low": -0.003951525388489271,
+          "high": 0.0005007316311950476
+        },
+        {
+          "model": "whisper",
+          "list": "domain-50",
+          "n_utterances": 1085,
+          "wer_without_list": 0.1452331620923566,
+          "wer_with_list": 0.14412624528141232,
+          "delta": -0.0011069168109442695,
+          "low": -0.0030546148957486673,
+          "high": 0.0009692674877980531
+        },
+        {
+          "model": "ctc",
+          "list": "oracle",
+          "n_utterances": 1170,
+          "wer_without_list": 0.21641291841703905,
+          "wer_with_list": 0.21710860781847857,
+          "delta": 0.0006956894014395199,
+          "low": -0.0009023903949730307,
+          "high": 0.002972177186770544
+        },
+        {
+          "model": "ctc",
+          "list": "distractors",
+          "n_utterances": 1170,
+          "wer_without_list": 0.21641291841703905,
+          "wer_with_list": 0.2181521419206379,
+          "delta": 0.0017392235035988413,
+          "low": 0.0010686305057641108,
+          "high": 0.0026153257904257977
+        },
+        {
+          "model": "ctc",
+          "list": "domain-50",
+          "n_utterances": 1170,
+          "wer_without_list": 0.21641291841703905,
+          "wer_with_list": 0.2169213068257833,
+          "delta": 0.0005083884087442592,
+          "low": -0.00021445520103317292,
+          "high": 0.0012119850259559473
+        }
+      ]
+    }
+  ],
+  "created": "2026-11-03T16:34:20+00:00",
+  "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94"
+}

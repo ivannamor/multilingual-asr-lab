@@ -16,9 +16,10 @@ that regenerates it.
 7. [E4. How much does a language model help a CTC model?](#e4-how-much-does-a-language-model-help-a-ctc-model)
 8. [E6. Which training transcripts can be trusted?](#e6-which-training-transcripts-can-be-trusted)
 9. [E7. Does the choice of training data matter when the amount does not?](#e7-does-the-choice-of-training-data-matter-when-the-amount-does-not)
-10. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
+10. [E9. Can a list of names help a model write them?](#e9-can-a-list-of-names-help-a-model-write-them)
+11. [E10. Usage analytics: where should a product team invest?](#e10-usage-analytics-where-should-a-product-team-invest)
    (simulated traffic, real audio and errors)
-11. [Limitations and next steps](#limitations-and-next-steps)
+12. [Limitations and next steps](#limitations-and-next-steps)
 
 ## Executive summary
 
@@ -74,6 +75,14 @@ that regenerates it.
   5-gram adds almost nothing to a 3-gram. English stays at about twice the error of Whisper-small
   (13.55% against 6.59%), and on parliamentary speech only 293 of the 1,648 errors removed are at the
   segment edges.
+- **A list of the expected names helps both kinds of model, and a wrong or noisy list has a cost.** With
+  the names of each utterance, entity recall on FLEURS rises by 15 to 18 points for large-v3-turbo (to
+  95.5%-98.6%) and by 18 to 25 points for a CTC model with hotwords, and the WER falls by 0.53 to 1.26
+  points. A list of another utterance's names costs CTC 0.10 to 0.17 points of WER on every set. On
+  parliamentary speech, a list of the commonest names of the domain lowers Whisper's WER by 2.07 points,
+  but by preventing transcripts that collapse into "Grazie a tutti" (81 to 42), not by writing more names:
+  on the other utterances the WER does not change. Hotwords also write the tagger's mistakes: one letter
+  tagged as a name was written 36 times in one utterance.
 - **In simulated usage, competing speakers are the problem, and confidence helps find it.** On
   3,000 sessions with simulated traffic but real noise, telephone degradations and transcripts,
   large-v3-turbo's WER is 3.56% in quiet rooms and 45.47% with babble at 0 dB on a headset, where
@@ -1679,6 +1688,260 @@ and regenerates the tables. The fine-tuning and the transcriptions come from
 [`notebooks/e7_finetune_colab.ipynb`](notebooks/e7_finetune_colab.ipynb) (about 3 hours on a Colab
 A100).
 
+## E9. Can a list of names help a model write them?
+
+**Question.** A model often gets a name wrong and the rest right, and the WER barely shows it. When an
+application knows which names to expect, such as a contact list or the members of a committee, how much
+does giving them to the model help, and what does a wrong list cost?
+
+**Method.** Entities, lists, settings, selection rule and comparisons were fixed in
+[`experiments/E9/biasing.toml`](experiments/E9/biasing.toml) before any list was given to a model on a
+dev or test set
+([decision 30](docs/design.md#30-lists-of-entities-for-whisper-and-ctc-with-the-metric-on-the-entities)),
+except for the change declared below.
+
+- **Entities.** spaCy's large models (`it_core_news_lg`, `de_core_news_lg`, `en_core_web_lg`) tag the
+  people, places and organizations of the references, with a filter that drops single words at the start
+  of a sentence, and the result is committed in
+  [`entities.json`](experiments/E9/results/entities.json). The tagger makes mistakes: in a hand-read
+  sample of 30 dev entities per set, errors were few in Italian and English and more frequent in German,
+  where every noun is capitalized, and the test lists hold non-names such as the pronoun `Lei` and a
+  single letter `N`. Recall is measured on these entities, the same in every condition.
+- **Metric.** Entity recall: an occurrence counts as written only if all its words are aligned as correct
+  in its own position. Next to it, the WER, the CER and the entities of the list written more often than
+  the reference says them.
+- **Lists.** No list; *oracle*, the entities of the utterance itself, an upper bound that uses the
+  reference; *distractors*, the entities of another utterance of the same set sharing none with it, the
+  cost of a wrong list; and *domain*, on VoxPopuli only, the commonest entities of the 3,000 training
+  utterances of E6, the same list for every utterance, the realistic case.
+- **Models.** Whisper large-v3-turbo, with the decoding of E1b, gets the list as its initial prompt
+  ("Roma, Unione europea."). faster-whisper keeps the prompt's last 223 tokens, so the commonest
+  entities go last, and with `condition_on_previous_text` off the prompt affects the first 30 seconds
+  only. The XLS-R CTC models, with the Europarl 5-gram and the weights of E4, get the words of the list
+  as hotwords: our beam search adds a bonus when it ends a listed word.
+- **Selection on dev.** The highest entity recall among the settings whose dev WER is at most 0.2 points
+  above no list; in a tie, the smaller list and weight. For Whisper, the size of the domain list (25 or
+  50 entities); for CTC, one hotword weight per test set for the oracle and distractor lists, and a size
+  and weight for the domain list. The choices were merged in their own pull request before any test run.
+- **Statistics.** Corpus rates with the widest of the bootstrap intervals (1,000 resamples), and a
+  paired bootstrap of each list against no list, for recall and WER, with Holm's correction over all the
+  comparisons of a test set (8 on FLEURS, 12 on VoxPopuli). The runs without a list are those of E1b for
+  Whisper and of E4 for CTC, unchanged. The FLEURS runs of E1b recorded fewer decoding options, and the
+  missing ones are faster-whisper 1.2.1's defaults, which the new runs record.
+
+**One change after the pre-registration, before any test run.** The hotword weight 8, the largest of the
+first grid, won on every dev set, so 13 and 21 were added once, with the rule that the grid would not be
+extended again. The 39 earlier cells came out identical, to the four decimals recorded. 21 won for the
+oracle lists on all four sets, so that choice is at the edge of the grid: beyond 8 the recall keeps
+rising while the WER stops falling.
+
+### The settings chosen on the dev sets
+
+<!-- BEGIN e9-selection -->
+| Model | Dev set | List | Chosen | Dev WER: no list → list | Dev entity recall: no list → list |
+|---|---|---|---|---|---|
+| Whisper large-v3-turbo | voxpopuli-it | domain | 50 entities | 16.33% → 14.92% | 85.0% → 86.8% |
+| XLS-R CTC + Europarl 5-gram | fleurs-it | oracle and distractors | weight 21 | 6.44% → 5.67% | 68.8% → 87.3% |
+| XLS-R CTC + Europarl 5-gram | fleurs-de | oracle and distractors | weight 21 | 10.89% → 9.72% | 55.2% → 77.4% |
+| XLS-R CTC + Europarl 5-gram | fleurs-en | oracle and distractors | weight 21 | 14.61% → 14.20% | 46.5% → 68.1% |
+| XLS-R CTC + Europarl 5-gram | voxpopuli-it | oracle and distractors | weight 21 | 19.51% → 19.53% | 77.4% → 84.2% |
+| XLS-R CTC + Europarl 5-gram | voxpopuli-it | domain | 50 entities, weight 8 | 19.51% → 19.62% | 77.4% → 77.9% |
+<!-- END e9-selection -->
+
+Without hotwords, our decoding gives the dev WER of the weights chosen in E4, so the runs without a list
+can be those of E4:
+
+<!-- BEGIN e9-check -->
+| Dev set | Dev WER in E4 | Dev WER here, without hotwords |
+|---|---|---|
+| fleurs-it | 6.44% | 6.44% |
+| fleurs-de | 10.89% | 10.89% |
+| fleurs-en | 14.61% | 14.61% |
+| voxpopuli-it | 19.51% | 19.51% |
+<!-- END e9-check -->
+
+### Results
+
+<!-- BEGIN e9-results -->
+| Test set | Model | List | Entity recall [95% CI] | WER [95% CI] | S / D / I | CER |
+|---|---|---|---|---|---|---|
+| fleurs-it | Whisper large-v3-turbo | No list | 81.5% [76.7%, 86.3%] | 2.40% [2.04%, 2.80%] | 404 / 44 / 62 | 0.65% |
+| fleurs-it | Whisper large-v3-turbo | Oracle | 98.6% [97.5%, 99.5%] | 1.87% [1.59%, 2.17%] | 307 / 44 / 47 | 0.56% |
+| fleurs-it | Whisper large-v3-turbo | Distractors | 81.1% [76.5%, 86.0%] | 2.51% [2.13%, 2.91%] | 424 / 45 / 64 | 0.68% |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | No list | 64.4% [58.5%, 70.4%] | 6.41% [5.76%, 7.07%] | 974 / 191 / 198 | 1.54% |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Oracle | 82.5% [77.9%, 86.8%] | 5.84% [5.24%, 6.47%] | 865 / 166 / 211 | 1.44% |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Distractors | 64.4% [58.5%, 70.4%] | 6.51% [5.86%, 7.17%] | 992 / 191 / 201 | 1.56% |
+| fleurs-de | Whisper large-v3-turbo | No list | 80.1% [75.5%, 84.0%] | 4.45% [3.91%, 5.01%] | 612 / 89 / 131 | 1.44% |
+| fleurs-de | Whisper large-v3-turbo | Oracle | 95.5% [93.1%, 97.3%] | 3.66% [3.21%, 4.15%] | 484 / 79 / 122 | 1.25% |
+| fleurs-de | Whisper large-v3-turbo | Distractors | 79.3% [74.6%, 83.6%] | 4.39% [3.87%, 4.95%] | 604 / 97 / 120 | 1.41% |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | No list | 54.5% [49.2%, 59.9%] | 11.10% [10.13%, 12.17%] | 1,604 / 259 / 213 | 4.79% |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Oracle | 79.5% [75.3%, 83.5%] | 9.84% [8.97%, 10.83%] | 1,431 / 212 / 198 | 4.59% |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Distractors | 54.5% [49.2%, 59.9%] | 11.22% [10.25%, 12.32%] | 1,627 / 257 / 214 | 4.80% |
+| fleurs-en | Whisper large-v3-turbo | No list | 77.6% [72.6%, 82.8%] | 5.00% [4.45%, 5.55%] | 517 / 110 / 97 | 2.13% |
+| fleurs-en | Whisper large-v3-turbo | Oracle | 95.6% [92.9%, 98.0%] | 4.26% [3.74%, 4.75%] | 427 / 109 / 80 | 1.89% |
+| fleurs-en | Whisper large-v3-turbo | Distractors | 76.9% [71.8%, 82.2%] | 4.96% [4.41%, 5.55%] | 521 / 102 / 95 | 2.11% |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | No list | 52.5% [46.2%, 58.6%] | 13.55% [12.46%, 14.75%] | 1,478 / 241 / 241 | 6.54% |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Oracle | 74.3% [68.9%, 79.4%] | 12.84% [11.84%, 13.97%] | 1,380 / 208 / 270 | 6.35% |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Distractors | 52.3% [46.0%, 58.6%] | 13.65% [12.56%, 14.86%] | 1,484 / 242 / 249 | 6.56% |
+| voxpopuli-it | Whisper large-v3-turbo | No list | 83.1% [78.9%, 86.4%] | 19.11% [16.12%, 22.18%] | 1,782 / 3,964 / 1,412 | 15.59% |
+| voxpopuli-it | Whisper large-v3-turbo | Oracle | 86.9% [83.3%, 89.9%] | 18.73% [15.94%, 21.83%] | 1,742 / 3,905 / 1,368 | 15.20% |
+| voxpopuli-it | Whisper large-v3-turbo | Distractors | 81.4% [77.2%, 85.0%] | 20.24% [17.24%, 23.58%] | 1,807 / 4,454 / 1,321 | 16.66% |
+| voxpopuli-it | Whisper large-v3-turbo | Domain (50) | 85.8% [82.3%, 88.7%] | 17.04% [14.72%, 19.72%] | 1,859 / 2,952 / 1,573 | 13.47% |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | No list | 76.9% [72.9%, 80.4%] | 21.79% [19.50%, 24.37%] | 3,163 / 2,836 / 2,164 | 14.42% |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Oracle | 82.8% [79.3%, 85.6%] | 21.86% [19.58%, 24.49%] | 3,167 / 2,810 / 2,212 | 14.46% |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Distractors | 76.6% [72.4%, 80.1%] | 21.97% [19.69%, 24.55%] | 3,221 / 2,835 / 2,172 | 14.45% |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Domain (50) | 78.1% [74.1%, 81.6%] | 21.85% [19.54%, 24.44%] | 3,171 / 2,814 / 2,197 | 14.43% |
+
+*Sizes: fleurs-it 865 utterances, 21,262 words, 578 entities (`it-v2`), fleurs-de 862 utterances, 18,703 words, 639 entities (`de-v1`), fleurs-en 647 utterances, 14,467 words, 451 entities (`en-v1`), voxpopuli-it 1,177 utterances, 37,454 words, 956 entities (`it-v2`).*
+<!-- END e9-results -->
+
+<!-- BEGIN e9-comparisons -->
+| Test set | Model | List | Metric | List - no list [95% CI] | p | p (Holm) | Significant |
+|---|---|---|---|---|---|---|---|
+| fleurs-it | Whisper large-v3-turbo | Oracle | Entity recall | +17.13% [+12.61%, +21.82%] | < 0.001 | < 0.008 | yes |
+| fleurs-it | Whisper large-v3-turbo | Oracle | WER | -0.53% [-0.75%, -0.32%] | < 0.001 | < 0.008 | yes |
+| fleurs-it | Whisper large-v3-turbo | Distractors | Entity recall | -0.35% [-1.32%, +0.55%] | 0.576 | 1.000 | no |
+| fleurs-it | Whisper large-v3-turbo | Distractors | WER | +0.11% [-0.02%, +0.24%] | 0.122 | 0.366 | no |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Oracle | Entity recall | +18.17% [+14.24%, +22.52%] | < 0.001 | < 0.008 | yes |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Oracle | WER | -0.57% [-0.83%, -0.32%] | < 0.001 | < 0.008 | yes |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Distractors | Entity recall | +0.00% [+0.00%, +0.00%] | 1.000 | 1.000 | no |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Distractors | WER | +0.10% [+0.05%, +0.15%] | < 0.001 | < 0.008 | yes |
+| fleurs-de | Whisper large-v3-turbo | Oracle | Entity recall | +15.34% [+11.31%, +19.46%] | < 0.001 | < 0.008 | yes |
+| fleurs-de | Whisper large-v3-turbo | Oracle | WER | -0.79% [-1.08%, -0.52%] | < 0.001 | < 0.008 | yes |
+| fleurs-de | Whisper large-v3-turbo | Distractors | Entity recall | -0.78% [-2.02%, +0.43%] | 0.248 | 0.744 | no |
+| fleurs-de | Whisper large-v3-turbo | Distractors | WER | -0.06% [-0.21%, +0.07%] | 0.452 | 0.904 | no |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Oracle | Entity recall | +25.04% [+20.26%, +29.83%] | < 0.001 | < 0.008 | yes |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Oracle | WER | -1.26% [-1.59%, -0.91%] | < 0.001 | < 0.008 | yes |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Distractors | Entity recall | +0.00% [+0.00%, +0.00%] | 1.000 | 1.000 | no |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Distractors | WER | +0.12% [+0.05%, +0.20%] | < 0.001 | < 0.008 | yes |
+| fleurs-en | Whisper large-v3-turbo | Oracle | Entity recall | +17.96% [+13.66%, +22.50%] | < 0.001 | < 0.008 | yes |
+| fleurs-en | Whisper large-v3-turbo | Oracle | WER | -0.75% [-1.05%, -0.44%] | < 0.001 | < 0.008 | yes |
+| fleurs-en | Whisper large-v3-turbo | Distractors | Entity recall | -0.67% [-1.91%, +0.41%] | 0.328 | 0.984 | no |
+| fleurs-en | Whisper large-v3-turbo | Distractors | WER | -0.04% [-0.19%, +0.11%] | 0.652 | 1.000 | no |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Oracle | Entity recall | +21.73% [+17.92%, +26.00%] | < 0.001 | < 0.008 | yes |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Oracle | WER | -0.71% [-1.02%, -0.43%] | < 0.001 | < 0.008 | yes |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Distractors | Entity recall | -0.22% [-0.74%, +0.00%] | 0.824 | 1.000 | no |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Distractors | WER | +0.10% [+0.03%, +0.19%] | 0.002 | 0.008 | yes |
+| voxpopuli-it | Whisper large-v3-turbo | Oracle | Entity recall | +3.87% [+1.70%, +6.26%] | < 0.001 | < 0.012 | yes |
+| voxpopuli-it | Whisper large-v3-turbo | Oracle | WER | -0.38% [-1.13%, +0.32%] | 0.292 | 0.584 | no |
+| voxpopuli-it | Whisper large-v3-turbo | Distractors | Entity recall | -1.67% [-3.70%, +0.11%] | 0.092 | 0.368 | no |
+| voxpopuli-it | Whisper large-v3-turbo | Distractors | WER | +1.13% [+0.13%, +2.21%] | 0.032 | 0.192 | no |
+| voxpopuli-it | Whisper large-v3-turbo | Domain (50) | Entity recall | +2.72% [+1.10%, +4.50%] | < 0.001 | < 0.012 | yes |
+| voxpopuli-it | Whisper large-v3-turbo | Domain (50) | WER | -2.07% [-3.11%, -1.00%] | < 0.001 | < 0.012 | yes |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Oracle | Entity recall | +5.96% [+4.07%, +8.23%] | < 0.001 | < 0.012 | yes |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Oracle | WER | +0.07% [-0.09%, +0.27%] | 0.480 | 0.584 | no |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Distractors | Entity recall | -0.31% [-0.72%, +0.00%] | 0.064 | 0.320 | no |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Distractors | WER | +0.17% [+0.11%, +0.26%] | < 0.001 | < 0.012 | yes |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Domain (50) | Entity recall | +1.26% [+0.50%, +2.21%] | < 0.001 | < 0.012 | yes |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Domain (50) | WER | +0.05% [-0.02%, +0.12%] | 0.154 | 0.462 | no |
+<!-- END e9-comparisons -->
+
+### Names written without being said
+
+Occurrences of a listed entity beyond those of the reference, summed over the utterances. The second
+column counts the same entities in the transcript without a list, which the list cannot be blamed for.
+
+<!-- BEGIN e9-invented -->
+| Test set | Model | List | Written more often than said: with the list | Same entities, without the list | Commonest with the list (times) |
+|---|---|---|---|---|---|
+| fleurs-it | Whisper large-v3-turbo | Oracle | 0 | 0 | - |
+| fleurs-it | Whisper large-v3-turbo | Distractors | 0 | 0 | - |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Oracle | 12 | 0 | h (12) |
+| fleurs-it | XLS-R CTC + Europarl 5-gram | Distractors | 2 | 0 | stato (2) |
+| fleurs-de | Whisper large-v3-turbo | Oracle | 5 | 1 | hongkong (3), addenbrooke (2) |
+| fleurs-de | Whisper large-v3-turbo | Distractors | 0 | 0 | - |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Oracle | 2 | 3 | goma (1), h (1) |
+| fleurs-de | XLS-R CTC + Europarl 5-gram | Distractors | 0 | 0 | - |
+| fleurs-en | Whisper large-v3-turbo | Oracle | 2 | 2 | vatican city (2) |
+| fleurs-en | Whisper large-v3-turbo | Distractors | 0 | 0 | - |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Oracle | 36 | 6 | south africa (3), un (3), ai (2), aristotle (2), canada (2) |
+| fleurs-en | XLS-R CTC + Europarl 5-gram | Distractors | 0 | 0 | - |
+| voxpopuli-it | Whisper large-v3-turbo | Oracle | 1 | 1 | europa (1) |
+| voxpopuli-it | Whisper large-v3-turbo | Distractors | 26 | 2 | unione europea (22), commissario (1), commissario barnier (1), consiglio (1), unione (1) |
+| voxpopuli-it | Whisper large-v3-turbo | Domain (50) | 68 | 51 | presidente (10), europa (7), stati (7), stato (7), unione (6) |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Oracle | 55 | 4 | n (36), italia (4), europa (3), iran (2), consiglio (1) |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Distractors | 14 | 4 | n (3), lei (2), stato (2), unione europea (2), commissario (1) |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Domain (50) | 136 | 76 | lei (22), ue (22), europa (15), stato (14), stati (13) |
+<!-- END e9-invented -->
+
+### Short transcripts (post hoc)
+
+Added after seeing that the domain list lowered Whisper's WER on VoxPopuli far more than it raised its
+recall. A transcript is short if it has fewer than half the words of a reference of five words or more:
+on VoxPopuli, Whisper sometimes writes "Grazie." or "Grazie a tutti." for a whole speech, as in E6. The
+last two columns compare the WER on the utterances whose transcript is short in neither run, as a
+description outside Holm's correction. No FLEURS run has a short transcript.
+
+<!-- BEGIN e9-short -->
+| Test set | Model | List | Short transcripts: no list → list | Their share of the errors: no list → list | Entities missed in them: no list → list | Utterances kept | WER of the rest: no list → list | Difference [95% CI] |
+|---|---|---|---|---|---|---|---|---|
+| voxpopuli-it | Whisper large-v3-turbo | Oracle | 81 → 80 | 27.5% → 26.8% | 53 of 162 → 49 of 125 | 1,082 | 14.39% → 14.25% | -0.14% [-0.30%, +0.05%] |
+| voxpopuli-it | Whisper large-v3-turbo | Distractors | 81 → 106 | 27.5% → 34.3% | 53 of 162 → 71 of 178 | 1,045 | 13.98% → 13.81% | -0.17% [-0.40%, +0.05%] |
+| voxpopuli-it | Whisper large-v3-turbo | Domain (50) | 81 → 42 | 27.5% → 12.3% | 53 of 162 → 24 of 136 | 1,085 | 14.52% → 14.41% | -0.11% [-0.31%, +0.10%] |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Oracle | 7 → 7 | 0.9% → 0.9% | 2 of 221 → 2 of 164 | 1,170 | 21.64% → 21.71% | +0.07% [-0.09%, +0.30%] |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Distractors | 7 → 7 | 0.9% → 0.9% | 2 of 221 → 2 of 224 | 1,170 | 21.64% → 21.82% | +0.17% [+0.11%, +0.26%] |
+| voxpopuli-it | XLS-R CTC + Europarl 5-gram | Domain (50) | 7 → 7 | 0.9% → 0.9% | 2 of 221 → 2 of 209 | 1,170 | 21.64% → 21.69% | +0.05% [-0.02%, +0.12%] |
+<!-- END e9-short -->
+
+### Findings
+
+- **With the right names, both models write almost all of them.** The oracle lists raise entity recall
+  on FLEURS by 15.3 to 18.0 points for Whisper, to 95.5%-98.6%, and by 18.2 to 25.0 points for CTC, to
+  74.3%-82.5%, and lower the WER by 0.53 to 1.26 points. All 12 comparisons are significant after Holm's
+  correction. CTC gains more and still ends lower: a bonus at the end of a word can only promote a word
+  that its characters already make likely.
+- **On parliamentary speech the gain is smaller, and much of what is missed is not about names.** The
+  oracle raises recall by 3.87 points for Whisper and 5.96 for CTC on VoxPopuli, from higher starting
+  points (83.1% and 76.9%), and changes neither WER significantly. Of the 125 entities that Whisper still
+  misses with the oracle list, 49 are in short transcripts.
+- **A wrong list costs CTC a little, every time, and Whisper on parliamentary speech.** Distractors
+  do not change CTC's recall significantly and raise its WER by 0.10 to 0.17 points, small but significant on all
+  four sets, at the weight chosen for the oracle. For Whisper, no difference is significant on FLEURS.
+  On VoxPopuli its WER rises by 1.13 points ([+0.13, +2.21]; p = 0.192 after Holm's correction), short
+  transcripts go from 81 to 106, and a distractor "Unione europea" is written 22 times beyond the
+  references.
+- **The domain list lowers Whisper's WER on VoxPopuli by preventing collapses, not by writing names.**
+  Recall rises by 2.72 points ([+1.10, +4.50]) and the WER falls by 2.07 ([-3.11, -1.00]), both
+  significant. But the short transcripts fall from 81 to 42, from 27.5% to 12.3% of the errors, and on
+  the 1,085 utterances short in neither run the WER does not change (-0.11, [-0.31, +0.10]). A prompt
+  in the style of the domain seems to keep Whisper from taking a speech for its end. This was found
+  after the fact, on one test set, and the dev runs had shown the same imbalance before the test (WER
+  from 16.33% to 14.92%, recall from 85.0% to 86.8%).
+- **For CTC, the domain list barely helps.** Recall rises by 1.26 points and the WER does not change, at
+  weight 8 and 50 entities. Longer lists at high weights make the decoder write their words everywhere:
+  on dev, 800 entities at weight 21 raised the WER by 50 points.
+- **Noise in the list becomes noise in the transcript, most of all with hotwords.** One single letter
+  tagged as an entity, `N`, in one VoxPopuli reference makes CTC write `n` 36 times with the oracle
+  list, and `h` from FLEURS Italian is written 12 times. With the domain list, `lei`, a pronoun tagged as
+  a name, and the abbreviation `ue` are each written 22 times beyond the references. Whisper writes
+  listed names it did not hear far less often: at most 5 times on a FLEURS set with the oracle list,
+  and 68 times with the domain list against 51 for the same entities without it.
+
+For a product, a list of the names expected in each conversation is worth giving to either model. For a
+CTC model the list must be clean (no single letters, no pronouns) and the weight tuned on data of its own.
+For Whisper on long, formal speech, a prompt from the domain is worth testing for its effect on
+collapsed transcripts as much as on names.
+
+### Limitations
+
+- The entities come from an automatic tagger, with its errors in the lists and in the recall, and its
+  precision was checked only on a small hand-read sample of the dev sets.
+- The oracle uses the reference, so it is an upper bound. A real list also holds names that are not said,
+  which the distractors imitate only with names of the same set and style.
+- The oracle weight of CTC is at the edge of the grid, and the cost of a wrong list was measured at the
+  weight chosen for the right one. Another rule, such as the lowest WER, would choose lower weights.
+- The domain list was tested on one test set in one language, and the analysis of short transcripts was
+  added after seeing the results.
+- Only one Whisper model and one way of giving it the list, the initial prompt, were tested, and the
+  prompt affects only the first 30 seconds of an utterance. Holm's correction applies within each test
+  set.
+
+**Reproduce:** `bash experiments/E9/run.sh` (or `experiments/E9/run.ps1` on Windows). With the committed
+transcripts, entities and settings it only rescores, after downloading the test manifests if they are
+missing. The Whisper runs come from
+[`notebooks/e9_whisper_colab.ipynb`](notebooks/e9_whisper_colab.ipynb), and the commands for the CTC
+grid and decoding are in the [README](README.md#lists-of-entities-for-whisper-and-ctc-experiment-e9).
+
 ## E10. Usage analytics: where should a product team invest?
 
 > **Simulated usage.** No real usage logs are available. In this chapter the **traffic** (which
@@ -1928,6 +2191,9 @@ degraded audio and transcribes it on a Colab GPU (about 25 minutes on a T4).
 - The language models (E4) stop at 5 million words, and their benefit from the domain rests on one
   test set in one language. A larger text, a test of how much of the gain survives on sessions of a
   new domain, and a language model for the Transducer are the next steps.
+- The entity lists (E9) rest on an automatic tagger whose mistakes reach the transcripts through the
+  hotwords. A filter for the lists, a cost of a wrong list measured at its own weight, and the effect of a
+  domain prompt on collapsed transcripts in another domain are the next steps.
 - Decoding settings were tuned for large-v3-turbo only, one option at a time and on read speech
   (E2); the next sweep should fix a non-inferiority margin in advance and include long recordings
   with pauses, where voice activity detection matters most.

@@ -1,0 +1,39 @@
+# Tables of the E9 chapter of RESULTS.md (rendered by: asr-lab render-results), from the results of
+# asr-lab bias-results
+
+[[table]]
+name = "e9-selection"
+kind = "bias"
+file = "experiments/E9/results/results.json"
+section = "selection"
+
+[[table]]
+name = "e9-check"
+kind = "bias"
+file = "experiments/E9/results/results.json"
+section = "check"
+
+[[table]]
+name = "e9-results"
+kind = "bias"
+file = "experiments/E9/results/results.json"
+section = "results"
+
+[[table]]
+name = "e9-comparisons"
+kind = "bias"
+file = "experiments/E9/results/results.json"
+section = "comparisons"
+
+[[table]]
+name = "e9-invented"
+kind = "bias"
+file = "experiments/E9/results/results.json"
+section = "invented"
+
+# Post hoc: added after seeing that a list moves Whisper's WER on VoxPopuli far more than its recall
+[[table]]
+name = "e9-short"
+kind = "bias"
+file = "experiments/E9/results/results.json"
+section = "short"
