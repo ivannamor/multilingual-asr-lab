@@ -1,0 +1,94 @@
+{
+  "whisper": {
+    "baseline": {
+      "wer": 0.16327878849476574,
+      "recall": 0.8499025341130604,
+      "n_entities": 1026
+    },
+    "cells": [
+      {
+        "size": 25,
+        "wer": 0.15433479012094725,
+        "recall": 0.8576998050682261,
+        "n_entities": 1026
+      },
+      {
+        "size": 50,
+        "wer": 0.1492275637768066,
+        "recall": 0.868421052631579,
+        "n_entities": 1026
+      }
+    ],
+    "domain_size": 50
+  },
+  "ctc": {
+    "fleurs-it": {
+      "baseline": {
+        "list": "none",
+        "wer": 0.06441241685144124,
+        "recall": 0.6883561643835616,
+        "n_entities": 292
+      },
+      "oracle": {
+        "weight": 21.0,
+        "wer": 0.056651884700665185,
+        "recall": 0.8732876712328768,
+        "n_entities": 292
+      },
+      "domain": null
+    },
+    "fleurs-de": {
+      "baseline": {
+        "list": "none",
+        "wer": 0.10890688259109312,
+        "recall": 0.5518518518518518,
+        "n_entities": 270
+      },
+      "oracle": {
+        "weight": 21.0,
+        "wer": 0.09716599190283401,
+        "recall": 0.7740740740740741,
+        "n_entities": 270
+      },
+      "domain": null
+    },
+    "fleurs-en": {
+      "baseline": {
+        "list": "none",
+        "wer": 0.14609877442058003,
+        "recall": 0.4652014652014652,
+        "n_entities": 273
+      },
+      "oracle": {
+        "weight": 21.0,
+        "wer": 0.14197306152166,
+        "recall": 0.6813186813186813,
+        "n_entities": 273
+      },
+      "domain": null
+    },
+    "voxpopuli-it": {
+      "baseline": {
+        "list": "none",
+        "wer": 0.19511637361520479,
+        "recall": 0.7738791423001949,
+        "n_entities": 1026
+      },
+      "oracle": {
+        "weight": 21.0,
+        "wer": 0.1952942372192296,
+        "recall": 0.8421052631578947,
+        "n_entities": 1026
+      },
+      "domain": {
+        "size": 50,
+        "weight": 8.0,
+        "wer": 0.19620896432564286,
+        "recall": 0.7787524366471735,
+        "n_entities": 1026
+      }
+    }
+  },
+  "created": "2026-11-03T10:35:22+00:00",
+  "git_commit": "d84261f3362f067e5cc29d295554fcbc318b8f6e"
+}

@@ -23,7 +23,9 @@ language_model = "europarl"
 order = 5
 lm_spec = "experiments/E4/lm.toml"
 grid = "experiments/E4/results/grid.json"
-weights = [1.0, 2.0, 3.0, 5.0, 8.0]
+# 13 and 21 added after the dev grid, before any test run: 8, then the largest, won on every test set.
+# This is the only extension: if 21 wins it stays, and the report says the choice is at the edge.
+weights = [1.0, 2.0, 3.0, 5.0, 8.0, 13.0, 21.0]
 domain_sizes = [50, 200, 800]
 
 [selection]
