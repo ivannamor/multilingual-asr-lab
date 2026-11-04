@@ -847,3 +847,11 @@ letter of a hotword (more code, to be added only if the word-end bonus shows it 
 are missed, and the filter drops single words at the start of a sentence. Oracle lists cannot be used
 by a product. With `condition_on_previous_text` off, a prompt affects only the first 30 seconds of an
 utterance.
+
+**After E9.** The weight 8 won on every dev set, so 13 and 21 were added once, before any test run,
+and 21 won for the oracle lists: the choice is at the edge of the grid, as declared in advance. The
+domain list lowered Whisper's WER on VoxPopuli by preventing transcripts that collapse into "Grazie a
+tutti", not by writing more names, which a comparison on the utterances short in neither run shows;
+that analysis was added after seeing the results. The noise of the recognizer reached the
+transcripts through the hotwords: a single letter tagged as an entity was written 36 times in one
+utterance at weight 21, so a list for CTC needs a filter on length and on pronouns.

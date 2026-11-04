@@ -10,8 +10,8 @@ data-centric optimization.
 > **Status:** early development. The evaluation pipeline (FLEURS ingestion, Whisper inference,
 > WER/CER with versioned normalizers and bootstrap confidence intervals) works end to end and has
 > produced the first results (baseline, model families, decoding settings, text normalization,
-> language models for CTC, training-data quality, data selection for fine-tuning and usage analytics
-> on simulated traffic); more experiments are next.
+> language models for CTC, lists of entities for Whisper and CTC, training-data quality, data selection
+> for fine-tuning and usage analytics on simulated traffic); more experiments are next.
 
 Design decisions and their rationale are recorded in [docs/design.md](docs/design.md).
 
@@ -110,8 +110,16 @@ Key findings so far:
   1.16 points on FLEURS, and on Italian parliamentary speech 4.40 points with Europarl (from 26.19% to
   21.79%) against 2.25 with OpenSubtitles. A 5-gram adds almost nothing to a 3-gram.
 
+- **A list of the expected names helps, and a noisy one has a cost** (experiment E9). Given the names of
+  each utterance, large-v3-turbo writes 95.5% to 98.6% of them on FLEURS, 15 to 18 points more than without
+  a list, and a CTC model with hotwords gains 18 to 25 points. On parliamentary speech, a list of the
+  domain's commonest names lowers Whisper's WER by 2.07 points by preventing transcripts that collapse into
+  "Grazie a tutti", not by writing more names, and hotwords write the tagger's mistakes too: one letter
+  tagged as a name was written 36 times in one utterance.
+
 To reproduce: `experiments/E1/run.sh`, `experiments/E1b/run.sh`, `experiments/E2/run.sh`,
-`experiments/E3/run.sh`, `experiments/E4/run.sh`, `experiments/E6/run.sh`, `experiments/E7/run.sh` and `experiments/E10/run.sh` (see
+`experiments/E3/run.sh`, `experiments/E4/run.sh`, `experiments/E6/run.sh`, `experiments/E7/run.sh`,
+`experiments/E9/run.sh` and `experiments/E10/run.sh` (see
 [Experiments](#experiments)).
 
 ## Try it in your browser
@@ -186,6 +194,7 @@ bash experiments/E3/run.sh    # text normalization: rescoring, paired comparison
 bash experiments/E4/run.sh    # language models for CTC: results, comparisons, recall, figure
 bash experiments/E6/run.sh    # training-data quality: features, rules, clusters, second opinion
 bash experiments/E7/run.sh    # fine-tuning data: second model, four strategies, results
+bash experiments/E9/run.sh    # entity lists: recall, WER, comparisons, invented names
 bash experiments/E10/run.sh   # usage analytics on simulated sessions: segments, priorities, review
 ```
 
@@ -249,6 +258,10 @@ uv run asr-lab bias-select --spec experiments/E9/biasing.toml \
 uv run --extra lm asr-lab bias-ctc-decode --spec experiments/E9/biasing.toml \
     --entities experiments/E9/results/entities.json \
     --selection experiments/E9/results/selection.json
+uv run asr-lab bias-results --spec experiments/E9/biasing.toml \
+    --entities experiments/E9/results/entities.json \
+    --selection experiments/E9/results/selection.json \
+    --ctc-grid experiments/E9/results/ctc_grid.json --output experiments/E9/results/results.json
 ```
 
 ### Experiment tracking (MLflow)

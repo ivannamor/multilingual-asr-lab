@@ -1,0 +1,47 @@
+{
+  "model": "faster-whisper/large-v3-turbo-float16",
+  "model_config": {
+    "library": "faster-whisper",
+    "library_version": "1.2.1",
+    "model_size": "large-v3-turbo",
+    "compute_type": "float16",
+    "device": "cuda",
+    "cpu_threads": 4,
+    "beam_size": 5,
+    "temperature": [
+      0.0,
+      0.2,
+      0.4,
+      0.6,
+      0.8,
+      1.0
+    ],
+    "compression_ratio_threshold": 2.4,
+    "log_prob_threshold": -1.0,
+    "no_speech_threshold": 0.6,
+    "vad_filter": false,
+    "hallucination_silence_threshold": null,
+    "word_timestamps": false,
+    "condition_on_previous_text": false,
+    "best_of": 5,
+    "patience": 1.0,
+    "length_penalty": 1.0,
+    "initial_prompts_sha256": "70dae29c73bb930c98aa81e2f4e041cda94e7b7e238ddbd2bfa8baa693ae63ac"
+  },
+  "manifest_sha256": "0231e54ad44ba32d1c393ac907d1f94db564ee8f9faa6d0b047f8cebfa3bab6d",
+  "limit": null,
+  "manifest": "data/fleurs_it/test.jsonl",
+  "n_utterances": 865,
+  "audio_seconds": 12676.26,
+  "git_commit": "5073b4dcb70a5bc2b113255c36b26c558e759e94",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.13.16",
+    "platform": "Linux x86_64",
+    "executable_is_venv": false
+  },
+  "started_at": "2026-11-03T12:11:17+00:00",
+  "finished_at": "2026-11-03T12:18:30+00:00",
+  "processing_seconds": 433.025083989,
+  "rtf": 0.0341603188944531
+}

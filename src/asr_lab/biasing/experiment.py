@@ -302,7 +302,7 @@ def run_ctc_decode(
     spec = load_spec(spec_path)
     entities_report = json.loads(entities_path.read_text(encoding="utf-8"))
     selection = json.loads(selection_path.read_text(encoding="utf-8"))["ctc"]
-    lm_spec, weights = _language_model(spec)
+    lm_spec, weights = e4_settings(spec)
     written = []
     for test_set in spec["test_sets"]:
         chosen = selection[test_set["name"]]
@@ -316,7 +316,7 @@ def run_ctc_decode(
             if setting is None:
                 continue
             bonuses = hotword_bonuses(listed, alphabet, setting["weight"])
-            name = _ctc_name(spec)
+            name = ctc_lm_name(spec)
             written.append(
                 decode_test_set(
                     lm_spec,
@@ -366,7 +366,7 @@ def _select_whisper(
     }
 
 
-def _language_model(spec: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+def e4_settings(spec: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     """The spec of E4, for its decoding settings, and the weights chosen there."""
     lm_spec = load_spec(Path(spec["ctc"]["lm_spec"]))
     grid = json.loads(Path(spec["ctc"]["grid"]).read_text(encoding="utf-8"))["test_sets"]
@@ -377,7 +377,8 @@ def _lm_test_set(lm_spec: dict[str, Any], name: str) -> dict[str, Any]:
     return next(t for t in lm_spec["test_sets"] if t["name"] == name)
 
 
-def _ctc_name(spec: dict[str, Any]) -> str:
+def ctc_lm_name(spec: dict[str, Any]) -> str:
+    """Name of the language model of E4 that the hotwords build on."""
     return lm_name(spec["ctc"]["language_model"], spec["ctc"]["order"])
 
 
@@ -422,8 +423,8 @@ def _tune_test_set(
     logprobs_dir: Path,
     workers: int,
 ) -> dict[str, Any]:
-    lm_spec, grid = _language_model(spec)
-    name = _ctc_name(spec)
+    lm_spec, grid = e4_settings(spec)
+    name = ctc_lm_name(spec)
     weights = grid[test_set["name"]][name]["selected"]
     options = decoding_options(lm_spec, weights["alpha"], weights["beta"])
     logprobs = logprobs_dir / f"{test_set['name']}-dev.npz"

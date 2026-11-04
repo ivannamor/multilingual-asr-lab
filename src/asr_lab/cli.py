@@ -40,6 +40,8 @@ Usage::
         --ctc-grid ctc_grid.json --output selection.json
     uv run asr-lab bias-ctc-decode --spec experiments/E9/biasing.toml --entities entities.json \
         --selection selection.json
+    uv run asr-lab bias-results --spec experiments/E9/biasing.toml --entities entities.json \
+        --selection selection.json --ctc-grid ctc_grid.json --output results.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -60,6 +62,7 @@ from asr_lab.biasing.experiment import (
     run_selection,
     run_whisper,
 )
+from asr_lab.biasing.results import bias_results
 from asr_lab.data.manifest import write_manifest
 from asr_lab.data.quality import (
     analyze_quality,
@@ -409,12 +412,16 @@ def main(argv: Sequence[str] | None = None) -> None:
     bias_decode = commands.add_parser(
         "bias-ctc-decode", help="decode the test sets once with the chosen hotwords (E9)"
     )
-    for command in (bias_entities, bias_whisper, bias_tune, bias_select, bias_decode):
+    bias_res = commands.add_parser(
+        "bias-results", help="entity recall, WER and comparisons of the lists on the test sets (E9)"
+    )
+    all_bias = (bias_entities, bias_whisper, bias_tune, bias_select, bias_decode, bias_res)
+    for command in all_bias:
         command.add_argument("--spec", required=True, type=Path, help="TOML biasing spec")
-    for command in (bias_whisper, bias_tune, bias_select, bias_decode):
+    for command in all_bias[1:]:
         command.add_argument("--entities", required=True, type=Path, help="output of bias-entities")
     runs_default = Path("experiments/runs")
-    for command in (bias_whisper, bias_select, bias_decode):
+    for command in (bias_whisper, bias_select, bias_decode, bias_res):
         command.add_argument("--runs", type=Path, default=runs_default)
     for command in (bias_tune, bias_decode):
         command.add_argument("--models", type=Path, default=Path("models/e4"))
@@ -425,9 +432,12 @@ def main(argv: Sequence[str] | None = None) -> None:
     bias_whisper.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
     bias_tune.add_argument("--output", required=True, type=Path, help="grid JSON")
     bias_tune.add_argument("--workers", type=int, default=8)
-    bias_select.add_argument("--ctc-grid", required=True, type=Path, help="output of bias-ctc-tune")
+    for command in (bias_select, bias_res):
+        command.add_argument("--ctc-grid", required=True, type=Path, help="output of bias-ctc-tune")
     bias_select.add_argument("--output", required=True, type=Path, help="selection JSON")
-    bias_decode.add_argument("--selection", required=True, type=Path, help="output of bias-select")
+    for command in (bias_decode, bias_res):
+        command.add_argument("--selection", required=True, type=Path, help="output of bias-select")
+    bias_res.add_argument("--output", required=True, type=Path, help="results JSON")
 
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
@@ -647,6 +657,17 @@ def main(argv: Sequence[str] | None = None) -> None:
             args.spec, args.entities, args.selection, args.models, args.logprobs, args.runs
         ):
             print(path)
+    elif args.command == "bias-results":
+        report = bias_results(args.spec, args.entities, args.selection, args.ctc_grid, args.runs)
+        save_results(report, args.output)
+        for test_set in report["test_sets"]:
+            for model, result in test_set["models"].items():
+                systems = ", ".join(
+                    f"{name} {s['wer']:.2%} / {s['recall']:.1%}"
+                    for name, s in result["systems"].items()
+                )
+                print(f"{test_set['name']} {model} (WER / entity recall): {systems}")
+        print(f"Biasing results: {args.output}")
     elif args.command == "lm-results":
         report = lm_results(args.spec, args.selection, args.text, args.models, args.runs)
         save_results(report, args.output)
