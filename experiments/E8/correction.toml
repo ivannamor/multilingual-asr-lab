@@ -1,0 +1,81 @@
+# Experiment E8: a large language model rescores or corrects the N-best list of the CTC model. Everything
+# here is fixed before the language model reads any dev or test transcript: the lists, the model, the
+# prompts, the grid, the selection and the comparisons.
+
+[nbest]
+# The 5 best distinct transcripts of the beam search of E4, with Europarl-5 and its weights: the first
+# is the transcript of E4 itself
+lm_spec = "experiments/E4/lm.toml"
+grid = "experiments/E4/results/grid.json"
+language_model = "europarl"
+order = 5
+n = 5
+
+[llm]
+# An instruction-tuned model with open weights, for the probabilities of its tokens and a reproducible
+# run. Greedy decoding throughout; bfloat16 needs a GPU with about 16 GB free (an A100 or an L4).
+id = "Qwen/Qwen2.5-7B-Instruct"
+revision = "a09a35458c702b33eeacc393d103063234e8bc28"
+dtype = "bfloat16"
+batch_size = 16
+prompts = "experiments/E8/prompts.toml"
+
+[few_shot]
+# Examples from the dev set of each test set, never from a test set: utterances whose first transcript
+# has an error, whose reference the CTC model can write (no digit) and has at most max_words words
+n_examples = 5
+max_words = 30
+seed = 0
+
+[rescoring]
+# score = CTC score of E4 + weight * ln P_LLM(transcript) + word_bonus * words, on the dev set: the
+# lowest WER, then the smaller weight, then the smaller bonus. The bonus offsets the preference of a
+# language model for fewer words, as beta does in E4. A weight of 0 keeps the order of E4.
+weights = [0.0, 0.05, 0.1, 0.2, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0, 3.0, 5.0]
+word_bonuses = [0.0, 0.5, 1.0, 2.0, 3.0, 5.0]
+
+[[test_sets]]
+name = "fleurs-it"
+lang = "it"
+normalizer = "it-v2"
+dev = "data/fleurs_it/dev.jsonl"
+test = "data/fleurs_it/test.jsonl"
+
+[[test_sets]]
+name = "fleurs-de"
+lang = "de"
+normalizer = "de-v1"
+dev = "data/fleurs_de/dev.jsonl"
+test = "data/fleurs_de/test.jsonl"
+
+[[test_sets]]
+name = "fleurs-en"
+lang = "en"
+normalizer = "en-v1"
+dev = "data/fleurs_en/dev.jsonl"
+test = "data/fleurs_en/test.jsonl"
+
+[[test_sets]]
+name = "voxpopuli-it"
+lang = "it"
+normalizer = "it-v2"
+dev = "data/voxpopuli_it/validation.jsonl"
+test = "data/voxpopuli_it/test.jsonl"
+
+[analysis]
+# Per test set: paired bootstrap of B - A on the widest resampling unit, Holm's correction over these
+# five comparisons, repeated on the utterances whose reference has no digit (the CTC model cannot
+# write one, the language model can). Reported besides: the WER of the best transcript of each list
+# (the most that choosing can give), the transcripts that were right and became wrong, and the words
+# written that are in no transcript of the list, with how many of them are in the reference. FLEURS
+# comes from Wikipedia, which the language model has probably read: words that appear only in the
+# reference are a sign of memory as much as of correction, and VoxPopuli is the check. Also reported:
+# the position of each chosen candidate in its list.
+methods = ["rescore", "choose", "zero-shot", "few-shot"]
+comparisons = [
+  ["rescore", "ctc"],
+  ["choose", "ctc"],
+  ["zero-shot", "ctc"],
+  ["few-shot", "ctc"],
+  ["few-shot", "zero-shot"],
+]

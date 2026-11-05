@@ -6,8 +6,9 @@ import itertools
 import math
 
 import numpy as np
+import pytest
 
-from asr_lab.lm.decoder import DecodingOptions, beam_search, greedy_decode
+from asr_lab.lm.decoder import DecodingOptions, beam_search, beam_search_nbest, greedy_decode
 
 TOKENS = ["<pad>", "|", "a", "b"]
 
@@ -119,3 +120,24 @@ def test_the_end_of_the_sentence_is_scored() -> None:
 
 def test_empty_audio_gives_an_empty_transcript() -> None:
     assert beam_search(np.zeros((0, 4)), TOKENS) == ""
+
+
+def test_nbest_starts_with_the_best_transcript_and_has_distinct_texts() -> None:
+    options = DecodingOptions(beam_width=100, token_min_logp=-100, beam_prune_logp=-100)
+    rng = np.random.default_rng(1)
+    for _ in range(10):
+        log_probs = np.log(rng.dirichlet(np.ones(4) * 0.5, size=5) + 1e-9)
+        nbest = beam_search_nbest(log_probs, TOKENS, options=options, n=5)
+        assert nbest[0].text == beam_search(log_probs, TOKENS, options=options)
+        assert len({t.text for t in nbest}) == len(nbest) <= 5
+        scores = [t.score for t in nbest]
+        assert scores == sorted(scores, reverse=True)
+
+
+def test_nbest_scores_split_into_acoustic_and_language() -> None:
+    log_probs = frames([0.05, 0.05, 0.5, 0.4], [0.05, 0.05, 0.5, 0.4])
+    options = DecodingOptions(alpha=1.0, beta=0.5, token_min_logp=-100, beam_prune_logp=-100)
+    nbest = beam_search_nbest(log_probs, TOKENS, FixedLM({"a": 0.5, "b": 0.5}), options, n=2)
+    assert [t.text for t in nbest] == ["a", "b"]
+    assert nbest[0].language == pytest.approx(math.log(0.5) + 0.5)
+    assert nbest[0].acoustic > nbest[1].acoustic

@@ -10,8 +10,9 @@ repos:
       - id: check-added-large-files
         args: ["--maxkb=1000"]
         # The E10 session manifest is text committed on purpose (about 2 MB): it documents
-        # exactly which simulated sessions were transcribed.
-        exclude: ^experiments/E10/sessions\.jsonl$
+        # exactly which simulated sessions were transcribed. The VoxPopuli N-best lists of E8
+        # (about 1.5 MB each) are the input of the language model, read on Colab from the clone.
+        exclude: ^(experiments/E10/sessions\.jsonl|experiments/runs/e8-nbest-voxpopuli-it(-dev)?/predictions\.jsonl)$
       - id: check-merge-conflict
       - id: mixed-line-ending
 

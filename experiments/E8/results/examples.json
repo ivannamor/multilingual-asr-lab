@@ -1,0 +1,234 @@
+{
+ "examples": {
+  "fleurs-it": [
+   {
+    "utterance_id": "fleurs_it_4582106738404759838",
+    "candidates": [
+     "nkk ha inoltre riferito che la centrale nucreale di kashiwazakikariwa che si trova nella provincia di innigata era regolarmente operativa",
+     "nkk ha inoltre riferito che la centrale nucreale di kashiwazaki-kariwa che si trova nella provincia di innigata era regolarmente operativa",
+     "nk ha inoltre riferito che la centrale nucreale di kashiwazakikariwa che si trova nella provincia di innigata era regolarmente operativa",
+     "nkk ha inoltre riferito che la centrale nucreale di kashiwazakikariwa che si trova nella provincia di inigata era regolarmente operativa",
+     "nkk ha inoltre riferito che la centrale nucreale di kashiwazakikarywa che si trova nella provincia di innigata era regolarmente operativa"
+    ],
+    "target": "nhk ha inoltre riferito che la centrale nucleare di kashiwazaki kariwa che si trova nella provincia di niigata era regolarmente operativa"
+   },
+   {
+    "utterance_id": "fleurs_it_5268024095654990550",
+    "candidates": [
+     "migliaia di anni fa un nuovo chiamata ristarco affermò che il sistema solare si muoveva attorno al sole",
+     "migliaia di anni fa un nuovo chiamata a ristarco affermò che il sistema solare si muoveva attorno al sole",
+     "migliaia di anni fa un nuovo chiamata aristarco affermò che il sistema solare si muoveva attorno al sole",
+     "migliaia di anni fa un nuovo chiamato ristarco affermò che il sistema solare si muoveva attorno al sole",
+     "migliaia di anni fa un nuovo chiamato aristarco affermò che il sistema solare si muoveva attorno al sole"
+    ],
+    "target": "migliaia di anni fa un uomo chiamato aristarco affermò che il sistema solare si muoveva attorno al sole"
+   },
+   {
+    "utterance_id": "fleurs_it_1075902291743732614",
+    "candidates": [
+     "anche in conseguenza della sua relativa inaccessibilità timbuc tu ha finito per diventare metafora di terra isotica è lontana",
+     "anche in conseguenza della sua relativa inaccessibilità timbuctu ha finito per diventare metafora di terra isotica è lontana",
+     "anche in conseguenza della sua relativa inaccessibilità timbuc tu ha finito per diventare metafora di terra esotica è lontana",
+     "anche in conseguenza della sua relativa inaccessibilità timbuc to ha finito per diventare metafora di terra isotica è lontana",
+     "anche in conseguenza della sua relativa inaccessibilità timbuctu ha finito per diventare metafora di terra esotica è lontana"
+    ],
+    "target": "anche in conseguenza della sua relativa inaccessibilità timbuctù ha finito per diventare metafora di terra esotica e lontana"
+   },
+   {
+    "utterance_id": "fleurs_it_16694224544766824032",
+    "candidates": [
+     "il paziente si era recato in nigeria dove sono stati registrati alcuni casi di virusebola",
+     "il paziente si era recato in nigeria dove sono stati registrati alcuni casi di virus ebola",
+     "il paziente si era recato in nigeria dove sono stati registrati alcuni casi di birusebola",
+     "il paziente si era recato in nigeria dove sono stati registrati alcuni casi di viruzebola",
+     "il paziente si era recato in nigeria dove sono stati registrati alcuni casi di birus ebola"
+    ],
+    "target": "il paziente si era recato in nigeria dove sono stati registrati alcuni casi di virus ebola"
+   },
+   {
+    "utterance_id": "fleurs_it_7958434877198264692",
+    "candidates": [
+     "alcuni animali come elefanti e giraffe tendono ad avvicinarsi maggiormente alle auto per ce sufficiente una normale attrezzatura per ottenere una buona visuale",
+     "alcuni animali come elefanti e giraffe tendono ad avvicinarsi maggiormente alle auto perce sufficiente una normale attrezzatura per ottenere una buona visuale",
+     "alcuni animali come elefanti e giraffe tendono ad avvicinarsi maggiormente alle auto percessufficiente una normale attrezzatura per ottenere una buona visuale",
+     "alcuni animali come elefanti e giraffe tendono ad avvicinarsi maggiormente alle auto percè sufficiente una normale attrezzatura per ottenere una buona visuale",
+     "alcuni animali come elefanti e giraffe tendono ad avvicinarsi maggiormente alle auto per che sufficiente una normale attrezzatura per ottenere una buona visuale"
+    ],
+    "target": "alcuni animali come elefanti e giraffe tendono ad avvicinarsi maggiormente alle auto perciò è sufficiente una normale attrezzatura per ottenere una buona visuale"
+   }
+  ],
+  "fleurs-de": [
+   {
+    "utterance_id": "fleurs_de_18116591072717519422",
+    "candidates": [
+     "die wichtigste religion in maldawien ist die christliche orthodoxe",
+     "die wichtigste religion in maldawien ist die christlicheorthodoxe",
+     "die wichtigste religion in maldawien ist die christliche-orthodoxe",
+     "die wichtigste religion in moldawien ist die christliche orthodoxe",
+     "die wichtigste religion in moldawien ist die christlicheorthodoxe"
+    ],
+    "target": "die wichtigste religion in moldawien ist die christlich orthodoxe"
+   },
+   {
+    "utterance_id": "fleurs_de_941594548826014564",
+    "candidates": [
+     "die eigenschaften die eine subkultur als solche abgrenzen können sprachlicher ästhetische religiöser politischer sexueller oder geographischer natur oder eine kombination dieser faktoren sein",
+     "die eigenschaften die eine subkultur als solche abgrenzen können sprachlicher ästhetischer religiöser politischer sexueller oder geographischer natur oder eine kombination dieser faktoren sein",
+     "die eigenschaften die eine subkultur als solche abgrenzen können sprachlicher ästhetische religiöse politischer sexueller oder geographischer natur oder eine kombination dieser faktoren sein",
+     "die eigenschaften die eine subkultur als solche abgrenzen können sprachlicher ästhetische religiöser politische sexueller oder geographischer natur oder eine kombination dieser faktoren sein",
+     "die eigenschaften die eine subkultur als solche abgrenzen können sprachlicher ästhetische religiöser politischer sexuelle oder geographischer natur oder eine kombination dieser faktoren sein"
+    ],
+    "target": "die eigenschaften die eine subkultur als solche abgrenzen können sprachlicher ästhetischer religiöser politischer sexueller oder geographischer natur oder eine kombination dieser faktoren sein"
+   },
+   {
+    "utterance_id": "fleurs_de_2451196745503996684",
+    "candidates": [
+     "er sagte dass er eine wählen-töklinge gebaut habe",
+     "er sagte dass er eine wählend-töklinge gebaut habe",
+     "er sagte dass er eine wähler-töklinge gebaut habe",
+     "er sagte dass er eine wehlen-töklinge gebaut habe",
+     "er sagte dass er eine wählentöklinge gebaut habe"
+    ],
+    "target": "er sagte dass er eine wlan türklingel gebaut habe"
+   },
+   {
+    "utterance_id": "fleurs_de_10900138321253994888",
+    "candidates": [
+     "dies wurde üblich doch das eisensorgte für mehr verschleis an den hölzernen rädern der wagen",
+     "dies wurde üblich doch das eisensorgte für mehr verschleiss an den hölzernen rädern der wagen",
+     "dies wurde üblich doch das eisen sorgte für mehr verschleis an den hölzernen rädern der wagen",
+     "dies wurde üblich doch das eisen sorgte für mehr verschleiss an den hölzernen rädern der wagen",
+     "dies wurde üblich doch das eisensorgte für mehr verschleis an den hölzernden rädern der wagen"
+    ],
+    "target": "dies wurde üblich doch das eisen sorgte für mehr verschleiss an den hölzernen rädern der wagen"
+   },
+   {
+    "utterance_id": "fleurs_de_14925190301953652068",
+    "candidates": [
+     "er hätte am dienstag gefällt werden sollen wurde aber durch einen nordfallgerichtsentscheid gerettet",
+     "er hätte am dienstag gefällt werden sollen wurde aber durch einen nordfall-gerichtsentscheid gerettet",
+     "er hätte am dienstag gefällt werden sollen wurde aber durch einen nordfallgerichtsentscheld gerettet",
+     "er hätte am dienstag gefällt werden sollen wurde aber durch einen nordfallgerichtsentschaid gerettet",
+     "er hätte am dienstag gefällt werden sollen wurde aber durch einen nordpfallgerichtsentscheid gerettet"
+    ],
+    "target": "er hätte am dienstag gefällt werden sollen wurde aber durch einen notfallgerichtsentscheid gerettet"
+   }
+  ],
+  "fleurs-en": [
+   {
+    "utterance_id": "fleurs_en_8364006913180567866",
+    "candidates": [
+     "technology offers a solution with virtual field trips students can look at museum artifacts visit anquarium or admire beautiful art while sitting with their class",
+     "technology offers a solution with virtual field trips students can look at museum artifacts visit anquarrium or admire beautiful art while sitting with their class",
+     "technology offers a solution with virtual field trips students can look at museum artifacts visit andquarium or admire beautiful art while sitting with their class",
+     "technology offers a solution with virtual field trips students can look at museum artifacts visit andquarrium or admire beautiful art while sitting with their class",
+     "technology offers a solution with virtual field trips students can look at museum artifacts visit inquarium or admire beautiful art while sitting with their class"
+    ],
+    "target": "technology offers the solution with virtual field trips students can look at museum artifacts visit an aquarium or admire beautiful art while sitting with their class"
+   },
+   {
+    "utterance_id": "fleurs_en_17358079166744661933",
+    "candidates": [
+     "most of the life of the heru family happened in the open air",
+     "most of the life of the herus family happened in the open air",
+     "most of the life of the hebru family happened in the open air",
+     "most of the life of the here family happened in the open air",
+     "most of the life of the herue family happened in the open air"
+    ],
+    "target": "most of the life of the hebrew family happened in the open air"
+   },
+   {
+    "utterance_id": "fleurs_en_6840966447225121742",
+    "candidates": [
+     "any amendments or requests the should be coursed through the travel agent first and not directly with the hotel",
+     "any amendments or request the should be coursed through the travel agent first and not directly with the hotel",
+     "any amendment or requests the should be coursed through the travel agent first and not directly with the hotel",
+     "any amendment or request the should be coursed through the travel agent first and not directly with the hotel",
+     "any amendments or requests the should be course through the travel agent first and not directly with the hotel"
+    ],
+    "target": "any amendments or requests though should be coursed through the travel agent first and not directly with the hotel"
+   },
+   {
+    "utterance_id": "fleurs_en_9783582591971624116",
+    "candidates": [
+     "thousands of years ago a man called aristarchus said that the soldier system moved around the sun",
+     "thousands of years ago a man called aristarchus said that the solier system moved around the sun",
+     "thousands of years ago a man called aristrarchus said that the soldier system moved around the sun",
+     "thousands of years ago a man called aristarchas said that the soldier system moved around the sun",
+     "thousands of years ago a man called aristrarchus said that the solier system moved around the sun"
+    ],
+    "target": "thousands of years ago a man called aristarchus said that the solar system moved around the sun"
+   },
+   {
+    "utterance_id": "fleurs_en_18255068392894758145",
+    "candidates": [
+     "due to a long distance from continent mammals were unable to make the journey making the giant tortis the primary grazing animal and the galopagos",
+     "due to a long distance from continent mammals were unable to make the journey making the giant tortis the primary grazing animal and the galapagos",
+     "due to a long distance from continent mammals were unable to make the journey making the giant tortise the primary grazing animal and the galopagos",
+     "due to a long distance from continent mammals were unable to make the journey making the giant tortis the primary grazing animal in the galopagos",
+     "due to a long distance from continent mammals were unable to make the journey making the giant tortise the primary grazing animal and the galapagos"
+    ],
+    "target": "due to the long distance from the continent mammals were unable to make the journey making the giant tortoise the primary grazing animal in the galapagos"
+   }
+  ],
+  "voxpopuli-it": [
+   {
+    "utterance_id": "voxpopuli_it_20180529-0900-PLENARY-22-it_20180529-20-08-46_6",
+    "candidates": [
+     "al momento in cui la francia ha ampliato i controlli ce li siamo tenuti tutti in casa",
+     "el momento in cui la francia ha ampliato i controlli ce li siamo tenuti tutti in casa",
+     "il momento in cui la francia ha ampliato i controlli ce li siamo tenuti tutti in casa",
+     "al momento in cui la francia ha ampliato i controlli ci li siamo tenuti tutti in casa",
+     "el momento in cui la francia ha ampliato i controlli ci li siamo tenuti tutti in casa"
+    ],
+    "target": "nel momento in cui la francia ha ampliato i controlli ce li siamo tenuti tutti in casa"
+   },
+   {
+    "utterance_id": "voxpopuli_it_20160622-0900-PLENARY-20-it_20160622-22-00-57_3",
+    "candidates": [
+     "isperatamente abbandonati a loro stessi dove la malavita gestisce il territorio e le attività illecite sono le uniche fonti di guadagno ho voluto prendere",
+     "speratamente abbandonati a loro stessi dove la malavita gestisce il territorio e le attività illecite sono le uniche fonti di guadagno ho voluto prendere",
+     "isperatamente abbandonati a loro stessi dove la malavita gestisce il territorio e le attività e lecite sono le uniche fonti di guadagno ho voluto prendere",
+     "isperatamente abbandonati a loro stessi dove la malavita gestisce il territorio e l' attività illecite sono le uniche fonti di guadagno ho voluto prendere",
+     "isperatamente abbandonati a loro stessi dove la malavita gestisce il territorio e le attività ellecite sono le uniche fonti di guadagno ho voluto prendere"
+    ],
+    "target": "si tratta di quartieri disperatamente abbandonati a loro stessi dove la malavita gestisce il territorio e le attività illecite sono le uniche fonti di guadagno"
+   },
+   {
+    "utterance_id": "voxpopuli_it_20180205-0900-PLENARY-19-it_20180205-22-49-55_5",
+    "candidates": [
+     "la cabillari diffusione di piccoli impianti messi in rete possono dare un grande impulso alla transizione energetica",
+     "la cabillare diffusione di piccoli impianti messi in rete possono dare un grande impulso alla transizione energetica",
+     "la cabilari diffusione di piccoli impianti messi in rete possono dare un grande impulso alla transizione energetica",
+     "la cabillari diffusione dei piccoli impianti messi in rete possono dare un grande impulso alla transizione energetica",
+     "la cabillare diffusione dei piccoli impianti messi in rete possono dare un grande impulso alla transizione energetica"
+    ],
+    "target": "la capillare diffusione di piccoli impianti messi in rete può dare un grande impulso alla transizione energetica"
+   },
+   {
+    "utterance_id": "voxpopuli_it_20180611-0900-PLENARY-13-it_20180611-20-24-22_10",
+    "candidates": [
+     "o di concludere ricordando la centralità della figura dellinsegnante che deve essere da un lato garante e pietrangolare per il cambiamento del sistema di istruzione",
+     "o di concludere ricordando la centralità della figura dellinsegnante che deve essere da un lato garante e pietrangolare per il cambiamento del sistema d' istruzione",
+     "o di concludere ricordando la centralità della figura dell'insegnante che deve essere da un lato garante e pietrangolare per il cambiamento del sistema di istruzione",
+     "e di concludere ricordando la centralità della figura dellinsegnante che deve essere da un lato garante e pietrangolare per il cambiamento del sistema di istruzione",
+     "o di concludere ricordando la centralità della figura dellinsegnante che deve essere da un lato garante e pietrangolari per il cambiamento del sistema di istruzione"
+    ],
+    "target": "mi permetto di concludere ricordando la centralità della figura dell'insegnante che deve essere da un lato garante e pietra angolare per il cambiamento del sistema di istruzione"
+   },
+   {
+    "utterance_id": "voxpopuli_it_20170201-0900-PLENARY-15-it_20170201-21-46-18_6",
+    "candidates": [
+     "inuare ad essere un esempio positivo e credibile",
+     "tinuare ad essere un esempio positivo e credibile",
+     "enuare ad essere un esempio positivo e credibile",
+     "finuare ad essere un esempio positivo e credibile",
+     "inuare a essere un esempio positivo e credibile"
+    ],
+    "target": "solo in questo modo l'unione europea potrà continuare ad essere un esempio positivo e credibile"
+   }
+  ]
+ },
+ "created": "2026-11-05T18:47:56+00:00",
+ "git_commit": "fca1a7d7b22513ff2f970ef7d248d17389716487"
+}

@@ -149,7 +149,6 @@ def decode_test_set(
         and json.loads(run_path.read_text(encoding="utf-8")).get("model_config") == config
     ):
         return output / "predictions.jsonl"
-    entries = {entry.utterance_id: entry for entry in read_manifest(manifest)}
     lm = KenLMModel(str(lm_path))
     started = time.perf_counter()
     hypotheses = [
@@ -160,15 +159,31 @@ def decode_test_set(
         for key, values in iter_log_probs(logprobs)
     ]
     seconds = time.perf_counter() - started
+    return write_run(output, hypotheses, f"{metadata['model']}+{name}", config, manifest, seconds)
+
+
+def write_run(
+    output: Path,
+    hypotheses: list[Hypothesis],
+    model: str,
+    config: dict[str, Any],
+    manifest: Path,
+    seconds: float,
+) -> Path:
+    """Write the predictions and ``run.json`` of a run made from saved outputs, not from audio.
+
+    ``seconds`` is the time of this step only: the acoustic model ran earlier.
+    """
+    entries = {entry.utterance_id: entry for entry in read_manifest(manifest)}
     output.mkdir(parents=True, exist_ok=True)
     (output / "predictions.jsonl").unlink(missing_ok=True)
     append_predictions(output / "predictions.jsonl", hypotheses)
     audio_seconds = sum(entries[h.utterance_id].duration for h in hypotheses)
     run = {
-        "model": f"{metadata['model']}+{name}",
+        "model": model,
         "model_config": config,
         "manifest": manifest.as_posix(),
-        "manifest_sha256": sha256,
+        "manifest_sha256": file_sha256(manifest),
         "limit": None,
         "n_utterances": len(hypotheses),
         "audio_seconds": audio_seconds,
@@ -177,9 +192,9 @@ def decode_test_set(
         "environment": environment(),
         "started_at": None,
         "finished_at": utc_now(),
-        "processing_seconds": seconds,  # the decoding only: the acoustic model ran earlier
+        "processing_seconds": seconds,
         "rtf": seconds / audio_seconds,
     }
     text = json.dumps(run, ensure_ascii=False, indent=2) + "\n"
-    run_path.write_text(text, encoding="utf-8", newline="\n")
+    (output / "run.json").write_text(text, encoding="utf-8", newline="\n")
     return output / "predictions.jsonl"
