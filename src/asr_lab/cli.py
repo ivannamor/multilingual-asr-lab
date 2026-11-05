@@ -42,6 +42,11 @@ Usage::
         --selection selection.json
     uv run asr-lab bias-results --spec experiments/E9/biasing.toml --entities entities.json \
         --selection selection.json --ctc-grid ctc_grid.json --output results.json
+    uv run asr-lab correct-nbest --spec experiments/E8/correction.toml --examples examples.json
+    uv run asr-lab correct-llm --spec experiments/E8/correction.toml --examples examples.json \
+        --output experiments/E8/results/llm
+    uv run asr-lab correct-methods --spec experiments/E8/correction.toml \
+        --llm experiments/E8/results/llm --selection rescoring.json
     uv run asr-lab render-results --spec experiments/E3/tables.toml --document RESULTS.md
 """
 
@@ -63,6 +68,7 @@ from asr_lab.biasing.experiment import (
     run_whisper,
 )
 from asr_lab.biasing.results import bias_results
+from asr_lab.correction.experiment import load_llm, run_llm, run_methods, run_nbest
 from asr_lab.data.manifest import write_manifest
 from asr_lab.data.quality import (
     analyze_quality,
@@ -439,6 +445,32 @@ def main(argv: Sequence[str] | None = None) -> None:
         command.add_argument("--selection", required=True, type=Path, help="output of bias-select")
     bias_res.add_argument("--output", required=True, type=Path, help="results JSON")
 
+    correct_nbest = commands.add_parser(
+        "correct-nbest", help="write the N-best lists of CTC and the few-shot examples (E8)"
+    )
+    correct_llm = commands.add_parser(
+        "correct-llm", help="ask a large language model about every N-best list (E8, GPU)"
+    )
+    correct_methods = commands.add_parser(
+        "correct-methods", help="choose the rescoring weights on dev, write the test runs (E8)"
+    )
+    all_correct = (correct_nbest, correct_llm, correct_methods)
+    for command in all_correct:
+        command.add_argument("--spec", required=True, type=Path, help="TOML correction spec")
+        command.add_argument("--runs", type=Path, default=runs_default)
+    for command in (correct_nbest, correct_llm):
+        command.add_argument(
+            "--examples", required=True, type=Path, help="few-shot examples JSON (correct-nbest)"
+        )
+    correct_nbest.add_argument("--models", type=Path, default=Path("models/e4"))
+    correct_nbest.add_argument("--logprobs", type=Path, default=Path("data/e4_logprobs"))
+    correct_nbest.add_argument("--workers", type=int, default=8)
+    correct_llm.add_argument("--output", required=True, type=Path, help="folder of the outputs")
+    correct_llm.add_argument("--split", choices=["dev", "test"], action="append", default=None)
+    correct_llm.add_argument("--device", default="cuda", choices=["cpu", "cuda"])
+    correct_methods.add_argument("--llm", required=True, type=Path, help="output of correct-llm")
+    correct_methods.add_argument("--selection", required=True, type=Path, help="selection JSON")
+
     render = commands.add_parser(
         "render-results", help="regenerate the tables of the results document from JSON results"
     )
@@ -683,6 +715,21 @@ def main(argv: Sequence[str] | None = None) -> None:
     elif args.command == "lm-check-greedy":
         save_results(greedy_check(args.spec, args.logprobs), args.output)
         print(f"Greedy check: {args.output}")
+    elif args.command == "correct-nbest":
+        for path in run_nbest(
+            args.spec, args.models, args.logprobs, args.runs, args.examples, args.workers
+        ):
+            print(path)
+        print(f"Few-shot examples: {args.examples}")
+    elif args.command == "correct-llm":
+        llm = load_llm(args.spec, args.device)
+        splits = args.split or ["dev", "test"]
+        for path in run_llm(args.spec, args.runs, args.examples, args.output, llm, splits):
+            print(path)
+    elif args.command == "correct-methods":
+        for path in run_methods(args.spec, args.runs, args.llm, args.selection):
+            print(path)
+        print(f"Rescoring settings: {args.selection}")
     elif args.command == "lm-decode":
         for path in run_lm_decode(args.spec, args.models, args.logprobs, args.selection, args.runs):
             print(path)

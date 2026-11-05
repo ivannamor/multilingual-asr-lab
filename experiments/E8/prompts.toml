@@ -1,0 +1,26 @@
+# The prompts of experiment E8, fixed before the language model reads any transcript. A change gives a
+# new version, and every output records the version and the SHA-256 of this file.
+version = "e8-v1"
+
+# Rescoring: the probability of each transcript after this prefix, with the end of the text
+[score]
+prefix = "{language} speech, transcribed in lowercase without punctuation:\n"
+
+# Choosing: the probability of the number of each candidate as the first token of the answer
+[choose]
+system = "You choose the correct transcript of an utterance among the candidates of a speech recognizer."
+user = """These are the {n} most likely transcripts of one {language} utterance, according to a speech recognizer, the most likely first:
+
+{candidates}
+
+Which one is correct? Answer with its number only."""
+
+# Correcting, zero-shot and few-shot: the few-shot examples are earlier turns of the same conversation,
+# with the reference as the answer
+[correct]
+system = "You correct the transcripts of a speech recognizer."
+user = """These are the {n} most likely transcripts of one {language} utterance, according to a speech recognizer, the most likely first:
+
+{candidates}
+
+Write the correct transcript of the utterance, in lowercase without punctuation. You may combine the candidates, or change a word that is wrong in all of them. Answer with the transcript only."""

@@ -16,6 +16,9 @@ character adds nothing unless a blank separates the two.
 
 A ``word_bonus`` adds to the score of chosen words when they end, which is hotword boosting: it
 tells the search which names to expect, without changing the language model.
+
+``beam_search_nbest`` returns the best distinct transcripts that survive to the last frame, each
+with its acoustic and language scores, for a second pass that rescores or corrects them.
 """
 
 from __future__ import annotations
@@ -101,6 +104,19 @@ def greedy_decode(log_probs: np.ndarray, tokens: Sequence[str]) -> str:
     return " ".join("".join(chars).split())
 
 
+@dataclass(frozen=True)
+class ScoredTranscript:
+    """A transcript of the beam search, with the two parts of its score."""
+
+    text: str
+    acoustic: float  # ln P(text | audio) of the CTC model, summed over the merged alignments
+    language: float  # alpha * ln P(text) + beta * words, plus any word bonus
+
+    @property
+    def score(self) -> float:
+        return self.acoustic + self.language
+
+
 def beam_search(
     log_probs: np.ndarray,
     tokens: Sequence[str],
@@ -115,6 +131,21 @@ def beam_search(
         tokens: the token of each column.
         lm: without one, the search only merges the alignments of the acoustic model.
         word_bonus: added to the score of each of these words when it ends.
+    """
+    return beam_search_nbest(log_probs, tokens, lm, options, word_bonus, n=1)[0].text
+
+
+def beam_search_nbest(
+    log_probs: np.ndarray,
+    tokens: Sequence[str],
+    lm: LanguageModel | None = None,
+    options: DecodingOptions | None = None,
+    word_bonus: Mapping[str, float] | None = None,
+    n: int = 5,
+) -> list[ScoredTranscript]:
+    """The ``n`` most probable distinct transcripts, best first; arguments as ``beam_search``.
+
+    Fewer come back when fewer survive the beam. The first is always ``beam_search``'s.
     """
     options = options or DecodingOptions()
     word_bonus = word_bonus or {}
@@ -137,7 +168,7 @@ def beam_search(
                 else:
                     found[0] = _log_add(found[0], score)
         beams = _prune(extended, options)
-    return _best_transcript(beams, lm, options, word_bonus)
+    return _best_transcripts(beams, lm, options, word_bonus)[:n]
 
 
 def _candidates(
@@ -206,13 +237,13 @@ def _prune(
     }
 
 
-def _best_transcript(
+def _best_transcripts(
     beams: dict[tuple[str, str, str | None], list[Any]],
     lm: LanguageModel | None,
     options: DecodingOptions,
     word_bonus: Mapping[str, float],
-) -> str:
-    """Close the last word of each hypothesis, merge equal texts and take the best one."""
+) -> list[ScoredTranscript]:
+    """Close the last word of each hypothesis, merge equal texts and sort them, best first."""
     finished: dict[str, list[float]] = {}
     for (text, word, _), (acoustic, language, state) in beams.items():
         full = f"{text} {word}".strip() if word else text
@@ -225,4 +256,6 @@ def _best_transcript(
             finished[full] = [acoustic, language]
         else:
             found[0] = _log_add(found[0], acoustic)
-    return max(finished, key=lambda text: finished[text][0] + finished[text][1])
+    transcripts = [ScoredTranscript(text, *scores) for text, scores in finished.items()]
+    # A stable sort: in a tie, the transcript met first in the beams comes first
+    return sorted(transcripts, key=lambda transcript: -transcript.score)

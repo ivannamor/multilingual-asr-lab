@@ -855,3 +855,39 @@ tutti", not by writing more names, which a comparison on the utterances short in
 that analysis was added after seeing the results. The noise of the recognizer reached the
 transcripts through the hotwords: a single letter tagged as an entity was written 36 times in one
 utterance at weight 21, so a list for CTC needs a filter on length and on pronouns.
+
+## 31. A large language model on the N-best lists of CTC, with open weights and fixed prompts
+
+**Context.** A recognizer's second guess is often right where its first is wrong, and a large language
+model knows far more about a language than an n-gram. E8 asks whether such a model can pick or write a
+better transcript from the 5 best of the CTC model with the language model of E4.
+
+**Decision.**
+- **Lists**: the 5 best distinct transcripts of our own beam search, with Europarl-5 and its weights
+  from E4, on CPU. The first is the transcript of E4 exactly (3,551 of 3,551 on the test sets), so
+  every method starts from a baseline already reported.
+- **Model**: Qwen2.5-7B-Instruct at a fixed revision, in bfloat16 on a Colab GPU, greedy throughout.
+  Open weights give the probabilities of tokens, which rescoring needs, and the same run every time.
+- **Four methods**: rescoring (the CTC score plus a weight times the model's log probability and a
+  bonus per word, both chosen on dev, like alpha and beta in E4); choosing (the probability of each
+  number as the first token of the answer, so no answer has to be parsed); zero-shot correction; and
+  few-shot correction with 5 dev examples per test set, drawn by seed among dev lists with an error.
+- **Prompts**: one versioned file, its SHA-256 recorded with every output. They are not tuned: the
+  only settings chosen on dev are the two of rescoring.
+- **No audio on Colab**: the notebook reads the committed lists, so the GPU session is only the model.
+
+**Alternatives rejected.** Whisper's N-best (CTranslate2 can return it, faster-whisper does not, and
+Whisper has little left to correct on FLEURS); an API model (no token probabilities and a model that
+can change under the same name); a small model on the CPU here (the trial run with Qwen2.5-0.5B
+rewrote correct numbers into nonsense); choosing by parsing a generated number (it can fail, the
+probability of the first token cannot); tuning the prompts on dev (many more runs, and the plan
+asks how far a fixed prompt goes).
+
+**Consequences.** FLEURS comes from Wikipedia, which the model has probably read, so a correction
+there may be memory; the report counts the words written that are in no transcript of the list, and
+how many of those are in the reference, and VoxPopuli is the check. Rescoring and choosing can do
+no better than the best transcript of each list, which the report gives. The CTC model cannot write
+a digit and the language model can, which matters only where the normalizer keeps digits (German and
+English), so the comparisons are repeated on the utterances whose reference has none. The trial run
+showed a strong preference of the small model for the last candidate, so the report gives the
+position of each choice.
