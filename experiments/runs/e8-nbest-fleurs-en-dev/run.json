@@ -1,0 +1,40 @@
+{
+  "model": "transformers/jonatasgrosman/wav2vec2-large-xlsr-53-english-float16+europarl-5",
+  "model_config": {
+    "acoustic_model": {
+      "library": "transformers",
+      "library_version": "5.21.0",
+      "model_id": "jonatasgrosman/wav2vec2-large-xlsr-53-english",
+      "revision": "569a6236e92bd5f7652a0420bfe9bb94c5664080",
+      "dtype": "float16",
+      "device": "cuda",
+      "decoding": "ctc-greedy"
+    },
+    "language_model": "europarl-5",
+    "language_model_sha256": "feb414330ca4b5806893f61e532e50a81a04d50aed03e2368c4e1d8b13647fdb",
+    "decoding": {
+      "alpha": 0.3,
+      "beta": 2.0,
+      "beam_width": 100,
+      "token_min_logp": -10.0,
+      "beam_prune_logp": -20.0
+    },
+    "n": 5
+  },
+  "manifest": "data/fleurs_en/dev.jsonl",
+  "manifest_sha256": "ab89f6a2a8db5fcfed82fdb1f126233da09d4d2ad43fdcd1325775be02350fdf",
+  "limit": null,
+  "n_utterances": 394,
+  "audio_seconds": 3765.1799999999994,
+  "git_commit": "fca1a7d7b22513ff2f970ef7d248d17389716487",
+  "git_dirty": "unknown",
+  "environment": {
+    "python": "3.11.17",
+    "platform": "Linux aarch64",
+    "executable_is_venv": true
+  },
+  "started_at": null,
+  "finished_at": "2026-11-05T18:47:20+00:00",
+  "processing_seconds": 4.3454366810037754,
+  "rtf": 0.0011541112725032472
+}
